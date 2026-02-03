@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/verify.sh
-# Template-Version: 1.4.0
-# Last-Generated: 2026-02-03T19:42:42Z
+# Template-Version: 1.6.0
+# Last-Generated: 2026-02-03T22:23:54Z
 # Ownership: Managed
 
 set -euo pipefail
@@ -58,7 +58,24 @@ for f in $MANAGED_FILES; do
   fi
  done
 
-# 3) L0/L1 adapter coherence
+
+# 2b) PRD managed block check
+if [[ -f "docs/PRD.md" ]]; then
+  if ! grep -q "BEGIN_MANAGED" "docs/PRD.md" || ! grep -q "END_MANAGED" "docs/PRD.md"; then
+    fail "docs/PRD.md missing BEGIN_MANAGED/END_MANAGED block"
+  fi
+fi
+
+
+
+# 2c) PROJECT managed block check
+if [[ -f ".ai/context/PROJECT.md" ]]; then
+  if ! grep -q "BEGIN_MANAGED" ".ai/context/PROJECT.md" || ! grep -q "END_MANAGED" ".ai/context/PROJECT.md"; then
+    fail "PROJECT.md missing BEGIN_MANAGED/END_MANAGED block"
+  fi
+fi
+
+# 3) Adapter coherence (bootstrap)
 ADAPTERS=(
   "AGENTS.md"
   "GEMINI.md"
@@ -70,7 +87,7 @@ ADAPTERS=(
 )
 for f in "${ADAPTERS[@]}"; do
   if [[ -f "$f" ]]; then
-    for ref in CORE.md STANDARDS.md SECURITY.md TESTING.md; do
+    for ref in BOOTSTRAP.md PROJECT.md; do
       if ! grep -q "$ref" "$f"; then
         fail "Adapter $f missing reference to $ref"
       fi

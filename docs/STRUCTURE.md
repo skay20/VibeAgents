@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/docs/STRUCTURE.md
-Template-Version: 1.4.0
-Last-Generated: 2026-02-03T19:43:51Z
+Template-Version: 1.6.0
+Last-Generated: 2026-02-03T22:23:54Z
 Ownership: Managed
 ---
 # Project Structure
@@ -23,7 +23,9 @@ Ownership: Managed
 │     └─ 0001-initial.md
 ├─ .ai/
 │  ├─ context/
+│  │  ├─ BOOTSTRAP.md
 │  │  ├─ CORE.md
+│  │  ├─ PROJECT.md
 │  │  ├─ STANDARDS.md
 │  │  ├─ SECURITY.md
 │  │  └─ TESTING.md

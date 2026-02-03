@@ -1,13 +1,14 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/docs/PRD.md
-Template-Version: 1.0.0
-Last-Generated: 2026-02-03T18:17:45Z
-Ownership: Managed
+Template-Version: 1.5.0
+Last-Generated: 2026-02-03T21:40:49Z
+Ownership: Hybrid
 ---
 
 # Product Requirements Document (PRD)
 
+<!-- BEGIN_MANAGED -->
 ## Summary
 TO_CONFIRM
 
@@ -49,3 +50,4 @@ TO_CONFIRM
 
 ## Acceptance Criteria
 - TO_CONFIRM
+<!-- END_MANAGED -->

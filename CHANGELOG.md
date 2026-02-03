@@ -1,12 +1,18 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/CHANGELOG.md
-Template-Version: 1.4.0
-Last-Generated: 2026-02-03T19:42:42Z
+Template-Version: 1.6.0
+Last-Generated: 2026-02-03T22:23:54Z
 Ownership: Managed
 ---
 
 # Changelog
+
+## 0.1.7 - 2026-02-03
+- Add BOOTSTRAP + PROJECT context layers and PRD overlay rules.
+
+## 0.1.6 - 2026-02-03
+- Make PRD.md hybrid with managed block; enforce header preservation.
 
 ## 0.1.5 - 2026-02-03
 - Add headless/CI bootstrap safeguards and bus concurrency policy.

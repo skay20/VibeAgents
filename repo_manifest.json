@@ -1,8 +1,8 @@
 {
   "Managed-By": "AgenticRepoBuilder",
   "Template-Source": "templates/repo_manifest.json",
-  "Template-Version": "1.4.0",
-  "Last-Generated": "2026-02-03T19:44:08Z",
+  "Template-Version": "1.6.0",
+  "Last-Generated": "2026-02-03T22:23:54Z",
   "repo": {
     "slug": "vibeagents",
     "mode": "no-app-first",
@@ -212,9 +212,19 @@
       "template": "templates/.agentic/templates/.gitkeep"
     },
     {
+      "path": ".ai/context/BOOTSTRAP.md",
+      "ownership": "Managed",
+      "template": "templates/.ai/context/BOOTSTRAP.md"
+    },
+    {
       "path": ".ai/context/CORE.md",
       "ownership": "Managed",
       "template": "templates/.ai/context/CORE.md"
+    },
+    {
+      "path": ".ai/context/PROJECT.md",
+      "ownership": "Hybrid",
+      "template": "templates/.ai/context/PROJECT.md"
     },
     {
       "path": ".ai/context/SECURITY.md",
@@ -247,6 +257,11 @@
       "template": "templates/.claude/CLAUDE.md"
     },
     {
+      "path": ".claude/rules/prd.md",
+      "ownership": "Managed",
+      "template": "templates/.claude/rules/prd.md"
+    },
+    {
       "path": ".claude/rules/security.md",
       "ownership": "Managed",
       "template": "templates/.claude/rules/security.md"
@@ -277,6 +292,11 @@
       "template": "templates/.cursor/rules/20-backend.mdc"
     },
     {
+      "path": ".cursor/rules/90-prd.mdc",
+      "ownership": "Managed",
+      "template": "templates/.cursor/rules/90-prd.mdc"
+    },
+    {
       "path": ".gemini/config.yaml",
       "ownership": "Managed",
       "template": "templates/.gemini/config.yaml"
@@ -305,6 +325,11 @@
       "path": ".windsurf/rules/20-backend.md",
       "ownership": "Managed",
       "template": "templates/.windsurf/rules/20-backend.md"
+    },
+    {
+      "path": ".windsurf/rules/90-prd.md",
+      "ownership": "Managed",
+      "template": "templates/.windsurf/rules/90-prd.md"
     },
     {
       "path": ".windsurf/workflows/implement.md",
@@ -373,7 +398,7 @@
     },
     {
       "path": "docs/PRD.md",
-      "ownership": "Managed",
+      "ownership": "Hybrid",
       "template": "templates/docs/PRD.md"
     },
     {

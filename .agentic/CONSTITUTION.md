@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CONSTITUTION.md
-Template-Version: 1.4.0
-Last-Generated: 2026-02-03T19:42:42Z
+Template-Version: 1.6.0
+Last-Generated: 2026-02-03T22:23:54Z
 Ownership: Managed
 ---
 
@@ -11,13 +11,18 @@ Ownership: Managed
 ## Instruction Precedence
 1. User instructions in the current session
 2. docs/PRD.md (when present)
-3. .ai/context/CORE.md
-4. .ai/context/STANDARDS.md
-5. .ai/context/SECURITY.md
-6. .ai/context/TESTING.md
-7. docs/ARCHITECTURE.md and ADRs
+3. .ai/context/PROJECT.md
+4. .ai/context/CORE.md
+5. .ai/context/STANDARDS.md
+6. .ai/context/SECURITY.md
+7. .ai/context/TESTING.md
+8. docs/ARCHITECTURE.md and ADRs
 
 If there is a conflict, higher precedence wins. If a required input is missing, the agent must BLOCK.
+
+## Bootstrap Context Policy
+- Startup should load only BOOTSTRAP + PROJECT + CONSTITUTION.
+- Load PRD and L1 contexts on-demand.
 
 ## Agent Prompt Spec v2 (Mandatory)
 Every agent prompt in `.agentic/agents/` must contain all sections below. Missing sections are a hard failure.
@@ -93,6 +98,8 @@ Adapters must avoid duplicating policy text. They should point to the same sourc
 - Managed files must include the Managed-By header.
 - Human-owned files (missing header) must never be overwritten.
 - Hybrid files may only modify blocks between `BEGIN_MANAGED` and `END_MANAGED`.
+- `docs/PRD.md` is Hybrid: only edit the managed block, never the header.
+- `.ai/context/PROJECT.md` is Hybrid: only edit the managed block, never the header.
 
 ## Versioning and Changelog
 - Any prompt change must bump semver and update `.agentic/CHANGELOG.md`.
