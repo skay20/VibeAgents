@@ -1,0 +1,79 @@
+# Gemini Code Assist Configuration
+# https://developers.google.com/gemini-code-assist/docs/customize-gemini-behavior
+
+# Configuración general
+gemini:
+  # Idioma para respuestas
+  language: es
+  
+  # Estilo de respuesta
+  response_style: concise
+  
+  # Incluir explicaciones
+  include_explanations: true
+  
+  # Nivel de detalle
+  detail_level: moderate
+
+# Reglas de código
+code:
+  # Estilo preferido
+  style_guide: .gemini/styleguide.md
+  
+  # Convenciones
+  conventions:
+    naming:
+      variables: camelCase
+      functions: camelCase
+      classes: PascalCase
+      constants: UPPER_SNAKE_CASE
+      files: kebab-case
+    
+    formatting:
+      indent: 2_spaces
+      max_line_length: 100
+      quotes: single
+      semicolons: true
+  
+  # Testing
+  testing:
+    framework: vitest
+    coverage_target: 80
+    required: true
+
+# Quality gates
+quality:
+  lint:
+    enabled: true
+    command: npm run lint
+  
+  type_check:
+    enabled: true
+    command: npm run typecheck
+  
+  test:
+    enabled: true
+    command: npm test
+  
+  build:
+    enabled: true
+    command: npm run build
+
+# Seguridad
+security:
+  # No sugerir código inseguro
+  safe_coding: true
+  
+  # Validar input
+  input_validation: true
+  
+  # Secrets
+  no_secrets_in_code: true
+
+# Documentación
+documentation:
+  # Generar JSDoc/TSDoc
+  generate_docs: true
+  
+  # Incluir ejemplos
+  include_examples: true

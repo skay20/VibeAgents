@@ -1,0 +1,64 @@
+---
+description: Testing Requirements
+globs: "**/*"
+alwaysApply: true
+---
+
+# Testing Requirements
+
+## Coverage Targets
+
+| Type | Minimum Coverage |
+|------|------------------|
+| Unit | 80% |
+| Integration | 60% |
+| E2E | Critical paths |
+
+## Test Structure
+
+Use AAA Pattern:
+
+```typescript
+describe('FeatureName', () => {
+  describe('functionName', () => {
+    it('should [expected behavior] when [condition]', () => {
+      // Arrange
+      const input = ...;
+      const expected = ...;
+      
+      // Act
+      const result = functionName(input);
+      
+      // Assert
+      expect(result).toEqual(expected);
+    });
+  });
+});
+```
+
+## What to Test
+
+- [ ] Happy path
+- [ ] Edge cases
+- [ ] Error handling
+- [ ] Null/undefined inputs
+- [ ] Input boundaries
+- [ ] Async operations
+
+## Mocking
+
+```typescript
+// Mock modules
+vi.mock('./api', () => ({
+  fetchUser: vi.fn().mockResolvedValue({ id: 1 }),
+}));
+
+// Mock functions
+const mockFn = vi.fn().mockReturnValue('value');
+```
+
+## Enforcement
+
+- Write tests alongside code (TDD preferred)
+- No merge without tests
+- Coverage reported in CI

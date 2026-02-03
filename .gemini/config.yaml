@@ -1,0 +1,13 @@
+# Managed-By: AgenticRepoBuilder
+# Template-Source: templates/.gemini/config.yaml
+# Template-Version: 1.1.0
+# Last-Generated: 2026-02-03T19:08:34Z
+# Ownership: Managed
+# Context sources: .ai/context/CORE.md, STANDARDS.md, SECURITY.md, TESTING.md
+have_fun: false
+memory_config:
+  disabled: false
+code_review:
+  disable: false
+  comment_severity_threshold: MEDIUM
+  max_review_comments: -1

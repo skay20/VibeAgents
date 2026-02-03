@@ -1,0 +1,44 @@
+---
+description: Quality Gates - Mandatory checks before any code change
+globs: "**/*"
+alwaysApply: true
+---
+
+# Quality Gates
+
+Before declaring any task as "complete", you MUST run and pass all quality gates.
+
+## Required Checks
+
+1. **Tests**: `npm test`
+   - All tests must pass
+   - Coverage >= 80%
+
+2. **Lint**: `npm run lint`
+   - 0 errors
+   - Warnings must be justified
+
+3. **Type Check**: `npm run typecheck`
+   - 0 TypeScript errors
+
+4. **Build**: `npm run build`
+   - Must complete successfully
+
+## Output Format
+
+When completing a task, report:
+
+```
+✅ Quality Gates:
+   - Tests: PASS (X tests, Y% coverage)
+   - Lint: PASS (0 errors)
+   - Type Check: PASS (0 errors)
+   - Build: PASS
+```
+
+## Enforcement
+
+If any gate fails:
+- DO NOT mark task as complete
+- Fix the issues
+- Re-run all gates

@@ -1,0 +1,18 @@
+---
+Managed-By: AgenticRepoBuilder
+Template-Source: templates/.cursor/rules/10-frontend.mdc
+Template-Version: 1.1.0
+Last-Generated: 2026-02-03T19:08:34Z
+Ownership: Managed
+description: Frontend rules
+globs:
+  - "**/*.tsx"
+  - "**/*.jsx"
+  - "**/*.css"
+  - "**/*.html"
+  - "**/*.scss"
+alwaysApply: false
+---
+
+- Use context from L0/L1 files in `.ai/context/`.
+- Keep UI changes accessible and minimal.

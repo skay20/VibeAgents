@@ -1,0 +1,436 @@
+{
+  "Managed-By": "AgenticRepoBuilder",
+  "Template-Source": "templates/repo_manifest.json",
+  "Template-Version": "1.4.0",
+  "Last-Generated": "2026-02-03T19:44:08Z",
+  "repo": {
+    "slug": "vibeagents",
+    "mode": "no-app-first",
+    "type": "mixed",
+    "stack": "unknown",
+    "monorepo": false,
+    "targets": [
+      "codex",
+      "claude_code",
+      "gemini_cli",
+      "gemini_code_assist",
+      "cursor",
+      "windsurf",
+      "copilot"
+    ]
+  },
+  "ownership": {
+    "default": "Managed",
+    "policy": {
+      "managed_requires_header": true,
+      "hybrid_markers": [
+        "BEGIN_MANAGED",
+        "END_MANAGED"
+      ],
+      "human_owned_if_no_header": true
+    }
+  },
+  "files": [
+    {
+      "path": ".agentic/AGENTS_CATALOG.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/AGENTS_CATALOG.md"
+    },
+    {
+      "path": ".agentic/CHANGELOG.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/CHANGELOG.md"
+    },
+    {
+      "path": ".agentic/CONSTITUTION.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/CONSTITUTION.md"
+    },
+    {
+      "path": ".agentic/README.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/README.md"
+    },
+    {
+      "path": ".agentic/VERSION.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/VERSION.md"
+    },
+    {
+      "path": ".agentic/WORKFLOWS_GUIDE.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/WORKFLOWS_GUIDE.md"
+    },
+    {
+      "path": ".agentic/agents/architect.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/architect.md"
+    },
+    {
+      "path": ".agentic/agents/context_curator.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/context_curator.md"
+    },
+    {
+      "path": ".agentic/agents/docs_writer.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/docs_writer.md"
+    },
+    {
+      "path": ".agentic/agents/god_orchestrator.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/god_orchestrator.md"
+    },
+    {
+      "path": ".agentic/agents/implementer.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/implementer.md"
+    },
+    {
+      "path": ".agentic/agents/intent_translator.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/intent_translator.md"
+    },
+    {
+      "path": ".agentic/agents/migration_manager.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/migration_manager.md"
+    },
+    {
+      "path": ".agentic/agents/planner.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/planner.md"
+    },
+    {
+      "path": ".agentic/agents/qa_reviewer.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/qa_reviewer.md"
+    },
+    {
+      "path": ".agentic/agents/release_manager.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/release_manager.md"
+    },
+    {
+      "path": ".agentic/agents/repo_maintainer.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/repo_maintainer.md"
+    },
+    {
+      "path": ".agentic/agents/security_reviewer.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/security_reviewer.md"
+    },
+    {
+      "path": ".agentic/agents/stack_advisor.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/stack_advisor.md"
+    },
+    {
+      "path": ".agentic/agents/template_librarian.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/template_librarian.md"
+    },
+    {
+      "path": ".agentic/bus/SCHEMA.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/bus/SCHEMA.md"
+    },
+    {
+      "path": ".agentic/bus/artifacts/.gitkeep",
+      "ownership": "Managed",
+      "template": "templates/.agentic/bus/artifacts/.gitkeep"
+    },
+    {
+      "path": ".agentic/bus/locks/.gitkeep",
+      "ownership": "Managed",
+      "template": "templates/.agentic/bus/locks/.gitkeep"
+    },
+    {
+      "path": ".agentic/bus/schemas/artifact.schema.json",
+      "ownership": "Managed",
+      "template": "templates/.agentic/bus/schemas/artifact.schema.json"
+    },
+    {
+      "path": ".agentic/bus/schemas/decision.schema.json",
+      "ownership": "Managed",
+      "template": "templates/.agentic/bus/schemas/decision.schema.json"
+    },
+    {
+      "path": ".agentic/bus/schemas/runstate.schema.json",
+      "ownership": "Managed",
+      "template": "templates/.agentic/bus/schemas/runstate.schema.json"
+    },
+    {
+      "path": ".agentic/bus/schemas/task.schema.json",
+      "ownership": "Managed",
+      "template": "templates/.agentic/bus/schemas/task.schema.json"
+    },
+    {
+      "path": ".agentic/bus/state/.gitkeep",
+      "ownership": "Managed",
+      "template": "templates/.agentic/bus/state/.gitkeep"
+    },
+    {
+      "path": ".agentic/connectors/README.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/connectors/README.md"
+    },
+    {
+      "path": ".agentic/connectors/ci.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/connectors/ci.md"
+    },
+    {
+      "path": ".agentic/connectors/docs_knowledge.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/connectors/docs_knowledge.md"
+    },
+    {
+      "path": ".agentic/connectors/repo_fs.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/connectors/repo_fs.md"
+    },
+    {
+      "path": ".agentic/connectors/tickets.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/connectors/tickets.md"
+    },
+    {
+      "path": ".agentic/migrations/.gitkeep",
+      "ownership": "Managed",
+      "template": "templates/.agentic/migrations/.gitkeep"
+    },
+    {
+      "path": ".agentic/migrations/0.4.0/README.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/migrations/0.4.0/README.md"
+    },
+    {
+      "path": ".agentic/templates/.gitkeep",
+      "ownership": "Managed",
+      "template": "templates/.agentic/templates/.gitkeep"
+    },
+    {
+      "path": ".ai/context/CORE.md",
+      "ownership": "Managed",
+      "template": "templates/.ai/context/CORE.md"
+    },
+    {
+      "path": ".ai/context/SECURITY.md",
+      "ownership": "Managed",
+      "template": "templates/.ai/context/SECURITY.md"
+    },
+    {
+      "path": ".ai/context/STANDARDS.md",
+      "ownership": "Managed",
+      "template": "templates/.ai/context/STANDARDS.md"
+    },
+    {
+      "path": ".ai/context/TESTING.md",
+      "ownership": "Managed",
+      "template": "templates/.ai/context/TESTING.md"
+    },
+    {
+      "path": ".ai/logs/runs/.gitkeep",
+      "ownership": "Managed",
+      "template": "templates/.ai/logs/runs/.gitkeep"
+    },
+    {
+      "path": ".ai/state/.gitkeep",
+      "ownership": "Managed",
+      "template": "templates/.ai/state/.gitkeep"
+    },
+    {
+      "path": ".claude/CLAUDE.md",
+      "ownership": "Managed",
+      "template": "templates/.claude/CLAUDE.md"
+    },
+    {
+      "path": ".claude/rules/security.md",
+      "ownership": "Managed",
+      "template": "templates/.claude/rules/security.md"
+    },
+    {
+      "path": ".claude/rules/style.md",
+      "ownership": "Managed",
+      "template": "templates/.claude/rules/style.md"
+    },
+    {
+      "path": ".claude/rules/testing.md",
+      "ownership": "Managed",
+      "template": "templates/.claude/rules/testing.md"
+    },
+    {
+      "path": ".cursor/rules/00-global.mdc",
+      "ownership": "Managed",
+      "template": "templates/.cursor/rules/00-global.mdc"
+    },
+    {
+      "path": ".cursor/rules/10-frontend.mdc",
+      "ownership": "Managed",
+      "template": "templates/.cursor/rules/10-frontend.mdc"
+    },
+    {
+      "path": ".cursor/rules/20-backend.mdc",
+      "ownership": "Managed",
+      "template": "templates/.cursor/rules/20-backend.mdc"
+    },
+    {
+      "path": ".gemini/config.yaml",
+      "ownership": "Managed",
+      "template": "templates/.gemini/config.yaml"
+    },
+    {
+      "path": ".gemini/styleguide.md",
+      "ownership": "Managed",
+      "template": "templates/.gemini/styleguide.md"
+    },
+    {
+      "path": ".github/copilot-instructions.md",
+      "ownership": "Managed",
+      "template": "templates/.github/copilot-instructions.md"
+    },
+    {
+      "path": ".windsurf/rules/00-global.md",
+      "ownership": "Managed",
+      "template": "templates/.windsurf/rules/00-global.md"
+    },
+    {
+      "path": ".windsurf/rules/10-frontend.md",
+      "ownership": "Managed",
+      "template": "templates/.windsurf/rules/10-frontend.md"
+    },
+    {
+      "path": ".windsurf/rules/20-backend.md",
+      "ownership": "Managed",
+      "template": "templates/.windsurf/rules/20-backend.md"
+    },
+    {
+      "path": ".windsurf/workflows/implement.md",
+      "ownership": "Managed",
+      "template": "templates/.windsurf/workflows/implement.md"
+    },
+    {
+      "path": ".windsurf/workflows/init.md",
+      "ownership": "Managed",
+      "template": "templates/.windsurf/workflows/init.md"
+    },
+    {
+      "path": ".windsurf/workflows/plan.md",
+      "ownership": "Managed",
+      "template": "templates/.windsurf/workflows/plan.md"
+    },
+    {
+      "path": ".windsurf/workflows/qa.md",
+      "ownership": "Managed",
+      "template": "templates/.windsurf/workflows/qa.md"
+    },
+    {
+      "path": ".windsurf/workflows/release.md",
+      "ownership": "Managed",
+      "template": "templates/.windsurf/workflows/release.md"
+    },
+    {
+      "path": "AGENTS.md",
+      "ownership": "Managed",
+      "template": "templates/AGENTS.md"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "ownership": "Managed",
+      "template": "templates/CHANGELOG.md"
+    },
+    {
+      "path": "GEMINI.md",
+      "ownership": "Managed",
+      "template": "templates/GEMINI.md"
+    },
+    {
+      "path": "README.md",
+      "ownership": "Managed",
+      "template": "templates/README.md"
+    },
+    {
+      "path": "TREE.md",
+      "ownership": "Managed",
+      "template": "templates/TREE.md"
+    },
+    {
+      "path": "docs/ADR/0001-initial.md",
+      "ownership": "Managed",
+      "template": "templates/docs/ADR/0001-initial.md"
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "ownership": "Managed",
+      "template": "templates/docs/ARCHITECTURE.md"
+    },
+    {
+      "path": "docs/GENERICITY_FIX_REPORT.md",
+      "ownership": "Managed",
+      "template": "templates/docs/GENERICITY_FIX_REPORT.md"
+    },
+    {
+      "path": "docs/PRD.md",
+      "ownership": "Managed",
+      "template": "templates/docs/PRD.md"
+    },
+    {
+      "path": "docs/RUNBOOK.md",
+      "ownership": "Managed",
+      "template": "templates/docs/RUNBOOK.md"
+    },
+    {
+      "path": "docs/STRUCTURE.md",
+      "ownership": "Managed",
+      "template": "templates/docs/STRUCTURE.md"
+    },
+    {
+      "path": "repo_manifest.json",
+      "ownership": "Managed",
+      "template": "templates/repo_manifest.json"
+    },
+    {
+      "path": "scripts/init-project.sh",
+      "ownership": "Managed",
+      "template": "templates/scripts/init-project.sh"
+    },
+    {
+      "path": "scripts/log-run.sh",
+      "ownership": "Managed",
+      "template": "templates/scripts/log-run.sh"
+    },
+    {
+      "path": "scripts/verify.sh",
+      "ownership": "Managed",
+      "template": "templates/scripts/verify.sh"
+    }
+  ],
+  "directories": [
+    ".agentic",
+    ".agentic/agents",
+    ".agentic/bus",
+    ".agentic/bus/artifacts",
+    ".agentic/bus/locks",
+    ".agentic/bus/schemas",
+    ".agentic/bus/state",
+    ".agentic/connectors",
+    ".agentic/migrations",
+    ".agentic/migrations/0.4.0",
+    ".agentic/templates",
+    ".ai/context",
+    ".ai/logs/runs",
+    ".ai/state",
+    ".claude",
+    ".claude/rules",
+    ".cursor/rules",
+    ".gemini",
+    ".github",
+    ".windsurf/rules",
+    ".windsurf/workflows",
+    "docs",
+    "docs/ADR",
+    "scripts"
+  ]
+}

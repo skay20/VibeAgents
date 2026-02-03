@@ -1,0 +1,49 @@
+{
+  "Managed-By": "AgenticRepoBuilder",
+  "Template-Source": "templates/.agentic/bus/schemas/artifact.schema.json",
+  "Template-Version": "1.0.0",
+  "Last-Generated": "2026-02-03T18:17:45Z",
+  "Ownership": "Managed",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Artifact",
+  "type": "object",
+  "required": [
+    "id",
+    "type",
+    "path",
+    "created_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "plan",
+        "decisions",
+        "diff_summary",
+        "qa_report",
+        "release_notes",
+        "other"
+      ]
+    },
+    "path": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "related_tasks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

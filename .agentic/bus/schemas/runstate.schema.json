@@ -1,0 +1,47 @@
+{
+  "Managed-By": "AgenticRepoBuilder",
+  "Template-Source": "templates/.agentic/bus/schemas/runstate.schema.json",
+  "Template-Version": "1.0.0",
+  "Last-Generated": "2026-02-03T18:17:45Z",
+  "Ownership": "Managed",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RunState",
+  "type": "object",
+  "required": [
+    "run_id",
+    "phase",
+    "gate_status",
+    "started_at"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string"
+    },
+    "phase": {
+      "type": "string"
+    },
+    "gate_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ]
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "checkpoints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}
