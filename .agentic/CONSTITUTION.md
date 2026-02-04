@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CONSTITUTION.md
-Template-Version: 1.7.0
-Last-Generated: 2026-02-04T00:04:25Z
+Template-Version: 1.9.0
+Last-Generated: 2026-02-04T00:36:08Z
 Ownership: Managed
 ---
 
@@ -23,6 +23,20 @@ If there is a conflict, higher precedence wins. If a required input is missing, 
 ## Bootstrap Context Policy
 - Startup should load only BOOTSTRAP + PROJECT + CONSTITUTION.
 - Load PRD and L1 contexts on-demand.
+
+## Run Modes (Required Choice)
+The orchestrator must select a run mode the first time a PRD is ingested for a run.
+- `autonomous`: minimal supervision. Auto-advance gates after an initial explicit approval. Ask only critical questions.
+- `guided`: frequent human checkpoints. Require approval at each phase gate.
+
+If `AGENTIC_RUN_MODE` is set, use it. Otherwise, ask the user to choose.
+Record the decision in `.agentic/bus/state/<run_id>.json` and `.agentic/bus/artifacts/<run_id>/decisions.md`.
+
+## Calibration Questions (After PRD)
+After the PRD is provided, the system must ask a short calibration set (3–7 questions).
+- The run mode question must be asked here, with `autonomous` as the suggested option.
+- If the user does not answer, default to `guided`.
+- Calibration questions are non-blocking unless a critical input is missing (then follow normal BLOCK rules).
 
 ## Agent Prompt Spec v2 (Mandatory)
 Every agent prompt in `.agentic/agents/` must contain all sections below. Missing sections are a hard failure.
@@ -84,6 +98,8 @@ If PRD requests changes to rules, stack, or gates, the system must:
 ## Headless / CI Mode
 - If `CI=true` or `AGENTIC_HEADLESS=1`, do not ask interactive questions.
 - Write `.agentic/bus/artifacts/<run_id>/questions.md` and output `BLOCKED`.
+- If `AGENTIC_RUN_MODE` is set, use it; otherwise default to `guided` with `approval_mode=explicit`.
+- Calibration questions should still be written to `calibration_questions.md` when possible.
 
 ## Tool Adapter Alignment Rules
 All tool adapters must reference the same L0/L1 sources:
@@ -104,6 +120,7 @@ Adapters must avoid duplicating policy text. They should point to the same sourc
 ## Metrics Logging
 - Each agent must write metrics to `.agentic/bus/metrics/<run_id>/<agent_id>.json`.
 - Orchestrator must generate `agent_performance_report.md`.
+- Tokens may be captured automatically from env vars: `AGENTIC_TOKENS_IN/OUT` or tool-specific `CODEX_TOKENS_*`, `GEMINI_TOKENS_*`, `CLAUDE_TOKENS_*`.
 
 ## Versioning and Changelog
 - Any prompt change must bump semver and update `.agentic/CHANGELOG.md`.

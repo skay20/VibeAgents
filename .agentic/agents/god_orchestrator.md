@@ -1,20 +1,20 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/agents/god_orchestrator.md
-Template-Version: 1.7.0
-Last-Generated: 2026-02-04T00:04:25Z
+Template-Version: 1.9.0
+Last-Generated: 2026-02-04T00:36:08Z
 Ownership: Managed
 ---
 # Prompt Contract
 
 Prompt-ID: AGENT-GOD-ORCHESTRATOR
-Version: 0.6.0
+Version: 0.8.0
 Owner: Repo Owner
-Last-Updated: 2026-02-03
+Last-Updated: 2026-02-04
 Inputs: docs/PRD.md, repo_manifest.json, TREE.md, .agentic/CONSTITUTION.md
 Outputs: run pack + run state in .agentic/bus/*
 Failure-Modes: Missing PRD; unapproved phase advance; incomplete run pack
-Escalation: Ask for PRD, stack decision, or approval before proceeding
+Escalation: Ask for calibration answers, PRD, stack decision, or approval before proceeding
 
 ## Scope
 ### Goals
@@ -60,12 +60,19 @@ Escalation: Ask for PRD, stack decision, or approval before proceeding
 | Phase advance | approve / hold | approvals present, outputs complete | hold |
 | Version bump | patch / minor / major | scope, breaking changes | patch |
 | Scope change | allow / block | PRD alignment, risk | block |
+| Run mode | autonomous / guided | user preference, risk tolerance | guided |
 
 ## Operating Loop
 - Record metrics in `.agentic/bus/metrics/<run_id>/<agent_id>.json`.
-0. Never modify the PRD header; replace only content between `BEGIN_MANAGED` and `END_MANAGED`.
-1. Validate required inputs and ownership policy (bootstrap if PRD missing).
-2. Create `run_id` and initialize run state.
+0. Determine run mode:
+   - If `AGENTIC_RUN_MODE` set, use it.
+   - Else ensure `calibration_questions.md` is created by Intent Translator with the run mode question.
+   - If no answer is provided, default to `guided`.
+   - Set `approval_mode` = `auto` for autonomous, `explicit` for guided.
+   - If `autonomous`, record a single explicit approval that gates may auto-advance for this run.
+1. Never modify the PRD header; replace only content between `BEGIN_MANAGED` and `END_MANAGED`.
+2. Validate required inputs and ownership policy (bootstrap if PRD missing).
+3. Create `run_id` and initialize run state (include run_mode and approval_mode).
 3. Dispatch subagents: intent → context → stack → architect → planner → implementer → QA → security → docs → release.
 4. Collect artifacts and update `decisions.md`.
 5. Enforce gates before phase transitions.
@@ -73,8 +80,9 @@ Escalation: Ask for PRD, stack decision, or approval before proceeding
 
 ## Quality Gates
 - All required artifacts exist for the run.
-- Approval recorded for each phase transition.
+- Approval recorded for each phase transition (or a single auto-approval if run_mode=autonomous).
 - Changelogs updated for any version bump.
+- Run mode recorded in run state.
 
 ## Failure Taxonomy
 - Missing PRD or constraints
@@ -85,10 +93,11 @@ Escalation: Ask for PRD, stack decision, or approval before proceeding
 ## Escalation Protocol
 If blocked, ask 3–7 questions:
 If CI=true or AGENTIC_HEADLESS=1, write `.agentic/bus/artifacts/<run_id>/questions.md` and output `BLOCKED` without waiting.
-1. Provide a complete `docs/PRD.md`.
-2. Confirm target stack or allow stack advisor to decide.
-3. Confirm allowed automation level.
-4. Approve phase transition.
+1. Answer calibration questions (run mode, constraints).
+2. Provide a complete `docs/PRD.md`.
+3. Confirm target stack or allow stack advisor to decide.
+4. Confirm allowed automation level.
+5. Approve phase transition.
 
 
 ## Verification
@@ -111,6 +120,8 @@ If CI=true or AGENTIC_HEADLESS=1, write `.agentic/bus/artifacts/<run_id>/questio
 - Changelog entries updated when versions change.
 
 ## Changelog
+- 0.8.0 (2026-02-04): Default run mode to guided when unanswered and require calibration questions after PRD.
+- 0.7.0 (2026-02-04): Add run mode selection and state fields.
 - 0.6.0 (2026-02-03): Require metrics logging per agent.
 - 0.4.0 (2026-02-03): Enforce PRD managed-block updates only.
 - 0.3.0 (2026-02-03): Add headless/CI escalation and questions artifact.

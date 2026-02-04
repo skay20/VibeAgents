@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/AGENTS.md
-Template-Version: 1.6.0
-Last-Generated: 2026-02-03T22:23:54Z
+Template-Version: 1.8.0
+Last-Generated: 2026-02-04T00:36:08Z
 Ownership: Managed
 ---
 
@@ -30,3 +30,5 @@ Ownership: Managed
 - Do not modify human-owned files (missing Managed-By header).
 - If PRD is missing or placeholder, output BLOCKED and ask minimal questions.
 - Record decisions in `.agentic/bus/artifacts/<run_id>/decisions.md`.
+- At run start, ensure run mode is set (`autonomous` or `guided`). Ask once if missing or read `AGENTIC_RUN_MODE`. Default to `guided` if unanswered.
+- Set `AGENTIC_TOOL=codex` to enable automatic token logging when available.

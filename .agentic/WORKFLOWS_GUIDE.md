@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/WORKFLOWS_GUIDE.md
-Template-Version: 1.7.0
-Last-Generated: 2026-02-04T00:04:25Z
+Template-Version: 1.9.0
+Last-Generated: 2026-02-04T00:36:08Z
 Ownership: Managed
 ---
 
@@ -25,6 +25,11 @@ Ownership: Managed
 ## PRD→Repo Engine
 - PRD changes trigger decision records, file updates, version bumps, and migrations.
 - Use `.agentic/bus/artifacts/<run_id>/` for traceability.
+
+## Run Modes
+- `autonomous`: minimal supervision. Auto-advance gates after an initial explicit approval.
+- `guided`: frequent checkpoints. Approval required per phase gate.
+- If `AGENTIC_RUN_MODE` is set, use it; otherwise ask at run start and default to `guided` if unanswered.
 
 ## Safe Overwrite Protocol
 - Always write `diff_summary.md` before applying changes.

@@ -1,14 +1,15 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/AGENTS_CATALOG.md
-Template-Version: 1.1.0
-Last-Generated: 2026-02-03T19:03:06Z
+Template-Version: 1.3.0
+Last-Generated: 2026-02-04T00:36:08Z
 Ownership: Managed
 ---
 
 # Agents Catalog (Spec v2)
 
 Each agent follows Agent Prompt Spec v2 and must BLOCK if required inputs are missing.
+Run mode is selected at the start of a run (`autonomous` or `guided`); if unanswered, default to `guided`.
 
 ## God Orchestrator
 - Purpose: system-wide orchestration, gates, and run state
@@ -25,7 +26,9 @@ Each agent follows Agent Prompt Spec v2 and must BLOCK if required inputs are mi
 ## Intent Translator
 - Purpose: convert idea/PRD into precise requirements
 - Inputs (required): `docs/PRD.md`
-- Outputs: `.agentic/bus/artifacts/<run_id>/intent.md`
+- Outputs:
+  - `.agentic/bus/artifacts/<run_id>/intent.md`
+  - `.agentic/bus/artifacts/<run_id>/calibration_questions.md`
 - Gates: blocks if PRD missing or ambiguous
 
 ## Context Curator

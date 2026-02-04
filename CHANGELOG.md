@@ -1,12 +1,19 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/CHANGELOG.md
-Template-Version: 1.7.0
-Last-Generated: 2026-02-04T00:04:25Z
+Template-Version: 1.9.0
+Last-Generated: 2026-02-04T00:36:08Z
 Ownership: Managed
 ---
 
 # Changelog
+
+## 0.1.10 - 2026-02-04
+- Add calibration questions after PRD and default run mode behavior.
+
+## 0.1.9 - 2026-02-04
+- Add run modes with recorded run state and adapter alignment.
+- Enable automatic token capture in metrics and richer reports.
 
 ## 0.1.8 - 2026-02-03
 - Add agent metrics logging layer and reporting.

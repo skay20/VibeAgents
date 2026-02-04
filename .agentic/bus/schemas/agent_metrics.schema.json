@@ -1,8 +1,8 @@
 {
   "Managed-By": "AgenticRepoBuilder",
   "Template-Source": "templates/.agentic/bus/schemas/agent_metrics.schema.json",
-  "Template-Version": "1.7.0",
-  "Last-Generated": "2026-02-04T00:04:25Z",
+  "Template-Version": "1.8.0",
+  "Last-Generated": "2026-02-04T00:25:01Z",
   "Ownership": "Managed",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "AgentMetrics",
@@ -21,6 +21,9 @@
       "type": "string"
     },
     "phase": {
+      "type": "string"
+    },
+    "tool": {
       "type": "string"
     },
     "status": {
