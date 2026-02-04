@@ -1,6 +1,6 @@
 <!-- Managed-By: AgenticRepoBuilder -->
 <!-- Template-Source: templates/.windsurf/rules/00-global.md -->
-<!-- Template-Version: 1.8.0
+<!-- Template-Version: 1.9.0
 <!-- Last-Generated: 2026-02-04T00:36:08Z
 <!-- Ownership: Managed -->
 
@@ -9,6 +9,7 @@
 Refer to:
 - `.ai/context/BOOTSTRAP.md`
 - `.ai/context/PROJECT.md`
+- `.agentic/settings.json`
 
 Rules:
 - Apply Agent Prompt Spec v2 and anti-genericity rubric.

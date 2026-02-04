@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/verify.sh
-# Template-Version: 1.7.0
-# Last-Generated: 2026-02-04T00:04:25Z
+# Template-Version: 1.10.0
+# Last-Generated: 2026-02-04T00:36:08Z
 # Ownership: Managed
 
 set -euo pipefail
@@ -82,6 +82,28 @@ if [[ ! -f ".agentic/bus/schemas/agent_metrics.schema.json" ]]; then
 fi
 if [[ ! -d ".agentic/bus/metrics" ]]; then
   fail "Missing metrics directory"
+fi
+
+# 2e) Settings file check
+if [[ ! -f ".agentic/settings.json" ]]; then
+  fail "Missing .agentic/settings.json"
+else
+  python3 - <<'PYCODE'
+import json, sys
+from pathlib import Path
+p = Path(".agentic/settings.json")
+try:
+    data = json.loads(p.read_text())
+except Exception:
+    print("[FAIL] Invalid JSON in .agentic/settings.json")
+    sys.exit(1)
+if "settings" not in data:
+    print("[FAIL] Missing settings key in .agentic/settings.json")
+    sys.exit(1)
+PYCODE
+  if [[ $? -ne 0 ]]; then
+    FAIL=1
+  fi
 fi
 
 # 3) Adapter coherence (bootstrap)

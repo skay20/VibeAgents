@@ -1,0 +1,28 @@
+{
+  "Managed-By": "AgenticRepoBuilder",
+  "Template-Source": "templates/.agentic/settings.json",
+  "Template-Version": "1.0.0",
+  "Last-Generated": "2026-02-04T00:36:08Z",
+  "Ownership": "Managed",
+  "settings": {
+    "run_mode": {
+      "ask_on_prd": true,
+      "preferred": "autonomous",
+      "default_if_unanswered": "guided"
+    },
+    "approvals": {
+      "auto_approve_in_autonomous": true
+    },
+    "telemetry": {
+      "enabled": true,
+      "capture_tokens": true
+    },
+    "headless": {
+      "default_run_mode": "guided"
+    },
+    "calibration_questions": {
+      "min": 3,
+      "max": 7
+    }
+  }
+}

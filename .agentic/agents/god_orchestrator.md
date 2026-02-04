@@ -1,7 +1,7 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/agents/god_orchestrator.md
-Template-Version: 1.9.0
+Template-Version: 1.10.0
 Last-Generated: 2026-02-04T00:36:08Z
 Ownership: Managed
 ---
@@ -32,6 +32,7 @@ Escalation: Ask for calibration answers, PRD, stack decision, or approval before
 - `repo_manifest.json`
 - `TREE.md`
 - `.agentic/CONSTITUTION.md`
+- `.agentic/settings.json`
 
 ### Optional
 - `docs/ARCHITECTURE.md`
@@ -66,7 +67,8 @@ Escalation: Ask for calibration answers, PRD, stack decision, or approval before
 - Record metrics in `.agentic/bus/metrics/<run_id>/<agent_id>.json`.
 0. Determine run mode:
    - If `AGENTIC_RUN_MODE` set, use it.
-   - Else ensure `calibration_questions.md` is created by Intent Translator with the run mode question.
+   - Else read `.agentic/settings.json` for preferred/default.
+   - Ensure `calibration_questions.md` is created by Intent Translator with the run mode question (preferred `autonomous`).
    - If no answer is provided, default to `guided`.
    - Set `approval_mode` = `auto` for autonomous, `explicit` for guided.
    - If `autonomous`, record a single explicit approval that gates may auto-advance for this run.

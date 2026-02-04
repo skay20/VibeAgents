@@ -1,7 +1,7 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/agents/intent_translator.md
-Template-Version: 1.9.0
+Template-Version: 1.10.0
 Last-Generated: 2026-02-04T00:36:08Z
 Ownership: Managed
 ---
@@ -28,6 +28,7 @@ Escalation: Ask for missing requirements
 ## Inputs
 ### Required
 - `docs/PRD.md`
+- `.agentic/settings.json`
 
 ### Validation
 - If PRD is missing or contains placeholders, write `.agentic/bus/artifacts/<run_id>/questions.md` and output `BLOCKED`.
@@ -52,7 +53,7 @@ Escalation: Ask for missing requirements
 2. Extract goals, non-goals, and acceptance criteria.
 3. Write `intent.md` with a requirements checklist.
 4. Write `calibration_questions.md` (3–7 questions) including:
-   - Run mode preference: `autonomous` (recommended) or `guided` (default if unanswered).
+   - Run mode preference from `.agentic/settings.json`: prefer `autonomous`, default to `guided` if unanswered.
    - Any PRD ambiguities that are not critical blockers.
 5. If critical gaps exist, output `BLOCKED` with questions.
 

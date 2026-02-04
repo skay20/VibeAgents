@@ -1,12 +1,17 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CHANGELOG.md
-Template-Version: 1.9.0
+Template-Version: 1.10.0
 Last-Generated: 2026-02-04T00:36:08Z
 Ownership: Managed
 ---
 
 # Agentic Changelog
+
+## 0.11.0 - 2026-02-04
+- Add `.agentic/settings.json` for scalable feature toggles.
+- Implement calibration questions flow with autonomous preference and guided default.
+- Respect telemetry toggles in metrics logging.
 
 ## 0.10.0 - 2026-02-04
 - Always ask calibration questions after PRD; default run mode to guided if unanswered.

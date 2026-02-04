@@ -1,7 +1,7 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CONSTITUTION.md
-Template-Version: 1.9.0
+Template-Version: 2.0.0
 Last-Generated: 2026-02-04T00:36:08Z
 Ownership: Managed
 ---
@@ -17,12 +17,19 @@ Ownership: Managed
 6. .ai/context/SECURITY.md
 7. .ai/context/TESTING.md
 8. docs/ARCHITECTURE.md and ADRs
+9. .agentic/settings.json (operational toggles; overridden by env vars)
 
 If there is a conflict, higher precedence wins. If a required input is missing, the agent must BLOCK.
 
 ## Bootstrap Context Policy
 - Startup should load only BOOTSTRAP + PROJECT + CONSTITUTION.
 - Load PRD and L1 contexts on-demand.
+
+## Settings and Overrides
+Primary settings live in `.agentic/settings.json`. Environment variables override settings:
+- `AGENTIC_RUN_MODE`
+- `AGENTIC_TELEMETRY` (true/false)
+- `AGENTIC_TELEMETRY_TOKENS` (true/false)
 
 ## Run Modes (Required Choice)
 The orchestrator must select a run mode the first time a PRD is ingested for a run.

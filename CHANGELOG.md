@@ -1,12 +1,15 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/CHANGELOG.md
-Template-Version: 1.9.0
+Template-Version: 1.10.0
 Last-Generated: 2026-02-04T00:36:08Z
 Ownership: Managed
 ---
 
 # Changelog
+
+## 0.1.11 - 2026-02-04
+- Add `.agentic/settings.json` and telemetry/run-mode toggles.
 
 ## 0.1.10 - 2026-02-04
 - Add calibration questions after PRD and default run mode behavior.

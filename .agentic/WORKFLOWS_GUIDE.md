@@ -1,7 +1,7 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/WORKFLOWS_GUIDE.md
-Template-Version: 1.9.0
+Template-Version: 2.0.0
 Last-Generated: 2026-02-04T00:36:08Z
 Ownership: Managed
 ---
@@ -39,6 +39,7 @@ Ownership: Managed
 ## Notes
 - Each workflow writes artifacts to the bus.
 - Use run_id for all artifacts and logs.
+- Operational toggles live in `.agentic/settings.json`.
 
 
 ## Metrics

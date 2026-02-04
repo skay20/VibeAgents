@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/log-metrics.sh
-# Template-Version: 1.9.0
+# Template-Version: 1.11.0
 # Last-Generated: 2026-02-04T00:36:08Z
 # Ownership: Managed
 
@@ -21,6 +21,59 @@ TOKENS_IN="${11:-auto}"
 TOKENS_OUT="${12:-auto}"
 NOTES="${13:-}"
 TOOL="${14:-${AGENTIC_TOOL:-}}"
+SETTINGS_FILE=".agentic/settings.json"
+
+is_false() {
+  local v
+  v=$(printf "%s" "${1:-}" | tr '[:upper:]' '[:lower:]')
+  case "$v" in
+    0|false|off|no|disable|disabled) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+is_true() {
+  local v
+  v=$(printf "%s" "${1:-}" | tr '[:upper:]' '[:lower:]')
+  case "$v" in
+    1|true|on|yes|enable|enabled) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+telemetry_enabled="true"
+capture_tokens="true"
+
+if [[ -f "$SETTINGS_FILE" ]]; then
+  read -r telemetry_enabled capture_tokens < <(python3 - <<'PY'
+import json
+from pathlib import Path
+p = Path(".agentic/settings.json")
+try:
+    data = json.loads(p.read_text())
+except Exception:
+    data = {}
+settings = data.get("settings", {})
+tele = settings.get("telemetry", {})
+enabled = tele.get("enabled", True)
+cap = tele.get("capture_tokens", True)
+print("true" if enabled else "false", "true" if cap else "false")
+PY
+)
+fi
+
+# Env overrides
+if [[ -n "${AGENTIC_TELEMETRY:-}" ]]; then
+  if is_false "$AGENTIC_TELEMETRY"; then telemetry_enabled="false"; else telemetry_enabled="true"; fi
+fi
+if [[ -n "${AGENTIC_TELEMETRY_TOKENS:-}" ]]; then
+  if is_false "$AGENTIC_TELEMETRY_TOKENS"; then capture_tokens="false"; else capture_tokens="true"; fi
+fi
+
+if is_false "$telemetry_enabled"; then
+  echo "Telemetry disabled; skipping metrics."
+  exit 0
+fi
 
 METRICS_DIR=".agentic/bus/metrics/$RUN_ID"
 mkdir -p "$METRICS_DIR"
@@ -60,11 +113,16 @@ pick_tokens() {
   fi
 }
 
-if [[ "$TOKENS_IN" == "auto" || "$TOKENS_IN" == "AUTO" || -z "$TOKENS_IN" ]]; then
-  TOKENS_IN="$(pick_tokens in)"
-fi
-if [[ "$TOKENS_OUT" == "auto" || "$TOKENS_OUT" == "AUTO" || -z "$TOKENS_OUT" ]]; then
-  TOKENS_OUT="$(pick_tokens out)"
+if is_false "$capture_tokens"; then
+  TOKENS_IN="null"
+  TOKENS_OUT="null"
+else
+  if [[ "$TOKENS_IN" == "auto" || "$TOKENS_IN" == "AUTO" || -z "$TOKENS_IN" ]]; then
+    TOKENS_IN="$(pick_tokens in)"
+  fi
+  if [[ "$TOKENS_OUT" == "auto" || "$TOKENS_OUT" == "AUTO" || -z "$TOKENS_OUT" ]]; then
+    TOKENS_OUT="$(pick_tokens out)"
+  fi
 fi
 
 if [[ -z "$TOKENS_IN" ]]; then TOKENS_IN="null"; fi

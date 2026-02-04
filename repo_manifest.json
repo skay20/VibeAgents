@@ -1,7 +1,7 @@
 {
   "Managed-By": "AgenticRepoBuilder",
   "Template-Source": "templates/repo_manifest.json",
-  "Template-Version": "1.9.0",
+  "Template-Version": "1.10.0",
   "Last-Generated": "2026-02-04T00:36:08Z",
   "repo": {
     "slug": "vibeagents",
@@ -50,6 +50,11 @@
       "path": ".agentic/README.md",
       "ownership": "Managed",
       "template": "templates/.agentic/README.md"
+    },
+    {
+      "path": ".agentic/settings.json",
+      "ownership": "Managed",
+      "template": "templates/.agentic/settings.json"
     },
     {
       "path": ".agentic/VERSION.md",

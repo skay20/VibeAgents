@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/metrics_summarize.py
-# Template-Version: 1.8.0
-# Last-Generated: 2026-02-04T00:25:01Z
+# Template-Version: 1.9.0
+# Last-Generated: 2026-02-04T00:36:08Z
 # Ownership: Managed
 
 import json
@@ -14,6 +14,16 @@ if len(sys.argv) < 2:
     sys.exit(1)
 
 run_id = sys.argv[1]
+settings_path = Path(".agentic/settings.json")
+if settings_path.exists():
+    try:
+        settings = json.loads(settings_path.read_text()).get("settings", {})
+        tele = settings.get("telemetry", {})
+        if tele.get("enabled", True) is False:
+            print("Telemetry disabled in settings; no report generated.")
+            sys.exit(0)
+    except Exception:
+        pass
 metrics_dir = Path(f".agentic/bus/metrics/{run_id}")
 art_dir = Path(f".agentic/bus/artifacts/{run_id}")
 art_dir.mkdir(parents=True, exist_ok=True)

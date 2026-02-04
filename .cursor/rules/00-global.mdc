@@ -1,7 +1,7 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.cursor/rules/00-global.mdc
-Template-Version: 1.8.0
+Template-Version: 1.9.0
 Last-Generated: 2026-02-04T00:36:08Z
 Ownership: Managed
 description: Global project rules
@@ -10,6 +10,7 @@ alwaysApply: true
 ---
 
 - Refer to `.ai/context/BOOTSTRAP.md` and `.ai/context/PROJECT.md`.
+- Refer to `.agentic/settings.json` for feature toggles.
 - Apply Agent Prompt Spec v2 and anti-genericity rubric.
 - If PRD is missing or placeholder, output BLOCKED.
 - At run start, ensure run mode is set (`autonomous` or `guided`) or read `AGENTIC_RUN_MODE`. Default to `guided` if unanswered.

@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/docs/STRUCTURE.md
-Template-Version: 1.7.0
-Last-Generated: 2026-02-04T00:04:25Z
+Template-Version: 1.8.0
+Last-Generated: 2026-02-04T00:36:08Z
 Ownership: Managed
 ---
 # Project Structure
@@ -39,6 +39,7 @@ Ownership: Managed
 │  ├─ CONSTITUTION.md
 │  ├─ WORKFLOWS_GUIDE.md
 │  ├─ AGENTS_CATALOG.md
+│  ├─ settings.json
 │  ├─ templates/.gitkeep
 │  ├─ migrations/.gitkeep
 │  ├─ migrations/0.4.0/README.md
@@ -54,7 +55,8 @@ Ownership: Managed
 │  │  │  ├─ task.schema.json
 │  │  │  ├─ decision.schema.json
 │  │  │  ├─ artifact.schema.json
-│  │  │  └─ runstate.schema.json
+│  │  │  ├─ runstate.schema.json
+│  │  │  └─ agent_metrics.schema.json
 │  │  ├─ artifacts/.gitkeep
 │  │  ├─ locks/.gitkeep
 │  │  ├─ metrics/.gitkeep
@@ -82,6 +84,7 @@ Ownership: Managed
 ├─ .claude/
 │  ├─ CLAUDE.md
 │  └─ rules/
+│     ├─ prd.md
 │     ├─ style.md
 │     ├─ testing.md
 │     └─ security.md
@@ -89,12 +92,14 @@ Ownership: Managed
 │  └─ rules/
 │     ├─ 00-global.mdc
 │     ├─ 10-frontend.mdc
-│     └─ 20-backend.mdc
+│     ├─ 20-backend.mdc
+│     └─ 90-prd.mdc
 ├─ .windsurf/
 │  ├─ rules/
 │  │  ├─ 00-global.md
 │  │  ├─ 10-frontend.md
-│  │  └─ 20-backend.md
+│  │  ├─ 20-backend.md
+│  │  └─ 90-prd.md
 │  └─ workflows/
 │     ├─ init.md
 │     ├─ plan.md

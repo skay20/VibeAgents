@@ -1,7 +1,7 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/AGENTS.md
-Template-Version: 1.8.0
+Template-Version: 1.9.0
 Last-Generated: 2026-02-04T00:36:08Z
 Ownership: Managed
 ---
@@ -17,6 +17,7 @@ Ownership: Managed
 - `.ai/context/BOOTSTRAP.md`
 - `.ai/context/PROJECT.md`
 - `.agentic/CONSTITUTION.md`
+- `.agentic/settings.json`
 
 ## On-Demand Context
 - `docs/PRD.md`
