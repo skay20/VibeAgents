@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/init-project.sh
-# Template-Version: 1.0.0
-# Last-Generated: 2026-02-03T18:17:45Z
+# Template-Version: 1.1.0
+# Last-Generated: 2026-02-04T15:18:38Z
 # Ownership: Managed
 
 set -euo pipefail
@@ -22,15 +22,28 @@ create_if_missing() {
 
 create_if_missing "$ROOT/docs/PRD.md" "# PRD
 
-TO_CONFIRM
+TO_FILL
 "
 create_if_missing "$ROOT/docs/RUNBOOK.md" "# Runbook
 
-TO_CONFIRM
+TO_FILL
 "
 create_if_missing "$ROOT/docs/ARCHITECTURE.md" "# Architecture
 
-TO_CONFIRM
+## Overview
+Describe the high-level architecture.
+
+## Components
+- Component A:
+- Component B:
+
+## Data Flow
+- Source:
+- Processing:
+- Storage:
+
+## Decisions
+See docs/ADR/*.
 "
 
 echo "Init complete. Review docs/PRD.md and docs/RUNBOOK.md."
