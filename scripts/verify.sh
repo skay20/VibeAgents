@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/verify.sh
-# Template-Version: 1.10.0
-# Last-Generated: 2026-02-04T00:36:08Z
+# Template-Version: 1.11.0
+# Last-Generated: 2026-02-04T12:40:34Z
 # Ownership: Managed
 
 set -euo pipefail
@@ -80,6 +80,9 @@ fi
 if [[ ! -f ".agentic/bus/schemas/agent_metrics.schema.json" ]]; then
   fail "Missing agent_metrics schema"
 fi
+if [[ ! -f ".agentic/bus/schemas/event.schema.json" ]]; then
+  fail "Missing event schema"
+fi
 if [[ ! -d ".agentic/bus/metrics" ]]; then
   fail "Missing metrics directory"
 fi
@@ -105,6 +108,13 @@ PYCODE
     FAIL=1
   fi
 fi
+
+# 2f) Scripts check
+for s in scripts/start-run.sh scripts/log-event.sh; do
+  if [[ ! -f "$s" ]]; then
+    fail "Missing script: $s"
+  fi
+done
 
 # 3) Adapter coherence (bootstrap)
 ADAPTERS=(

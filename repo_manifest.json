@@ -1,8 +1,8 @@
 {
   "Managed-By": "AgenticRepoBuilder",
   "Template-Source": "templates/repo_manifest.json",
-  "Template-Version": "1.10.0",
-  "Last-Generated": "2026-02-04T00:36:08Z",
+  "Template-Version": "1.11.0",
+  "Last-Generated": "2026-02-04T12:40:34Z",
   "repo": {
     "slug": "vibeagents",
     "mode": "no-app-first",
@@ -170,6 +170,11 @@
       "path": ".agentic/bus/schemas/decision.schema.json",
       "ownership": "Managed",
       "template": "templates/.agentic/bus/schemas/decision.schema.json"
+    },
+    {
+      "path": ".agentic/bus/schemas/event.schema.json",
+      "ownership": "Managed",
+      "template": "templates/.agentic/bus/schemas/event.schema.json"
     },
     {
       "path": ".agentic/bus/schemas/runstate.schema.json",
@@ -442,6 +447,11 @@
       "template": "templates/scripts/log-metrics.sh"
     },
     {
+      "path": "scripts/log-event.sh",
+      "ownership": "Managed",
+      "template": "templates/scripts/log-event.sh"
+    },
+    {
       "path": "scripts/log-run.sh",
       "ownership": "Managed",
       "template": "templates/scripts/log-run.sh"
@@ -450,6 +460,11 @@
       "path": "scripts/metrics_summarize.py",
       "ownership": "Managed",
       "template": "templates/scripts/metrics_summarize.py"
+    },
+    {
+      "path": "scripts/start-run.sh",
+      "ownership": "Managed",
+      "template": "templates/scripts/start-run.sh"
     },
     {
       "path": "scripts/verify.sh",

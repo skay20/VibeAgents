@@ -1,8 +1,8 @@
 {
   "Managed-By": "AgenticRepoBuilder",
   "Template-Source": "templates/.agentic/settings.json",
-  "Template-Version": "1.0.0",
-  "Last-Generated": "2026-02-04T00:36:08Z",
+  "Template-Version": "1.1.0",
+  "Last-Generated": "2026-02-04T12:40:34Z",
   "Ownership": "Managed",
   "settings": {
     "run_mode": {
@@ -15,7 +15,12 @@
     },
     "telemetry": {
       "enabled": true,
-      "capture_tokens": true
+      "capture_tokens": true,
+      "events": true
+    },
+    "run_start": {
+      "enabled": true,
+      "write_run_meta": true
     },
     "headless": {
       "default_run_mode": "guided"

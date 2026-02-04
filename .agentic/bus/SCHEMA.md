@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/bus/SCHEMA.md
-Template-Version: 1.9.0
-Last-Generated: 2026-02-04T00:36:08Z
+Template-Version: 1.10.0
+Last-Generated: 2026-02-04T12:40:34Z
 Ownership: Managed
 ---
 
@@ -15,6 +15,7 @@ Format: YYYYMMDD-HHMMSSZ-<slug>
 - Path: `.agentic/bus/artifacts/<run_id>/`
 - Required files: plan.md, decisions.md, diff_summary.md, qa_report.md, release_notes.md
 - Optional files: calibration_questions.md, intent.md, upgrade_plan.md
+- Optional files: run_meta.md
 
 ## State
 - Path: `.agentic/bus/state/<run_id>.json`
@@ -32,6 +33,10 @@ Format: YYYYMMDD-HHMMSSZ-<slug>
 - File per agent: `<agent_id>.json`
 - Schema: `.agentic/bus/schemas/agent_metrics.schema.json`
 - Each metrics file should include `tool` when available
+
+## Events (Optional)
+- Path: `.agentic/bus/metrics/<run_id>/events.jsonl`
+- Schema: `.agentic/bus/schemas/event.schema.json`
 
 ## Metrics Report
 - `.agentic/bus/artifacts/<run_id>/agent_performance_report.md`

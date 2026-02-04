@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CONSTITUTION.md
-Template-Version: 2.0.0
-Last-Generated: 2026-02-04T00:36:08Z
+Template-Version: 2.1.0
+Last-Generated: 2026-02-04T12:40:34Z
 Ownership: Managed
 ---
 
@@ -30,6 +30,8 @@ Primary settings live in `.agentic/settings.json`. Environment variables overrid
 - `AGENTIC_RUN_MODE`
 - `AGENTIC_TELEMETRY` (true/false)
 - `AGENTIC_TELEMETRY_TOKENS` (true/false)
+- `AGENTIC_TELEMETRY_EVENTS` (true/false)
+- `AGENTIC_RUN_START` (true/false)
 
 ## Run Modes (Required Choice)
 The orchestrator must select a run mode the first time a PRD is ingested for a run.
@@ -128,6 +130,7 @@ Adapters must avoid duplicating policy text. They should point to the same sourc
 - Each agent must write metrics to `.agentic/bus/metrics/<run_id>/<agent_id>.json`.
 - Orchestrator must generate `agent_performance_report.md`.
 - Tokens may be captured automatically from env vars: `AGENTIC_TOKENS_IN/OUT` or tool-specific `CODEX_TOKENS_*`, `GEMINI_TOKENS_*`, `CLAUDE_TOKENS_*`.
+- If telemetry events are enabled, append to `.agentic/bus/metrics/<run_id>/events.jsonl` for run_start, agent_start, agent_end, blocked, run_end.
 
 ## Versioning and Changelog
 - Any prompt change must bump semver and update `.agentic/CHANGELOG.md`.

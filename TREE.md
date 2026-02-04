@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/TREE.md
-Template-Version: 1.8.0
-Last-Generated: 2026-02-04T00:36:08Z
+Template-Version: 1.9.0
+Last-Generated: 2026-02-04T12:40:34Z
 Ownership: Managed
 ---
 # Repository Tree
@@ -58,7 +58,8 @@ This file is generated. Update it via the orchestrator and templates.
 │  │  │  ├─ decision.schema.json
 │  │  │  ├─ artifact.schema.json
 │  │  │  ├─ runstate.schema.json
-│  │  │  └─ agent_metrics.schema.json
+│  │  │  ├─ agent_metrics.schema.json
+│  │  │  └─ event.schema.json
 │  │  ├─ artifacts/.gitkeep
 │  │  ├─ locks/.gitkeep
 │  │  ├─ metrics/.gitkeep
@@ -114,6 +115,8 @@ This file is generated. Update it via the orchestrator and templates.
    ├─ init-project.sh
    ├─ log-run.sh
    ├─ log-metrics.sh
+   ├─ log-event.sh
+   ├─ start-run.sh
    ├─ metrics_summarize.py
    └─ verify.sh
 ```
