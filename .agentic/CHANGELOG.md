@@ -1,12 +1,15 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CHANGELOG.md
-Template-Version: 1.15.0
-Last-Generated: 2026-02-04T14:22:29Z
+Template-Version: 1.16.0
+Last-Generated: 2026-02-04T16:33:06Z
 Ownership: Managed
 ---
 
 # Agentic Changelog
+
+## 0.17.0 - 2026-02-04
+- Make question logging default when enabled and initialize questions_log at run start.
 
 ## 0.16.0 - 2026-02-04
 - Ensure AgentX mode does not ask "move on" prompts in orchestrator.

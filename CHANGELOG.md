@@ -1,12 +1,15 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/CHANGELOG.md
-Template-Version: 1.15.0
-Last-Generated: 2026-02-04T14:22:29Z
+Template-Version: 1.16.0
+Last-Generated: 2026-02-04T16:33:06Z
 Ownership: Managed
 ---
 
 # Changelog
+
+## 0.1.17 - 2026-02-04
+- Make question logging default when enabled and initialize questions_log at run start.
 
 ## 0.1.16 - 2026-02-04
 - Ensure AgentX mode does not ask to proceed between phases.

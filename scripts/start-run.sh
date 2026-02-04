@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/start-run.sh
-# Template-Version: 1.3.0
-# Last-Generated: 2026-02-04T14:22:29Z
+# Template-Version: 1.4.0
+# Last-Generated: 2026-02-04T16:33:06Z
 # Ownership: Managed
 
 set -euo pipefail
@@ -16,13 +16,14 @@ SETTINGS_FILE=".agentic/settings.json"
 
 telemetry_enabled="true"
 telemetry_events="true"
+telemetry_questions_log="true"
 run_start_enabled="true"
 write_run_meta="true"
 preferred_run_mode="autonomous"
 default_run_mode="guided"
 
 if [[ -f "$SETTINGS_FILE" ]]; then
-  read -r telemetry_enabled telemetry_events run_start_enabled write_run_meta preferred_run_mode default_run_mode < <(python3 - <<'PY'
+  read -r telemetry_enabled telemetry_events telemetry_questions_log run_start_enabled write_run_meta preferred_run_mode default_run_mode < <(python3 - <<'PY'
 import json
 from pathlib import Path
 p = Path(".agentic/settings.json")
@@ -40,12 +41,14 @@ def b(v, default=True):
     return "true" if v else "false"
 enabled = tele.get("enabled", True)
 events = tele.get("events", True)
+qlog = tele.get("questions_log", True)
 rs_enabled = run_start.get("enabled", True)
 rs_meta = run_start.get("write_run_meta", True)
 pref = run_mode.get("preferred", "autonomous")
 default = run_mode.get("default_if_unanswered", "guided")
 print("true" if enabled else "false",
       "true" if events else "false",
+      "true" if qlog else "false",
       "true" if rs_enabled else "false",
       "true" if rs_meta else "false",
       pref, default)
@@ -98,6 +101,16 @@ STATE_DIR=".agentic/bus/state"
 METRICS_DIR=".agentic/bus/metrics/$RUN_ID"
 ART_DIR=".agentic/bus/artifacts/$RUN_ID"
 mkdir -p "$STATE_DIR" "$METRICS_DIR" "$ART_DIR"
+
+if [[ "$telemetry_questions_log" == "true" ]]; then
+  if [[ ! -f "$ART_DIR/questions_log.md" ]]; then
+    cat > "$ART_DIR/questions_log.md" <<EOF
+# Questions Log
+
+Run ID: $RUN_ID
+EOF
+  fi
+fi
 
 cat > "$STATE_DIR/$RUN_ID.json" <<EOF
 {

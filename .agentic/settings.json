@@ -1,8 +1,8 @@
 {
   "Managed-By": "AgenticRepoBuilder",
   "Template-Source": "templates/.agentic/settings.json",
-  "Template-Version": "1.4.0",
-  "Last-Generated": "2026-02-04T15:18:38Z",
+  "Template-Version": "1.5.0",
+  "Last-Generated": "2026-02-04T16:33:06Z",
   "Ownership": "Managed",
   "settings": {
     "run_mode": {

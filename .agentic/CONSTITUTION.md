@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CONSTITUTION.md
-Template-Version: 2.4.0
-Last-Generated: 2026-02-04T14:22:29Z
+Template-Version: 2.5.0
+Last-Generated: 2026-02-04T16:33:06Z
 Ownership: Managed
 ---
 
@@ -141,6 +141,13 @@ Adapters must avoid duplicating policy text. They should point to the same sourc
 - Tokens may be captured automatically from env vars: `AGENTIC_TOKENS_IN/OUT` or tool-specific `CODEX_TOKENS_*`, `GEMINI_TOKENS_*`, `CLAUDE_TOKENS_*`.
 - If telemetry events are enabled, append to `.agentic/bus/metrics/<run_id>/events.jsonl` for run_start, agent_start, agent_end, blocked, run_end.
 - If telemetry questions are enabled, write `questions_log.md` and log question_asked/answer_received events.
+
+## Question Logging (Default)
+When `settings.telemetry.questions=true`:
+- Every question asked to the user must be logged via `scripts/log-question.sh`.
+- Use the real `agent_id` (file name under `.agentic/agents/`).
+- Reuse the same `question_id` when logging the answer.
+- If `settings.telemetry.questions_log=false`, only events are written (no `questions_log.md`).
 
 ## Versioning and Changelog
 - Any prompt change must bump semver and update `.agentic/CHANGELOG.md`.

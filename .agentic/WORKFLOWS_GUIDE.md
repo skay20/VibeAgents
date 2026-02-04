@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/WORKFLOWS_GUIDE.md
-Template-Version: 2.2.0
-Last-Generated: 2026-02-04T14:22:29Z
+Template-Version: 2.3.0
+Last-Generated: 2026-02-04T16:33:06Z
 Ownership: Managed
 ---
 
@@ -42,6 +42,7 @@ Ownership: Managed
 - Use run_id for all artifacts and logs.
 - Operational toggles live in `.agentic/settings.json`.
 - Use `scripts/start-run.sh` to create run state and initial telemetry.
+- Question logging is default when `settings.telemetry.questions=true`.
 
 
 ## Metrics

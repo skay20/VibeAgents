@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/verify.sh
-# Template-Version: 1.13.0
-# Last-Generated: 2026-02-04T14:22:29Z
+# Template-Version: 1.14.0
+# Last-Generated: 2026-02-04T16:33:06Z
 # Ownership: Managed
 
 set -euo pipefail

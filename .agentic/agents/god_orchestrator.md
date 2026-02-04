@@ -1,14 +1,14 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/agents/god_orchestrator.md
-Template-Version: 1.14.0
-Last-Generated: 2026-02-04T14:22:29Z
+Template-Version: 1.15.0
+Last-Generated: 2026-02-04T16:33:06Z
 Ownership: Managed
 ---
 # Prompt Contract
 
 Prompt-ID: AGENT-GOD-ORCHESTRATOR
-Version: 0.12.0
+Version: 0.13.0
 Owner: Repo Owner
 Last-Updated: 2026-02-04
 Inputs: docs/PRD.md, repo_manifest.json, TREE.md, .agentic/CONSTITUTION.md
@@ -130,6 +130,7 @@ If CI=true or AGENTIC_HEADLESS=1, write `.agentic/bus/artifacts/<run_id>/questio
 - Changelog entries updated when versions change.
 
 ## Changelog
+- 0.13.0 (2026-02-04): Make question logging the default behavior when enabled.
 - 0.12.0 (2026-02-04): Suppress "move on" prompts in AgentX mode.
 - 0.11.0 (2026-02-04): Add question logging requirements and questions_log.md output.
 - 0.10.0 (2026-02-04): Replace run modes with AgentX/L/M and adjust gate behavior.
