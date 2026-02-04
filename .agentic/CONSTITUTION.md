@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CONSTITUTION.md
-Template-Version: 2.5.0
-Last-Generated: 2026-02-04T16:33:06Z
+Template-Version: 2.6.0
+Last-Generated: 2026-02-04T17:55:11Z
 Ownership: Managed
 ---
 
@@ -35,6 +35,13 @@ Primary settings live in `.agentic/settings.json`. Environment variables overrid
 - `AGENTIC_TELEMETRY_QUESTIONS_LOG` (true/false)
 - `AGENTIC_RUN_START` (true/false)
 - `validation.enforce_agent_id` (boolean in settings, no env override)
+
+## Automation (Default On)
+If `settings.automation.run_scripts=true`, the assistant must run the logging scripts automatically.
+- `auto_start_run=true`: call `scripts/start-run.sh` on the first PRD interaction.
+- `auto_log_questions=true`: call `scripts/log-question.sh` for every question and answer.
+- `auto_log_agents=true`: call `scripts/log-event.sh` and `scripts/log-metrics.sh` for each agent start/end.
+If `settings.automation.run_scripts=false`, do not run scripts and explicitly note telemetry is disabled.
 
 ## Run Modes (Required Choice)
 The orchestrator must select a run mode the first time a PRD is ingested for a run.

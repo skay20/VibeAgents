@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/verify.sh
-# Template-Version: 1.14.0
-# Last-Generated: 2026-02-04T16:33:06Z
+# Template-Version: 1.15.0
+# Last-Generated: 2026-02-04T17:55:11Z
 # Ownership: Managed
 
 set -euo pipefail
@@ -107,6 +107,7 @@ if not isinstance(settings, dict):
 tele = settings.get("telemetry", {})
 run_start = settings.get("run_start", {})
 run_mode = settings.get("run_mode", {})
+automation = settings.get("automation", {})
 validation = settings.get("validation", {})
 required = [
     ("telemetry.enabled", tele.get("enabled", None)),
@@ -118,6 +119,10 @@ required = [
     ("run_start.write_run_meta", run_start.get("write_run_meta", None)),
     ("run_mode.preferred", run_mode.get("preferred", None)),
     ("run_mode.default_if_unanswered", run_mode.get("default_if_unanswered", None)),
+    ("automation.run_scripts", automation.get("run_scripts", None)),
+    ("automation.auto_start_run", automation.get("auto_start_run", None)),
+    ("automation.auto_log_questions", automation.get("auto_log_questions", None)),
+    ("automation.auto_log_agents", automation.get("auto_log_agents", None)),
     ("validation.enforce_agent_id", validation.get("enforce_agent_id", None)),
 ]
 missing = [k for k,v in required if v is None]

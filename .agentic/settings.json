@@ -1,8 +1,8 @@
 {
   "Managed-By": "AgenticRepoBuilder",
   "Template-Source": "templates/.agentic/settings.json",
-  "Template-Version": "1.5.0",
-  "Last-Generated": "2026-02-04T16:33:06Z",
+  "Template-Version": "1.6.0",
+  "Last-Generated": "2026-02-04T17:55:11Z",
   "Ownership": "Managed",
   "settings": {
     "run_mode": {
@@ -19,6 +19,12 @@
       "events": true,
       "questions": true,
       "questions_log": true
+    },
+    "automation": {
+      "run_scripts": true,
+      "auto_start_run": true,
+      "auto_log_questions": true,
+      "auto_log_agents": true
     },
     "run_start": {
       "enabled": true,

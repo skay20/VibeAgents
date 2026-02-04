@@ -1,14 +1,14 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/agents/god_orchestrator.md
-Template-Version: 1.15.0
-Last-Generated: 2026-02-04T16:33:06Z
+Template-Version: 1.16.0
+Last-Generated: 2026-02-04T17:55:11Z
 Ownership: Managed
 ---
 # Prompt Contract
 
 Prompt-ID: AGENT-GOD-ORCHESTRATOR
-Version: 0.13.0
+Version: 0.14.0
 Owner: Repo Owner
 Last-Updated: 2026-02-04
 Inputs: docs/PRD.md, repo_manifest.json, TREE.md, .agentic/CONSTITUTION.md
@@ -68,7 +68,7 @@ Escalation: Ask for calibration answers, PRD, stack decision, or approval before
 ## Operating Loop
 - Record metrics in `.agentic/bus/metrics/<run_id>/<agent_id>.json`.
 0. Start run immediately on PRD ingest:
-   - Call `scripts/start-run.sh` to create run_id, run_state, and run_meta (if enabled).
+   - If `settings.automation.run_scripts=true` and `settings.automation.auto_start_run=true`, call `scripts/start-run.sh`.
    - If telemetry events enabled, record `run_start` in events.jsonl.
 1. Determine run mode:
    - If `AGENTIC_RUN_MODE` set, use it.
@@ -81,8 +81,8 @@ Escalation: Ask for calibration answers, PRD, stack decision, or approval before
 2. Never modify the PRD header; replace only content between `BEGIN_MANAGED` and `END_MANAGED`.
 3. Validate required inputs and ownership policy (bootstrap if PRD missing).
 3. Dispatch subagents: intent → context → stack → architect → planner → implementer → QA → security → docs → release.
-   - If telemetry events enabled, log `agent_start` and `agent_end` for each agent.
-   - If telemetry questions enabled, log each question and answer via `scripts/log-question.sh`.
+   - If `settings.automation.run_scripts=true` and `settings.automation.auto_log_agents=true`, log `agent_start` and `agent_end`.
+   - If `settings.automation.run_scripts=true` and `settings.automation.auto_log_questions=true`, log each question and answer.
 4. Collect artifacts and update `decisions.md`.
 5. Enforce gates before phase transitions.
 6. Update changelogs and run state.
@@ -130,6 +130,7 @@ If CI=true or AGENTIC_HEADLESS=1, write `.agentic/bus/artifacts/<run_id>/questio
 - Changelog entries updated when versions change.
 
 ## Changelog
+- 0.14.0 (2026-02-04): Tie auto script execution to settings.automation flags.
 - 0.13.0 (2026-02-04): Make question logging the default behavior when enabled.
 - 0.12.0 (2026-02-04): Suppress "move on" prompts in AgentX mode.
 - 0.11.0 (2026-02-04): Add question logging requirements and questions_log.md output.

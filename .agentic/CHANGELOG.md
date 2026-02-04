@@ -1,12 +1,15 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CHANGELOG.md
-Template-Version: 1.16.0
-Last-Generated: 2026-02-04T16:33:06Z
+Template-Version: 1.17.0
+Last-Generated: 2026-02-04T17:55:11Z
 Ownership: Managed
 ---
 
 # Agentic Changelog
+
+## 0.18.0 - 2026-02-04
+- Add automation flags for auto-running telemetry scripts by default.
 
 ## 0.17.0 - 2026-02-04
 - Make question logging default when enabled and initialize questions_log at run start.
