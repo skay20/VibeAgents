@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/verify.sh
-# Template-Version: 1.11.0
-# Last-Generated: 2026-02-04T12:40:34Z
+# Template-Version: 1.13.0
+# Last-Generated: 2026-02-04T14:22:29Z
 # Ownership: Managed
 
 set -euo pipefail
@@ -100,8 +100,29 @@ try:
 except Exception:
     print("[FAIL] Invalid JSON in .agentic/settings.json")
     sys.exit(1)
-if "settings" not in data:
+settings = data.get("settings")
+if not isinstance(settings, dict):
     print("[FAIL] Missing settings key in .agentic/settings.json")
+    sys.exit(1)
+tele = settings.get("telemetry", {})
+run_start = settings.get("run_start", {})
+run_mode = settings.get("run_mode", {})
+validation = settings.get("validation", {})
+required = [
+    ("telemetry.enabled", tele.get("enabled", None)),
+    ("telemetry.capture_tokens", tele.get("capture_tokens", None)),
+    ("telemetry.events", tele.get("events", None)),
+    ("telemetry.questions", tele.get("questions", None)),
+    ("telemetry.questions_log", tele.get("questions_log", None)),
+    ("run_start.enabled", run_start.get("enabled", None)),
+    ("run_start.write_run_meta", run_start.get("write_run_meta", None)),
+    ("run_mode.preferred", run_mode.get("preferred", None)),
+    ("run_mode.default_if_unanswered", run_mode.get("default_if_unanswered", None)),
+    ("validation.enforce_agent_id", validation.get("enforce_agent_id", None)),
+]
+missing = [k for k,v in required if v is None]
+if missing:
+    print("[FAIL] Missing settings keys: " + ", ".join(missing))
     sys.exit(1)
 PYCODE
   if [[ $? -ne 0 ]]; then
@@ -110,7 +131,7 @@ PYCODE
 fi
 
 # 2f) Scripts check
-for s in scripts/start-run.sh scripts/log-event.sh; do
+for s in scripts/start-run.sh scripts/log-event.sh scripts/log-question.sh; do
   if [[ ! -f "$s" ]]; then
     fail "Missing script: $s"
   fi

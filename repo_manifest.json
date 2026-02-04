@@ -1,7 +1,7 @@
 {
   "Managed-By": "AgenticRepoBuilder",
   "Template-Source": "templates/repo_manifest.json",
-  "Template-Version": "1.12.0",
+  "Template-Version": "1.14.0",
   "Last-Generated": "2026-02-04T14:22:29Z",
   "repo": {
     "slug": "vibeagents",
@@ -450,6 +450,11 @@
       "path": "scripts/log-event.sh",
       "ownership": "Managed",
       "template": "templates/scripts/log-event.sh"
+    },
+    {
+      "path": "scripts/log-question.sh",
+      "ownership": "Managed",
+      "template": "templates/scripts/log-question.sh"
     },
     {
       "path": "scripts/log-run.sh",

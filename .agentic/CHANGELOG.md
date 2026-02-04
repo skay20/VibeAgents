@@ -1,12 +1,22 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CHANGELOG.md
-Template-Version: 1.12.0
+Template-Version: 1.15.0
 Last-Generated: 2026-02-04T14:22:29Z
 Ownership: Managed
 ---
 
 # Agentic Changelog
+
+## 0.16.0 - 2026-02-04
+- Ensure AgentX mode does not ask "move on" prompts in orchestrator.
+
+## 0.15.0 - 2026-02-04
+- Add question logging flags and validation reference in Constitution.
+
+## 0.14.0 - 2026-02-04
+- Add question logging (events + questions_log) with settings toggles.
+- Enforce agent_id validation in metrics logging.
 
 ## 0.13.0 - 2026-02-04
 - Replace run modes with AgentX/L/M and update calibration defaults.

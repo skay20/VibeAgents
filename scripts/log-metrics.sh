@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/log-metrics.sh
-# Template-Version: 1.11.0
-# Last-Generated: 2026-02-04T00:36:08Z
+# Template-Version: 1.12.0
+# Last-Generated: 2026-02-04T14:22:29Z
 # Ownership: Managed
 
 set -euo pipefail
@@ -43,9 +43,10 @@ is_true() {
 
 telemetry_enabled="true"
 capture_tokens="true"
+enforce_agent_id="true"
 
 if [[ -f "$SETTINGS_FILE" ]]; then
-  read -r telemetry_enabled capture_tokens < <(python3 - <<'PY'
+  read -r telemetry_enabled capture_tokens enforce_agent_id < <(python3 - <<'PY'
 import json
 from pathlib import Path
 p = Path(".agentic/settings.json")
@@ -55,9 +56,11 @@ except Exception:
     data = {}
 settings = data.get("settings", {})
 tele = settings.get("telemetry", {})
+validation = settings.get("validation", {})
 enabled = tele.get("enabled", True)
 cap = tele.get("capture_tokens", True)
-print("true" if enabled else "false", "true" if cap else "false")
+enf = validation.get("enforce_agent_id", True)
+print("true" if enabled else "false", "true" if cap else "false", "true" if enf else "false")
 PY
 )
 fi
@@ -73,6 +76,16 @@ fi
 if is_false "$telemetry_enabled"; then
   echo "Telemetry disabled; skipping metrics."
   exit 0
+fi
+
+if [[ "$enforce_agent_id" == "true" ]]; then
+  if [[ -d ".agentic/agents" ]]; then
+    allowed=$(ls .agentic/agents/*.md 2>/dev/null | xargs -n1 basename | sed 's/\.md$//')
+    if ! echo "$allowed" | grep -qx "$AGENT_ID"; then
+      echo "[FAIL] Invalid agent_id '$AGENT_ID' (not in .agentic/agents)"
+      exit 1
+    fi
+  fi
 fi
 
 METRICS_DIR=".agentic/bus/metrics/$RUN_ID"

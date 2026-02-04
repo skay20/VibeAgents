@@ -1,8 +1,8 @@
 {
   "Managed-By": "AgenticRepoBuilder",
   "Template-Source": "templates/.agentic/bus/schemas/event.schema.json",
-  "Template-Version": "1.0.0",
-  "Last-Generated": "2026-02-04T12:40:34Z",
+  "Template-Version": "1.1.0",
+  "Last-Generated": "2026-02-04T14:22:29Z",
   "Ownership": "Managed",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "AgenticEvent",
@@ -24,7 +24,9 @@
         "agent_start",
         "agent_end",
         "blocked",
-        "run_end"
+        "run_end",
+        "question_asked",
+        "answer_received"
       ]
     },
     "run_id": {

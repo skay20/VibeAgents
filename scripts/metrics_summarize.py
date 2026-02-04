@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/metrics_summarize.py
-# Template-Version: 1.9.0
-# Last-Generated: 2026-02-04T00:36:08Z
+# Template-Version: 1.10.0
+# Last-Generated: 2026-02-04T14:22:29Z
 # Ownership: Managed
 
 import json
@@ -27,6 +27,27 @@ if settings_path.exists():
 metrics_dir = Path(f".agentic/bus/metrics/{run_id}")
 art_dir = Path(f".agentic/bus/artifacts/{run_id}")
 art_dir.mkdir(parents=True, exist_ok=True)
+
+events_path = metrics_dir / "events.jsonl"
+event_counts = {}
+questions_by_agent = {}
+answers_by_agent = {}
+
+if events_path.exists():
+    try:
+        for line in events_path.read_text().splitlines():
+            if not line.strip():
+                continue
+            e = json.loads(line)
+            et = e.get("event_type", "")
+            event_counts[et] = event_counts.get(et, 0) + 1
+            agent = e.get("agent_id", "")
+            if et == "question_asked":
+                questions_by_agent[agent] = questions_by_agent.get(agent, 0) + 1
+            if et == "answer_received":
+                answers_by_agent[agent] = answers_by_agent.get(agent, 0) + 1
+    except Exception:
+        pass
 
 rows = []
 for p in metrics_dir.glob("*.json"):
@@ -72,6 +93,15 @@ lines = [
     f"Total tokens in: {total_tokens_in}",
     f"Total tokens out: {total_tokens_out}",
     "",
+    "## Event Summary",
+    f"- run_start: {event_counts.get('run_start', 0)}",
+    f"- agent_start: {event_counts.get('agent_start', 0)}",
+    f"- agent_end: {event_counts.get('agent_end', 0)}",
+    f"- blocked: {event_counts.get('blocked', 0)}",
+    f"- run_end: {event_counts.get('run_end', 0)}",
+    f"- question_asked: {event_counts.get('question_asked', 0)}",
+    f"- answer_received: {event_counts.get('answer_received', 0)}",
+    "",
     "| Agent | Tool | Status | Duration (ms) | Iterations | Tokens In | Tokens Out | Outputs |",
     "| --- | --- | --- | --- | --- | --- | --- | --- |",
 ]
@@ -80,6 +110,17 @@ for r in rows:
     lines.append(
         f"| {r.get('agent_id','')} | {r.get('tool','')} | {r.get('status','')} | {r.get('duration_ms','')} | {r.get('iterations','')} | {r.get('tokens_in','')} | {r.get('tokens_out','')} | {len(r.get('outputs_written',[]))} |"
     )
+
+if questions_by_agent:
+    lines += [
+        "",
+        "## Questions by Agent",
+        "| Agent | Questions | Answers |",
+        "| --- | --- | --- |",
+    ]
+    agents = sorted(set(list(questions_by_agent.keys()) + list(answers_by_agent.keys())))
+    for a in agents:
+        lines.append(f"| {a} | {questions_by_agent.get(a,0)} | {answers_by_agent.get(a,0)} |")
 
 report = "\n".join(lines) + "\n"
 (art_dir / "agent_performance_report.md").write_text(report)

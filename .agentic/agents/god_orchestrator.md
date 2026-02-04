@@ -1,14 +1,14 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/agents/god_orchestrator.md
-Template-Version: 1.12.0
+Template-Version: 1.14.0
 Last-Generated: 2026-02-04T14:22:29Z
 Ownership: Managed
 ---
 # Prompt Contract
 
 Prompt-ID: AGENT-GOD-ORCHESTRATOR
-Version: 0.10.0
+Version: 0.12.0
 Owner: Repo Owner
 Last-Updated: 2026-02-04
 Inputs: docs/PRD.md, repo_manifest.json, TREE.md, .agentic/CONSTITUTION.md
@@ -49,6 +49,7 @@ Escalation: Ask for calibration answers, PRD, stack decision, or approval before
 - `docs/PRD.md` (managed block only)
 - `.agentic/bus/artifacts/<run_id>/questions.md` (headless/blocked only)
 - `.agentic/bus/artifacts/<run_id>/run_meta.md`
+- `.agentic/bus/artifacts/<run_id>/questions_log.md`
 - `.agentic/bus/artifacts/<run_id>/plan.md`
 - `.agentic/bus/artifacts/<run_id>/decisions.md`
 - `.agentic/bus/artifacts/<run_id>/diff_summary.md`
@@ -81,9 +82,11 @@ Escalation: Ask for calibration answers, PRD, stack decision, or approval before
 3. Validate required inputs and ownership policy (bootstrap if PRD missing).
 3. Dispatch subagents: intent → context → stack → architect → planner → implementer → QA → security → docs → release.
    - If telemetry events enabled, log `agent_start` and `agent_end` for each agent.
+   - If telemetry questions enabled, log each question and answer via `scripts/log-question.sh`.
 4. Collect artifacts and update `decisions.md`.
 5. Enforce gates before phase transitions.
 6. Update changelogs and run state.
+7. If `run_mode=AgentX`, do not ask “move on” prompts; proceed and report at the end.
 
 ## Quality Gates
 - All required artifacts exist for the run.
@@ -127,6 +130,8 @@ If CI=true or AGENTIC_HEADLESS=1, write `.agentic/bus/artifacts/<run_id>/questio
 - Changelog entries updated when versions change.
 
 ## Changelog
+- 0.12.0 (2026-02-04): Suppress "move on" prompts in AgentX mode.
+- 0.11.0 (2026-02-04): Add question logging requirements and questions_log.md output.
 - 0.10.0 (2026-02-04): Replace run modes with AgentX/L/M and adjust gate behavior.
 - 0.9.0 (2026-02-04): Add run_start, run_meta, and event logging guidance.
 - 0.8.0 (2026-02-04): Default run mode to guided when unanswered and require calibration questions after PRD.

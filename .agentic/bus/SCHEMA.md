@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/bus/SCHEMA.md
-Template-Version: 1.10.0
-Last-Generated: 2026-02-04T12:40:34Z
+Template-Version: 1.11.0
+Last-Generated: 2026-02-04T14:22:29Z
 Ownership: Managed
 ---
 
@@ -16,6 +16,7 @@ Format: YYYYMMDD-HHMMSSZ-<slug>
 - Required files: plan.md, decisions.md, diff_summary.md, qa_report.md, release_notes.md
 - Optional files: calibration_questions.md, intent.md, upgrade_plan.md
 - Optional files: run_meta.md
+- Optional files: questions_log.md
 
 ## State
 - Path: `.agentic/bus/state/<run_id>.json`

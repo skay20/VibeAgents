@@ -1,12 +1,21 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/CHANGELOG.md
-Template-Version: 1.12.0
+Template-Version: 1.15.0
 Last-Generated: 2026-02-04T14:22:29Z
 Ownership: Managed
 ---
 
 # Changelog
+
+## 0.1.16 - 2026-02-04
+- Ensure AgentX mode does not ask to proceed between phases.
+
+## 0.1.15 - 2026-02-04
+- Add question logging flags and validation references.
+
+## 0.1.14 - 2026-02-04
+- Add question logging and enforce agent_id validation in metrics.
 
 ## 0.1.13 - 2026-02-04
 - Add AgentX/L/M run modes and update calibration defaults.
