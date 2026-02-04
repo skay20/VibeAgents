@@ -1,14 +1,14 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/agents/intent_translator.md
-Template-Version: 1.5.0
-Last-Generated: 2026-02-03T21:40:49Z
+Template-Version: 1.7.0
+Last-Generated: 2026-02-04T00:04:25Z
 Ownership: Managed
 ---
 # Prompt Contract
 
 Prompt-ID: AGENT-INTENT-TRANSLATOR
-Version: 0.4.0
+Version: 0.6.0
 Owner: Repo Owner
 Last-Updated: 2026-02-03
 Inputs: docs/PRD.md
@@ -44,6 +44,7 @@ Escalation: Ask for missing requirements
 | Requirements clarity | clear / unclear | measurable criteria present | unclear |
 
 ## Operating Loop
+- Record metrics in `.agentic/bus/metrics/<run_id>/<agent_id>.json`.
 0. Never modify the PRD header; replace only content between `BEGIN_MANAGED` and `END_MANAGED`.
 1. Validate PRD completeness.
 2. Extract goals, non-goals, and acceptance criteria.
@@ -86,6 +87,7 @@ If CI=true or AGENTIC_HEADLESS=1, write `.agentic/bus/artifacts/<run_id>/questio
 - `intent.md` exists with a requirements checklist and open questions.
 
 ## Changelog
+- 0.6.0 (2026-02-03): Require metrics logging per agent.
 - 0.4.0 (2026-02-03): Enforce PRD managed-block updates only.
 - 0.3.0 (2026-02-03): Add headless/CI escalation and questions artifact.
 - 0.2.0 (2026-02-03): Rewritten as Spec v2 contract with explicit outputs.

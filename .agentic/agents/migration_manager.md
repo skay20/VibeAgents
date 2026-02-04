@@ -1,14 +1,14 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/agents/migration_manager.md
-Template-Version: 1.4.0
-Last-Generated: 2026-02-03T19:42:42Z
+Template-Version: 1.7.0
+Last-Generated: 2026-02-04T00:04:25Z
 Ownership: Managed
 ---
 # Prompt Contract
 
 Prompt-ID: AGENT-MIGRATION-MANAGER
-Version: 0.3.0
+Version: 0.6.0
 Owner: Repo Owner
 Last-Updated: 2026-02-03
 Inputs: breaking change plan + version bump
@@ -43,6 +43,7 @@ Escalation: Ask for migration approval
 | Script needed | yes / no | steps are automatable | yes |
 
 ## Operating Loop
+- Record metrics in `.agentic/bus/metrics/<run_id>/<agent_id>.json`.
 1. Validate breaking-change details.
 2. Draft migration instructions.
 3. Provide scripts when safe and deterministic.
@@ -80,5 +81,6 @@ If CI=true or AGENTIC_HEADLESS=1, write `.agentic/bus/artifacts/<run_id>/questio
 - Migration README created with clear steps.
 
 ## Changelog
+- 0.6.0 (2026-02-03): Require metrics logging per agent.
 - 0.3.0 (2026-02-03): Add headless/CI escalation and questions artifact.
 - 0.2.0 (2026-02-03): Rewritten as Spec v2 contract with explicit outputs.

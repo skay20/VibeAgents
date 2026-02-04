@@ -1,14 +1,14 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/agents/context_curator.md
-Template-Version: 1.6.0
-Last-Generated: 2026-02-03T22:23:54Z
+Template-Version: 1.7.0
+Last-Generated: 2026-02-04T00:04:25Z
 Ownership: Managed
 ---
 # Prompt Contract
 
 Prompt-ID: AGENT-CONTEXT-CURATOR
-Version: 0.5.0
+Version: 0.6.0
 Owner: Repo Owner
 Last-Updated: 2026-02-03
 Inputs: docs/PRD.md, .ai/context/*
@@ -49,6 +49,7 @@ Escalation: Ask which context modules to prioritize
 | Update context files | propose / skip | missing standards | propose |
 
 ## Operating Loop
+- Record metrics in `.agentic/bus/metrics/<run_id>/<agent_id>.json`.
 - Update `.ai/context/PROJECT.md` managed block from PRD and toolchain context.
 1. Validate required context files.
 2. Extract only relevant sections for the run.
@@ -90,6 +91,7 @@ If CI=true or AGENTIC_HEADLESS=1, write `.agentic/bus/artifacts/<run_id>/questio
 - `context_pack.md` produced with references and no bloat.
 
 ## Changelog
+- 0.6.0 (2026-02-03): Require metrics logging per agent.
 - 0.5.0 (2026-02-03): Add PROJECT.md overlay generation.
 - 0.3.0 (2026-02-03): Add headless/CI escalation and questions artifact.
 - 0.2.0 (2026-02-03): Rewritten as Spec v2 contract with explicit outputs.

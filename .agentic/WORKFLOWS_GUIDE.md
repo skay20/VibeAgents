@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/WORKFLOWS_GUIDE.md
-Template-Version: 1.2.0
-Last-Generated: 2026-02-03T19:24:12Z
+Template-Version: 1.7.0
+Last-Generated: 2026-02-04T00:04:25Z
 Ownership: Managed
 ---
 
@@ -34,3 +34,8 @@ Ownership: Managed
 ## Notes
 - Each workflow writes artifacts to the bus.
 - Use run_id for all artifacts and logs.
+
+
+## Metrics
+- Log per-agent metrics to `.agentic/bus/metrics/<run_id>/`.
+- Generate `agent_performance_report.md` after each run.

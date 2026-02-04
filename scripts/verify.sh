@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/verify.sh
-# Template-Version: 1.6.0
-# Last-Generated: 2026-02-03T22:23:54Z
+# Template-Version: 1.7.0
+# Last-Generated: 2026-02-04T00:04:25Z
 # Ownership: Managed
 
 set -euo pipefail
@@ -73,6 +73,15 @@ if [[ -f ".ai/context/PROJECT.md" ]]; then
   if ! grep -q "BEGIN_MANAGED" ".ai/context/PROJECT.md" || ! grep -q "END_MANAGED" ".ai/context/PROJECT.md"; then
     fail "PROJECT.md missing BEGIN_MANAGED/END_MANAGED block"
   fi
+fi
+
+
+# 2d) Metrics schema and folder check
+if [[ ! -f ".agentic/bus/schemas/agent_metrics.schema.json" ]]; then
+  fail "Missing agent_metrics schema"
+fi
+if [[ ! -d ".agentic/bus/metrics" ]]; then
+  fail "Missing metrics directory"
 fi
 
 # 3) Adapter coherence (bootstrap)

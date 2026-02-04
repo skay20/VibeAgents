@@ -1,12 +1,15 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CHANGELOG.md
-Template-Version: 1.6.0
-Last-Generated: 2026-02-03T22:23:54Z
+Template-Version: 1.7.0
+Last-Generated: 2026-02-04T00:04:25Z
 Ownership: Managed
 ---
 
 # Agentic Changelog
+
+## 0.8.0 - 2026-02-03
+- Add metrics schema, logging scripts, and per-agent metrics requirement.
 
 ## 0.7.0 - 2026-02-03
 - Add BOOTSTRAP + PROJECT context layers for fast startup.

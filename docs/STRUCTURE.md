@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/docs/STRUCTURE.md
-Template-Version: 1.6.0
-Last-Generated: 2026-02-03T22:23:54Z
+Template-Version: 1.7.0
+Last-Generated: 2026-02-04T00:04:25Z
 Ownership: Managed
 ---
 # Project Structure
@@ -57,6 +57,7 @@ Ownership: Managed
 │  │  │  └─ runstate.schema.json
 │  │  ├─ artifacts/.gitkeep
 │  │  ├─ locks/.gitkeep
+│  │  ├─ metrics/.gitkeep
 │  │  └─ state/.gitkeep
 │  └─ agents/
 │     ├─ god_orchestrator.md
@@ -105,5 +106,7 @@ Ownership: Managed
 └─ scripts/
    ├─ init-project.sh
    ├─ log-run.sh
+   ├─ log-metrics.sh
+   ├─ metrics_summarize.py
    └─ verify.sh
 ```

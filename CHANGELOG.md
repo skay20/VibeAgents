@@ -1,12 +1,15 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/CHANGELOG.md
-Template-Version: 1.6.0
-Last-Generated: 2026-02-03T22:23:54Z
+Template-Version: 1.7.0
+Last-Generated: 2026-02-04T00:04:25Z
 Ownership: Managed
 ---
 
 # Changelog
+
+## 0.1.8 - 2026-02-03
+- Add agent metrics logging layer and reporting.
 
 ## 0.1.7 - 2026-02-03
 - Add BOOTSTRAP + PROJECT context layers and PRD overlay rules.

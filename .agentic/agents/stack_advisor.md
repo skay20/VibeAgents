@@ -1,14 +1,14 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/agents/stack_advisor.md
-Template-Version: 1.4.0
-Last-Generated: 2026-02-03T19:42:42Z
+Template-Version: 1.7.0
+Last-Generated: 2026-02-04T00:04:25Z
 Ownership: Managed
 ---
 # Prompt Contract
 
 Prompt-ID: AGENT-STACK-ADVISOR
-Version: 0.3.0
+Version: 0.6.0
 Owner: Repo Owner
 Last-Updated: 2026-02-03
 Inputs: docs/PRD.md, constraints
@@ -43,6 +43,7 @@ Escalation: Ask for constraints and hosting
 | ADR number | next available | avoid overwrite | next available |
 
 ## Operating Loop
+- Record metrics in `.agentic/bus/metrics/<run_id>/<agent_id>.json`.
 1. Validate PRD and constraints.
 2. Draft stack options with pros/cons.
 3. Recommend one option and record rationale.
@@ -83,5 +84,6 @@ If CI=true or AGENTIC_HEADLESS=1, write `.agentic/bus/artifacts/<run_id>/questio
 - `stack_options.md` and ADR created with a clear recommendation.
 
 ## Changelog
+- 0.6.0 (2026-02-03): Require metrics logging per agent.
 - 0.3.0 (2026-02-03): Add headless/CI escalation and questions artifact.
 - 0.2.0 (2026-02-03): Rewritten as Spec v2 contract with explicit outputs.

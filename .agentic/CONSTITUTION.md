@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CONSTITUTION.md
-Template-Version: 1.6.0
-Last-Generated: 2026-02-03T22:23:54Z
+Template-Version: 1.7.0
+Last-Generated: 2026-02-04T00:04:25Z
 Ownership: Managed
 ---
 
@@ -100,6 +100,10 @@ Adapters must avoid duplicating policy text. They should point to the same sourc
 - Hybrid files may only modify blocks between `BEGIN_MANAGED` and `END_MANAGED`.
 - `docs/PRD.md` is Hybrid: only edit the managed block, never the header.
 - `.ai/context/PROJECT.md` is Hybrid: only edit the managed block, never the header.
+
+## Metrics Logging
+- Each agent must write metrics to `.agentic/bus/metrics/<run_id>/<agent_id>.json`.
+- Orchestrator must generate `agent_performance_report.md`.
 
 ## Versioning and Changelog
 - Any prompt change must bump semver and update `.agentic/CHANGELOG.md`.
