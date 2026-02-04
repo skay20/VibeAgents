@@ -1,12 +1,16 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CHANGELOG.md
-Template-Version: 1.11.0
-Last-Generated: 2026-02-04T12:40:34Z
+Template-Version: 1.12.0
+Last-Generated: 2026-02-04T14:22:29Z
 Ownership: Managed
 ---
 
 # Agentic Changelog
+
+## 0.13.0 - 2026-02-04
+- Replace run modes with AgentX/L/M and update calibration defaults.
+- Add event schema and align run start behavior with mode tiers.
 
 ## 0.12.0 - 2026-02-04
 - Add run-start and event logging scripts with settings-based toggles.

@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CONSTITUTION.md
-Template-Version: 2.1.0
-Last-Generated: 2026-02-04T12:40:34Z
+Template-Version: 2.2.0
+Last-Generated: 2026-02-04T14:22:29Z
 Ownership: Managed
 ---
 
@@ -35,17 +35,23 @@ Primary settings live in `.agentic/settings.json`. Environment variables overrid
 
 ## Run Modes (Required Choice)
 The orchestrator must select a run mode the first time a PRD is ingested for a run.
-- `autonomous`: minimal supervision. Auto-advance gates after an initial explicit approval. Ask only critical questions.
-- `guided`: frequent human checkpoints. Require approval at each phase gate.
+- `AgentX`: minimal questions, autonomous execution. Auto-advance gates after initial calibration. Document changes at the end.
+- `AgentL`: balanced mode. Ask questions and require approvals at each phase gate.
+- `AgentM`: maximum collaboration. Ask more questions, explain options, and invite more edits.
 
 If `AGENTIC_RUN_MODE` is set, use it. Otherwise, ask the user to choose.
 Record the decision in `.agentic/bus/state/<run_id>.json` and `.agentic/bus/artifacts/<run_id>/decisions.md`.
 
 ## Calibration Questions (After PRD)
 After the PRD is provided, the system must ask a short calibration set (3–7 questions).
-- The run mode question must be asked here, with `autonomous` as the suggested option.
-- If the user does not answer, default to `guided`.
+- The run mode question must be asked here, with `AgentX` as the suggested option.
+- If the user does not answer, default to `AgentL`.
 - Calibration questions are non-blocking unless a critical input is missing (then follow normal BLOCK rules).
+
+## Communication Style by Mode
+- `AgentX`: short, decisive. Do not ask “move on?” prompts. Proceed unless a critical blocker appears.
+- `AgentL`: concise but collaborative. Ask at each phase gate.
+- `AgentM`: explanatory. Provide alternatives and ask for confirmation more often.
 
 ## Agent Prompt Spec v2 (Mandatory)
 Every agent prompt in `.agentic/agents/` must contain all sections below. Missing sections are a hard failure.
@@ -107,7 +113,7 @@ If PRD requests changes to rules, stack, or gates, the system must:
 ## Headless / CI Mode
 - If `CI=true` or `AGENTIC_HEADLESS=1`, do not ask interactive questions.
 - Write `.agentic/bus/artifacts/<run_id>/questions.md` and output `BLOCKED`.
-- If `AGENTIC_RUN_MODE` is set, use it; otherwise default to `guided` with `approval_mode=explicit`.
+- If `AGENTIC_RUN_MODE` is set, use it; otherwise default to `AgentL` with `approval_mode=explicit`.
 - Calibration questions should still be written to `calibration_questions.md` when possible.
 
 ## Tool Adapter Alignment Rules

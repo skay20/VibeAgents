@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/WORKFLOWS_GUIDE.md
-Template-Version: 2.1.0
-Last-Generated: 2026-02-04T12:40:34Z
+Template-Version: 2.2.0
+Last-Generated: 2026-02-04T14:22:29Z
 Ownership: Managed
 ---
 
@@ -27,9 +27,10 @@ Ownership: Managed
 - Use `.agentic/bus/artifacts/<run_id>/` for traceability.
 
 ## Run Modes
-- `autonomous`: minimal supervision. Auto-advance gates after an initial explicit approval.
-- `guided`: frequent checkpoints. Approval required per phase gate.
-- If `AGENTIC_RUN_MODE` is set, use it; otherwise ask at run start and default to `guided` if unanswered.
+- `AgentX`: minimal questions. Auto-advance gates after calibration. Document changes at the end.
+- `AgentL`: normal collaborative mode. Approval required per phase gate.
+- `AgentM`: more collaborative. Explain and suggest more.
+- If `AGENTIC_RUN_MODE` is set, use it; otherwise ask at run start and default to `AgentL` if unanswered.
 
 ## Safe Overwrite Protocol
 - Always write `diff_summary.md` before applying changes.

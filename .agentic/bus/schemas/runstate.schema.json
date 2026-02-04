@@ -1,8 +1,8 @@
 {
   "Managed-By": "AgenticRepoBuilder",
   "Template-Source": "templates/.agentic/bus/schemas/runstate.schema.json",
-  "Template-Version": "1.1.0",
-  "Last-Generated": "2026-02-04T00:25:01Z",
+  "Template-Version": "1.2.0",
+  "Last-Generated": "2026-02-04T14:22:29Z",
   "Ownership": "Managed",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "RunState",
@@ -23,8 +23,9 @@
     "run_mode": {
       "type": "string",
       "enum": [
-        "autonomous",
-        "guided"
+        "AgentX",
+        "AgentL",
+        "AgentM"
       ]
     },
     "approval_mode": {

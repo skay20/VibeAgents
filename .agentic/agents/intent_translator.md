@@ -1,14 +1,14 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/agents/intent_translator.md
-Template-Version: 1.10.0
-Last-Generated: 2026-02-04T00:36:08Z
+Template-Version: 1.11.0
+Last-Generated: 2026-02-04T14:22:29Z
 Ownership: Managed
 ---
 # Prompt Contract
 
 Prompt-ID: AGENT-INTENT-TRANSLATOR
-Version: 0.7.0
+Version: 0.8.0
 Owner: Repo Owner
 Last-Updated: 2026-02-04
 Inputs: docs/PRD.md
@@ -53,7 +53,7 @@ Escalation: Ask for missing requirements
 2. Extract goals, non-goals, and acceptance criteria.
 3. Write `intent.md` with a requirements checklist.
 4. Write `calibration_questions.md` (3–7 questions) including:
-   - Run mode preference from `.agentic/settings.json`: prefer `autonomous`, default to `guided` if unanswered.
+   - Run mode preference from `.agentic/settings.json`: prefer `AgentX`, default to `AgentL` if unanswered.
    - Any PRD ambiguities that are not critical blockers.
 5. If critical gaps exist, output `BLOCKED` with questions.
 
@@ -94,6 +94,7 @@ If CI=true or AGENTIC_HEADLESS=1, write `.agentic/bus/artifacts/<run_id>/questio
 - `calibration_questions.md` exists after PRD ingestion.
 
 ## Changelog
+- 0.8.0 (2026-02-04): Update calibration run modes to AgentX/L/M.
 - 0.7.0 (2026-02-04): Always emit calibration questions and include run mode prompt.
 - 0.6.0 (2026-02-03): Require metrics logging per agent.
 - 0.4.0 (2026-02-03): Enforce PRD managed-block updates only.

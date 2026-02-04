@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/start-run.sh
-# Template-Version: 1.2.0
-# Last-Generated: 2026-02-04T12:40:34Z
+# Template-Version: 1.3.0
+# Last-Generated: 2026-02-04T14:22:29Z
 # Ownership: Managed
 
 set -euo pipefail
@@ -85,7 +85,7 @@ if [[ -z "$RUN_MODE" ]]; then
 fi
 
 if [[ -z "$APPROVAL_MODE" ]]; then
-  if [[ "$RUN_MODE" == "autonomous" ]]; then
+  if [[ "$RUN_MODE" == "AgentX" ]]; then
     APPROVAL_MODE="auto"
   else
     APPROVAL_MODE="explicit"

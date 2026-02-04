@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/GEMINI.md
-Template-Version: 1.9.0
-Last-Generated: 2026-02-04T00:36:08Z
+Template-Version: 1.10.0
+Last-Generated: 2026-02-04T14:22:29Z
 Ownership: Managed
 ---
 
@@ -25,5 +25,5 @@ Ownership: Managed
 ## Rules
 - Apply Agent Prompt Spec v2.
 - If PRD is missing or placeholder, output BLOCKED.
-- At run start, ensure run mode is set (`autonomous` or `guided`). Ask once if missing or read `AGENTIC_RUN_MODE`. Default to `guided` if unanswered.
+- At run start, ensure run mode is set (`AgentX`, `AgentL`, `AgentM`). Ask once if missing or read `AGENTIC_RUN_MODE`. Default to `AgentL` if unanswered.
 - Set `AGENTIC_TOOL=gemini` to enable automatic token logging when available.

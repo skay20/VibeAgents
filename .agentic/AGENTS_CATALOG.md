@@ -1,15 +1,15 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/AGENTS_CATALOG.md
-Template-Version: 1.3.0
-Last-Generated: 2026-02-04T00:36:08Z
+Template-Version: 1.4.0
+Last-Generated: 2026-02-04T14:22:29Z
 Ownership: Managed
 ---
 
 # Agents Catalog (Spec v2)
 
 Each agent follows Agent Prompt Spec v2 and must BLOCK if required inputs are missing.
-Run mode is selected at the start of a run (`autonomous` or `guided`); if unanswered, default to `guided`.
+Run mode is selected at the start of a run (`AgentX`, `AgentL`, `AgentM`); if unanswered, default to `AgentL`.
 
 ## God Orchestrator
 - Purpose: system-wide orchestration, gates, and run state
