@@ -1,7 +1,7 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/docs/STRUCTURE.md
-Template-Version: 1.12.0
+Template-Version: 1.13.0
 Last-Generated: 2026-02-04T17:55:11Z
 Ownership: Managed
 ---
@@ -115,6 +115,8 @@ Ownership: Managed
    ├─ log-metrics.sh
    ├─ log-event.sh
    ├─ log-question.sh
+   ├─ preflight.py
+   ├─ preflight.sh
    ├─ start-run.sh
    ├─ metrics_summarize.py
    └─ verify.sh

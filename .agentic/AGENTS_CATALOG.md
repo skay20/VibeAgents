@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/AGENTS_CATALOG.md
-Template-Version: 1.4.0
-Last-Generated: 2026-02-04T14:22:29Z
+Template-Version: 1.5.0
+Last-Generated: 2026-02-04T17:55:11Z
 Ownership: Managed
 ---
 
@@ -70,6 +70,7 @@ Run mode is selected at the start of a run (`AgentX`, `AgentL`, `AgentM`); if un
 - Inputs (required): diff + test commands
 - Outputs: `.agentic/bus/artifacts/<run_id>/qa_report.md`
 - Gates: blocks if commands undefined
+ - Preflight: writes `.agentic/bus/artifacts/<run_id>/preflight_report.md` when enabled
 
 ## Security Reviewer
 - Purpose: security review and secret checks

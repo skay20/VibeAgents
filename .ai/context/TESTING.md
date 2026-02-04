@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.ai/context/TESTING.md
-Template-Version: 1.3.0
-Last-Generated: 2026-02-03T19:32:10Z
+Template-Version: 1.4.0
+Last-Generated: 2026-02-04T17:55:11Z
 Ownership: Managed
 ---
 
@@ -15,6 +15,7 @@ Ownership: Managed
 | Test | `docs/RUNBOOK.md` | `qa_report.md` | Command missing |
 | Typecheck | `docs/RUNBOOK.md` | `qa_report.md` | Command missing |
 | Security | `docs/RUNBOOK.md` | `security_report.md` | Command missing |
+| Preflight (start) | `scripts/preflight.sh` | `preflight_report.md` | App does not start |
 
 ## Execution Rules
 - Run all configured gates for any behavior change.
@@ -23,3 +24,4 @@ Ownership: Managed
 ## Outputs
 - `.agentic/bus/artifacts/<run_id>/qa_report.md`
 - `.agentic/bus/artifacts/<run_id>/security_report.md`
+- `.agentic/bus/artifacts/<run_id>/preflight_report.md`

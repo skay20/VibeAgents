@@ -1,12 +1,15 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/CHANGELOG.md
-Template-Version: 1.17.0
+Template-Version: 1.18.0
 Last-Generated: 2026-02-04T17:55:11Z
 Ownership: Managed
 ---
 
 # Changelog
+
+## 0.1.19 - 2026-02-04
+- Add preflight scripts and automation flags for auto-run checks.
 
 ## 0.1.18 - 2026-02-04
 - Add automation flags to auto-run telemetry scripts.

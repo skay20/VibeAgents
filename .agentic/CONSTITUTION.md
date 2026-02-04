@@ -1,7 +1,7 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CONSTITUTION.md
-Template-Version: 2.6.0
+Template-Version: 2.7.0
 Last-Generated: 2026-02-04T17:55:11Z
 Ownership: Managed
 ---
@@ -155,6 +155,11 @@ When `settings.telemetry.questions=true`:
 - Use the real `agent_id` (file name under `.agentic/agents/`).
 - Reuse the same `question_id` when logging the answer.
 - If `settings.telemetry.questions_log=false`, only events are written (no `questions_log.md`).
+
+## Preflight (Required for Web Apps)
+If `settings.checks.preflight_enabled=true` and a `package.json` exists:
+- QA must run `scripts/preflight.sh <run_id>` before release.
+- A failing preflight blocks release until fixed or explicitly waived.
 
 ## Versioning and Changelog
 - Any prompt change must bump semver and update `.agentic/CHANGELOG.md`.

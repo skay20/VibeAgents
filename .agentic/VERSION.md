@@ -1,7 +1,7 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/VERSION.md
-Template-Version: 1.17.0
+Template-Version: 1.18.0
 Last-Generated: 2026-02-04T17:55:11Z
 Ownership: Managed
 ---
@@ -19,3 +19,4 @@ Ownership: Managed
 0.16.0
 0.17.0
 0.18.0
+0.19.0

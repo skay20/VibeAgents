@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/verify.sh
-# Template-Version: 1.15.0
+# Template-Version: 1.16.0
 # Last-Generated: 2026-02-04T17:55:11Z
 # Ownership: Managed
 
@@ -108,6 +108,7 @@ tele = settings.get("telemetry", {})
 run_start = settings.get("run_start", {})
 run_mode = settings.get("run_mode", {})
 automation = settings.get("automation", {})
+checks = settings.get("checks", {})
 validation = settings.get("validation", {})
 required = [
     ("telemetry.enabled", tele.get("enabled", None)),
@@ -123,6 +124,11 @@ required = [
     ("automation.auto_start_run", automation.get("auto_start_run", None)),
     ("automation.auto_log_questions", automation.get("auto_log_questions", None)),
     ("automation.auto_log_agents", automation.get("auto_log_agents", None)),
+    ("checks.preflight_enabled", checks.get("preflight_enabled", None)),
+    ("checks.preflight_run_install", checks.get("preflight_run_install", None)),
+    ("checks.preflight_run_dev", checks.get("preflight_run_dev", None)),
+    ("checks.preflight_timeout_sec", checks.get("preflight_timeout_sec", None)),
+    ("checks.package_manager_auto", checks.get("package_manager_auto", None)),
     ("validation.enforce_agent_id", validation.get("enforce_agent_id", None)),
 ]
 missing = [k for k,v in required if v is None]
@@ -136,7 +142,7 @@ PYCODE
 fi
 
 # 2f) Scripts check
-for s in scripts/start-run.sh scripts/log-event.sh scripts/log-question.sh; do
+for s in scripts/start-run.sh scripts/log-event.sh scripts/log-question.sh scripts/preflight.sh scripts/preflight.py; do
   if [[ ! -f "$s" ]]; then
     fail "Missing script: $s"
   fi

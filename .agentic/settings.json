@@ -1,7 +1,7 @@
 {
   "Managed-By": "AgenticRepoBuilder",
   "Template-Source": "templates/.agentic/settings.json",
-  "Template-Version": "1.6.0",
+  "Template-Version": "1.7.0",
   "Last-Generated": "2026-02-04T17:55:11Z",
   "Ownership": "Managed",
   "settings": {
@@ -25,6 +25,13 @@
       "auto_start_run": true,
       "auto_log_questions": true,
       "auto_log_agents": true
+    },
+    "checks": {
+      "preflight_enabled": true,
+      "preflight_run_install": true,
+      "preflight_run_dev": true,
+      "preflight_timeout_sec": 20,
+      "package_manager_auto": true
     },
     "run_start": {
       "enabled": true,

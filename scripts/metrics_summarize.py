@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/metrics_summarize.py
-# Template-Version: 1.10.0
-# Last-Generated: 2026-02-04T14:22:29Z
+# Template-Version: 1.11.0
+# Last-Generated: 2026-02-04T17:55:11Z
 # Ownership: Managed
 
 import json
@@ -99,6 +99,8 @@ lines = [
     f"- agent_end: {event_counts.get('agent_end', 0)}",
     f"- blocked: {event_counts.get('blocked', 0)}",
     f"- run_end: {event_counts.get('run_end', 0)}",
+    f"- preflight_start: {event_counts.get('preflight_start', 0)}",
+    f"- preflight_end: {event_counts.get('preflight_end', 0)}",
     f"- question_asked: {event_counts.get('question_asked', 0)}",
     f"- answer_received: {event_counts.get('answer_received', 0)}",
     "",
