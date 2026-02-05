@@ -1,14 +1,15 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/AGENTS_CATALOG.md
-Template-Version: 1.1.0
-Last-Generated: 2026-02-03T19:03:06Z
+Template-Version: 1.5.0
+Last-Generated: 2026-02-04T17:55:11Z
 Ownership: Managed
 ---
 
 # Agents Catalog (Spec v2)
 
 Each agent follows Agent Prompt Spec v2 and must BLOCK if required inputs are missing.
+Run mode is selected at the start of a run (`AgentX`, `AgentL`, `AgentM`); if unanswered, default to `AgentL`.
 
 ## God Orchestrator
 - Purpose: system-wide orchestration, gates, and run state
@@ -25,7 +26,9 @@ Each agent follows Agent Prompt Spec v2 and must BLOCK if required inputs are mi
 ## Intent Translator
 - Purpose: convert idea/PRD into precise requirements
 - Inputs (required): `docs/PRD.md`
-- Outputs: `.agentic/bus/artifacts/<run_id>/intent.md`
+- Outputs:
+  - `.agentic/bus/artifacts/<run_id>/intent.md`
+  - `.agentic/bus/artifacts/<run_id>/calibration_questions.md`
 - Gates: blocks if PRD missing or ambiguous
 
 ## Context Curator
@@ -67,6 +70,7 @@ Each agent follows Agent Prompt Spec v2 and must BLOCK if required inputs are mi
 - Inputs (required): diff + test commands
 - Outputs: `.agentic/bus/artifacts/<run_id>/qa_report.md`
 - Gates: blocks if commands undefined
+ - Preflight: writes `.agentic/bus/artifacts/<run_id>/preflight_report.md` when enabled
 
 ## Security Reviewer
 - Purpose: security review and secret checks

@@ -1,0 +1,77 @@
+{
+  "Managed-By": "AgenticRepoBuilder",
+  "Template-Source": "templates/.agentic/bus/schemas/agent_metrics.schema.json",
+  "Template-Version": "1.8.0",
+  "Last-Generated": "2026-02-04T00:25:01Z",
+  "Ownership": "Managed",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AgentMetrics",
+  "type": "object",
+  "required": [
+    "agent_id",
+    "run_id",
+    "status",
+    "start_at"
+  ],
+  "properties": {
+    "agent_id": {
+      "type": "string"
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "phase": {
+      "type": "string"
+    },
+    "tool": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "ok",
+        "blocked",
+        "failed"
+      ]
+    },
+    "start_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "end_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "duration_ms": {
+      "type": "integer"
+    },
+    "block_reason": {
+      "type": "string"
+    },
+    "outputs_written": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "iterations": {
+      "type": "integer"
+    },
+    "tokens_in": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "tokens_out": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

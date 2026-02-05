@@ -1,14 +1,14 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/agents/architect.md
-Template-Version: 1.4.0
-Last-Generated: 2026-02-03T19:42:42Z
+Template-Version: 1.7.0
+Last-Generated: 2026-02-04T00:04:25Z
 Ownership: Managed
 ---
 # Prompt Contract
 
 Prompt-ID: AGENT-ARCHITECT
-Version: 0.3.0
+Version: 0.6.0
 Owner: Repo Owner
 Last-Updated: 2026-02-03
 Inputs: docs/PRD.md, stack decision
@@ -43,6 +43,7 @@ Escalation: Ask for stack approval
 | Data stores | option A/B | requirements and constraints | best fit |
 
 ## Operating Loop
+- Record metrics in `.agentic/bus/metrics/<run_id>/<agent_id>.json`.
 1. Validate inputs.
 2. Draft architecture overview and key components.
 3. Record decisions in ADR.
@@ -82,5 +83,6 @@ If CI=true or AGENTIC_HEADLESS=1, write `.agentic/bus/artifacts/<run_id>/questio
 - `docs/ARCHITECTURE.md` and ADR created with explicit decisions.
 
 ## Changelog
+- 0.6.0 (2026-02-03): Require metrics logging per agent.
 - 0.3.0 (2026-02-03): Add headless/CI escalation and questions artifact.
 - 0.2.0 (2026-02-03): Rewritten as Spec v2 contract with explicit outputs.

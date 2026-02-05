@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/docs/RUNBOOK.md
-Template-Version: 1.0.0
-Last-Generated: 2026-02-03T18:17:45Z
+Template-Version: 1.1.0
+Last-Generated: 2026-02-04T17:55:11Z
 Ownership: Managed
 ---
 
@@ -21,6 +21,7 @@ Ownership: Managed
 | Lint | TO_CONFIRM |
 | Typecheck | TO_CONFIRM |
 | Security | TO_CONFIRM |
+| Preflight | `scripts/preflight.sh <run_id> <project_root>` |
 
 ## Quality Gates
 - Run `scripts/verify.sh` or the commands above.

@@ -1,12 +1,55 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/CHANGELOG.md
-Template-Version: 1.4.0
-Last-Generated: 2026-02-03T19:42:42Z
+Template-Version: 1.18.0
+Last-Generated: 2026-02-04T17:55:11Z
 Ownership: Managed
 ---
 
 # Changelog
+
+## 0.1.19 - 2026-02-04
+- Add preflight scripts and automation flags for auto-run checks.
+
+## 0.1.18 - 2026-02-04
+- Add automation flags to auto-run telemetry scripts.
+
+## 0.1.17 - 2026-02-04
+- Make question logging default when enabled and initialize questions_log at run start.
+
+## 0.1.16 - 2026-02-04
+- Ensure AgentX mode does not ask to proceed between phases.
+
+## 0.1.15 - 2026-02-04
+- Add question logging flags and validation references.
+
+## 0.1.14 - 2026-02-04
+- Add question logging and enforce agent_id validation in metrics.
+
+## 0.1.13 - 2026-02-04
+- Add AgentX/L/M run modes and update calibration defaults.
+
+## 0.1.12 - 2026-02-04
+- Add run-start and event logging scripts with settings-based toggles.
+
+## 0.1.11 - 2026-02-04
+- Add `.agentic/settings.json` and telemetry/run-mode toggles.
+
+## 0.1.10 - 2026-02-04
+- Add calibration questions after PRD and default run mode behavior.
+
+## 0.1.9 - 2026-02-04
+- Add run modes with recorded run state and adapter alignment.
+- Enable automatic token capture in metrics and richer reports.
+
+## 0.1.8 - 2026-02-03
+- Add agent metrics logging layer and reporting.
+
+## 0.1.7 - 2026-02-03
+- Add BOOTSTRAP + PROJECT context layers and PRD overlay rules.
+
+## 0.1.6 - 2026-02-03
+- Make PRD.md hybrid with managed block; enforce header preservation.
 
 ## 0.1.5 - 2026-02-03
 - Add headless/CI bootstrap safeguards and bus concurrency policy.

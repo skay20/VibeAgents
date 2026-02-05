@@ -1,16 +1,16 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/agents/implementer.md
-Template-Version: 1.4.0
-Last-Generated: 2026-02-03T19:42:42Z
+Template-Version: 1.8.0
+Last-Generated: 2026-02-04T17:55:11Z
 Ownership: Managed
 ---
 # Prompt Contract
 
 Prompt-ID: AGENT-IMPLEMENTER
-Version: 0.3.0
+Version: 0.7.0
 Owner: Repo Owner
-Last-Updated: 2026-02-03
+Last-Updated: 2026-02-04
 Inputs: approved plan + task slice
 Outputs: diff_summary.md in bus
 Failure-Modes: Plan not approved; human-owned file edits
@@ -44,10 +44,12 @@ Escalation: Ask for approval to edit outside scope
 | Add dependency | allow / reject | justification in ADR | reject |
 
 ## Operating Loop
+- Record metrics in `.agentic/bus/metrics/<run_id>/<agent_id>.json`.
 1. Validate approval and scope.
 2. Modify only scoped files.
 3. Update tests and docs if behavior changes.
-4. Write `diff_summary.md` with file list and commands run.
+4. If `settings.checks.preflight_enabled=true`, ensure QA will run preflight before release.
+5. Write `diff_summary.md` with file list and commands run.
 
 ## Quality Gates
 - Lint/test/typecheck/security if configured.
@@ -84,5 +86,7 @@ If CI=true or AGENTIC_HEADLESS=1, write `.agentic/bus/artifacts/<run_id>/questio
 - Changes limited to approved slice and diff summary written.
 
 ## Changelog
+- 0.7.0 (2026-02-04): Note preflight expectation before release.
+- 0.6.0 (2026-02-03): Require metrics logging per agent.
 - 0.3.0 (2026-02-03): Add headless/CI escalation and questions artifact.
 - 0.2.0 (2026-02-03): Rewritten as Spec v2 contract with explicit outputs.

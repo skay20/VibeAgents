@@ -1,0 +1,51 @@
+{
+  "Managed-By": "AgenticRepoBuilder",
+  "Template-Source": "templates/.agentic/settings.json",
+  "Template-Version": "1.7.0",
+  "Last-Generated": "2026-02-04T17:55:11Z",
+  "Ownership": "Managed",
+  "settings": {
+    "run_mode": {
+      "ask_on_prd": true,
+      "preferred": "AgentX",
+      "default_if_unanswered": "AgentL"
+    },
+    "approvals": {
+      "auto_approve_in_agentx": true
+    },
+    "telemetry": {
+      "enabled": true,
+      "capture_tokens": true,
+      "events": true,
+      "questions": true,
+      "questions_log": true
+    },
+    "automation": {
+      "run_scripts": true,
+      "auto_start_run": true,
+      "auto_log_questions": true,
+      "auto_log_agents": true
+    },
+    "checks": {
+      "preflight_enabled": true,
+      "preflight_run_install": true,
+      "preflight_run_dev": true,
+      "preflight_timeout_sec": 20,
+      "package_manager_auto": true
+    },
+    "run_start": {
+      "enabled": true,
+      "write_run_meta": true
+    },
+    "headless": {
+      "default_run_mode": "AgentL"
+    },
+    "calibration_questions": {
+      "min": 3,
+      "max": 7
+    },
+    "validation": {
+      "enforce_agent_id": true
+    }
+  }
+}

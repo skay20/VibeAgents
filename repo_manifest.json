@@ -1,8 +1,8 @@
 {
   "Managed-By": "AgenticRepoBuilder",
   "Template-Source": "templates/repo_manifest.json",
-  "Template-Version": "1.4.0",
-  "Last-Generated": "2026-02-03T19:44:08Z",
+  "Template-Version": "1.17.0",
+  "Last-Generated": "2026-02-04T17:55:11Z",
   "repo": {
     "slug": "vibeagents",
     "mode": "no-app-first",
@@ -50,6 +50,11 @@
       "path": ".agentic/README.md",
       "ownership": "Managed",
       "template": "templates/.agentic/README.md"
+    },
+    {
+      "path": ".agentic/settings.json",
+      "ownership": "Managed",
+      "template": "templates/.agentic/settings.json"
     },
     {
       "path": ".agentic/VERSION.md",
@@ -147,6 +152,16 @@
       "template": "templates/.agentic/bus/locks/.gitkeep"
     },
     {
+      "path": ".agentic/bus/metrics/.gitkeep",
+      "ownership": "Managed",
+      "template": "templates/.agentic/bus/metrics/.gitkeep"
+    },
+    {
+      "path": ".agentic/bus/schemas/agent_metrics.schema.json",
+      "ownership": "Managed",
+      "template": "templates/.agentic/bus/schemas/agent_metrics.schema.json"
+    },
+    {
       "path": ".agentic/bus/schemas/artifact.schema.json",
       "ownership": "Managed",
       "template": "templates/.agentic/bus/schemas/artifact.schema.json"
@@ -155,6 +170,11 @@
       "path": ".agentic/bus/schemas/decision.schema.json",
       "ownership": "Managed",
       "template": "templates/.agentic/bus/schemas/decision.schema.json"
+    },
+    {
+      "path": ".agentic/bus/schemas/event.schema.json",
+      "ownership": "Managed",
+      "template": "templates/.agentic/bus/schemas/event.schema.json"
     },
     {
       "path": ".agentic/bus/schemas/runstate.schema.json",
@@ -212,9 +232,19 @@
       "template": "templates/.agentic/templates/.gitkeep"
     },
     {
+      "path": ".ai/context/BOOTSTRAP.md",
+      "ownership": "Managed",
+      "template": "templates/.ai/context/BOOTSTRAP.md"
+    },
+    {
       "path": ".ai/context/CORE.md",
       "ownership": "Managed",
       "template": "templates/.ai/context/CORE.md"
+    },
+    {
+      "path": ".ai/context/PROJECT.md",
+      "ownership": "Hybrid",
+      "template": "templates/.ai/context/PROJECT.md"
     },
     {
       "path": ".ai/context/SECURITY.md",
@@ -247,6 +277,11 @@
       "template": "templates/.claude/CLAUDE.md"
     },
     {
+      "path": ".claude/rules/prd.md",
+      "ownership": "Managed",
+      "template": "templates/.claude/rules/prd.md"
+    },
+    {
       "path": ".claude/rules/security.md",
       "ownership": "Managed",
       "template": "templates/.claude/rules/security.md"
@@ -277,6 +312,11 @@
       "template": "templates/.cursor/rules/20-backend.mdc"
     },
     {
+      "path": ".cursor/rules/90-prd.mdc",
+      "ownership": "Managed",
+      "template": "templates/.cursor/rules/90-prd.mdc"
+    },
+    {
       "path": ".gemini/config.yaml",
       "ownership": "Managed",
       "template": "templates/.gemini/config.yaml"
@@ -305,6 +345,11 @@
       "path": ".windsurf/rules/20-backend.md",
       "ownership": "Managed",
       "template": "templates/.windsurf/rules/20-backend.md"
+    },
+    {
+      "path": ".windsurf/rules/90-prd.md",
+      "ownership": "Managed",
+      "template": "templates/.windsurf/rules/90-prd.md"
     },
     {
       "path": ".windsurf/workflows/implement.md",
@@ -373,7 +418,7 @@
     },
     {
       "path": "docs/PRD.md",
-      "ownership": "Managed",
+      "ownership": "Hybrid",
       "template": "templates/docs/PRD.md"
     },
     {
@@ -397,9 +442,44 @@
       "template": "templates/scripts/init-project.sh"
     },
     {
+      "path": "scripts/log-metrics.sh",
+      "ownership": "Managed",
+      "template": "templates/scripts/log-metrics.sh"
+    },
+    {
+      "path": "scripts/log-event.sh",
+      "ownership": "Managed",
+      "template": "templates/scripts/log-event.sh"
+    },
+    {
+      "path": "scripts/log-question.sh",
+      "ownership": "Managed",
+      "template": "templates/scripts/log-question.sh"
+    },
+    {
+      "path": "scripts/preflight.py",
+      "ownership": "Managed",
+      "template": "templates/scripts/preflight.py"
+    },
+    {
+      "path": "scripts/preflight.sh",
+      "ownership": "Managed",
+      "template": "templates/scripts/preflight.sh"
+    },
+    {
       "path": "scripts/log-run.sh",
       "ownership": "Managed",
       "template": "templates/scripts/log-run.sh"
+    },
+    {
+      "path": "scripts/metrics_summarize.py",
+      "ownership": "Managed",
+      "template": "templates/scripts/metrics_summarize.py"
+    },
+    {
+      "path": "scripts/start-run.sh",
+      "ownership": "Managed",
+      "template": "templates/scripts/start-run.sh"
     },
     {
       "path": "scripts/verify.sh",
@@ -413,6 +493,7 @@
     ".agentic/bus",
     ".agentic/bus/artifacts",
     ".agentic/bus/locks",
+    ".agentic/bus/metrics",
     ".agentic/bus/schemas",
     ".agentic/bus/state",
     ".agentic/connectors",

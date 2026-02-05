@@ -1,0 +1,12 @@
+---
+Managed-By: AgenticRepoBuilder
+Template-Source: templates/.cursor/rules/90-prd.mdc
+Template-Version: 1.6.0
+Last-Generated: 2026-02-03T22:23:54Z
+Ownership: Managed
+description: PRD overlay
+alwaysApply: true
+---
+
+- Use `.ai/context/PROJECT.md` for project-specific instructions.
+- When updating PRD, modify only the managed block.

@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/README.md
-Template-Version: 1.0.0
-Last-Generated: 2026-02-03T18:17:45Z
+Template-Version: 1.1.0
+Last-Generated: 2026-02-04T00:36:08Z
 Ownership: Managed
 ---
 
@@ -16,6 +16,7 @@ This repository is the product. It contains rules, agents, workflows, and state 
 2. Confirm commands in `docs/RUNBOOK.md`.
 3. Use workflows in `.agentic/WORKFLOWS_GUIDE.md`.
 4. Run `scripts/verify.sh` for quality gates.
+5. Set toggles in `.agentic/settings.json` (run mode, telemetry).
 
 ## Modes
 - Scaffold: create a new repo from zero.

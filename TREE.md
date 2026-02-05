@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/TREE.md
-Template-Version: 1.4.0
-Last-Generated: 2026-02-03T19:43:51Z
+Template-Version: 1.13.0
+Last-Generated: 2026-02-04T17:55:11Z
 Ownership: Managed
 ---
 # Repository Tree
@@ -25,7 +25,9 @@ This file is generated. Update it via the orchestrator and templates.
 │     └─ 0001-initial.md
 ├─ .ai/
 │  ├─ context/
+│  │  ├─ BOOTSTRAP.md
 │  │  ├─ CORE.md
+│  │  ├─ PROJECT.md
 │  │  ├─ STANDARDS.md
 │  │  ├─ SECURITY.md
 │  │  └─ TESTING.md
@@ -39,6 +41,7 @@ This file is generated. Update it via the orchestrator and templates.
 │  ├─ CONSTITUTION.md
 │  ├─ WORKFLOWS_GUIDE.md
 │  ├─ AGENTS_CATALOG.md
+│  ├─ settings.json
 │  ├─ templates/.gitkeep
 │  ├─ migrations/.gitkeep
 │  ├─ migrations/0.4.0/README.md
@@ -54,9 +57,12 @@ This file is generated. Update it via the orchestrator and templates.
 │  │  │  ├─ task.schema.json
 │  │  │  ├─ decision.schema.json
 │  │  │  ├─ artifact.schema.json
-│  │  │  └─ runstate.schema.json
+│  │  │  ├─ runstate.schema.json
+│  │  │  ├─ agent_metrics.schema.json
+│  │  │  └─ event.schema.json
 │  │  ├─ artifacts/.gitkeep
 │  │  ├─ locks/.gitkeep
+│  │  ├─ metrics/.gitkeep
 │  │  └─ state/.gitkeep
 │  └─ agents/
 │     ├─ god_orchestrator.md
@@ -81,6 +87,7 @@ This file is generated. Update it via the orchestrator and templates.
 ├─ .claude/
 │  ├─ CLAUDE.md
 │  └─ rules/
+│     ├─ prd.md
 │     ├─ style.md
 │     ├─ testing.md
 │     └─ security.md
@@ -88,12 +95,14 @@ This file is generated. Update it via the orchestrator and templates.
 │  └─ rules/
 │     ├─ 00-global.mdc
 │     ├─ 10-frontend.mdc
-│     └─ 20-backend.mdc
+│     ├─ 20-backend.mdc
+│     └─ 90-prd.mdc
 ├─ .windsurf/
 │  ├─ rules/
 │  │  ├─ 00-global.md
 │  │  ├─ 10-frontend.md
-│  │  └─ 20-backend.md
+│  │  ├─ 20-backend.md
+│  │  └─ 90-prd.md
 │  └─ workflows/
 │     ├─ init.md
 │     ├─ plan.md
@@ -105,5 +114,12 @@ This file is generated. Update it via the orchestrator and templates.
 └─ scripts/
    ├─ init-project.sh
    ├─ log-run.sh
+   ├─ log-metrics.sh
+   ├─ log-event.sh
+   ├─ log-question.sh
+   ├─ preflight.py
+   ├─ preflight.sh
+   ├─ start-run.sh
+   ├─ metrics_summarize.py
    └─ verify.sh
 ```
