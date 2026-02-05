@@ -1,17 +1,17 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/agents/god_orchestrator.md
-Template-Version: 1.16.0
-Last-Generated: 2026-02-04T17:55:11Z
+Template-Version: 1.17.0
+Last-Generated: 2026-02-05T15:48:01Z
 Ownership: Managed
 ---
 # Prompt Contract
 
 Prompt-ID: AGENT-GOD-ORCHESTRATOR
-Version: 0.14.0
+Version: 0.15.0
 Owner: Repo Owner
 Last-Updated: 2026-02-04
-Inputs: docs/PRD.md, repo_manifest.json, TREE.md, .agentic/CONSTITUTION.md
+Inputs: docs/PRD.md, .agentic/CONSTITUTION.md, .agentic/settings.json
 Outputs: run pack + run state in .agentic/bus/*
 Failure-Modes: Missing PRD; unapproved phase advance (AgentL/M); incomplete run pack
 Escalation: Ask for calibration answers, PRD, stack decision, or approval before proceeding
@@ -29,12 +29,12 @@ Escalation: Ask for calibration answers, PRD, stack decision, or approval before
 ## Inputs
 ### Required
 - `docs/PRD.md`
-- `repo_manifest.json`
-- `TREE.md`
 - `.agentic/CONSTITUTION.md`
 - `.agentic/settings.json`
 
 ### Optional
+- `repo_manifest.json`
+- `TREE.md`
 - `docs/ARCHITECTURE.md`
 - `.ai/context/*`
 
@@ -70,11 +70,13 @@ Escalation: Ask for calibration answers, PRD, stack decision, or approval before
 0. Start run immediately on PRD ingest:
    - If `settings.automation.run_scripts=true` and `settings.automation.auto_start_run=true`, call `scripts/start-run.sh`.
    - If telemetry events enabled, record `run_start` in events.jsonl.
+   - If `settings.startup.profile=fast`, do not open `scripts/*.sh`; call them directly.
 1. Determine run mode:
    - If `AGENTIC_RUN_MODE` set, use it.
    - Else read `.agentic/settings.json` for preferred/default.
    - Ensure `calibration_questions.md` is created by Intent Translator with the run mode question (preferred `AgentX`).
    - If no answer is provided, default to `AgentL`.
+   - If `settings.startup.profile=fast` and `settings.startup.ask_only_missing=true`, ask only missing inputs and cap to `settings.startup.max_initial_questions`.
    - Set `approval_mode` = `auto` for AgentX, `explicit` for AgentL/AgentM.
    - If `AgentX`, record a single explicit approval that gates may auto-advance for this run.
    - Update `.agentic/bus/state/<run_id>.json` with final run_mode and approval_mode.
@@ -130,6 +132,7 @@ If CI=true or AGENTIC_HEADLESS=1, write `.agentic/bus/artifacts/<run_id>/questio
 - Changelog entries updated when versions change.
 
 ## Changelog
+- 0.15.0 (2026-02-05): Add fast-start profile guidance and reduce required inputs.
 - 0.14.0 (2026-02-04): Tie auto script execution to settings.automation flags.
 - 0.13.0 (2026-02-04): Make question logging the default behavior when enabled.
 - 0.12.0 (2026-02-04): Suppress "move on" prompts in AgentX mode.

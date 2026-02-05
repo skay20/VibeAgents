@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.ai/context/BOOTSTRAP.md
-Template-Version: 2.0.0
-Last-Generated: 2026-02-04T14:22:29Z
+Template-Version: 2.1.0
+Last-Generated: 2026-02-05T15:48:01Z
 Ownership: Managed
 ---
 
@@ -22,3 +22,10 @@ Provide minimal context for fast startup. Load only what is needed to begin safe
 - If PRD is missing or placeholder, write questions and BLOCK.
 - If run mode is not set, ask for `AgentX`, `AgentL`, or `AgentM` (or read `AGENTIC_RUN_MODE`). Default to `AgentL` if unanswered.
 - Read operational toggles from `.agentic/settings.json` (env vars override).
+
+## Startup Performance Profile
+If `settings.startup.profile=fast`:
+- Ask only missing calibration inputs, up to `settings.startup.max_initial_questions`.
+- Defer deep decisions until planning if not required to proceed.
+- Do not read scripts under `scripts/`; call them directly if automation is enabled.
+- Avoid directory listings; use `repo_manifest.json` or `TREE.md` only when needed.

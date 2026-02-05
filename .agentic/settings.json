@@ -1,14 +1,21 @@
 {
   "Managed-By": "AgenticRepoBuilder",
   "Template-Source": "templates/.agentic/settings.json",
-  "Template-Version": "1.7.0",
-  "Last-Generated": "2026-02-04T17:55:11Z",
+  "Template-Version": "1.8.0",
+  "Last-Generated": "2026-02-05T15:48:01Z",
   "Ownership": "Managed",
   "settings": {
     "run_mode": {
       "ask_on_prd": true,
       "preferred": "AgentX",
       "default_if_unanswered": "AgentL"
+    },
+    "startup": {
+      "profile": "fast",
+      "max_initial_questions": 3,
+      "ask_only_missing": true,
+      "avoid_script_reads": true,
+      "defer_repo_map": true
     },
     "approvals": {
       "auto_approve_in_agentx": true

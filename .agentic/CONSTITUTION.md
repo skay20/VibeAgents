@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CONSTITUTION.md
-Template-Version: 2.7.0
-Last-Generated: 2026-02-04T17:55:11Z
+Template-Version: 2.8.0
+Last-Generated: 2026-02-05T15:48:01Z
 Ownership: Managed
 ---
 
@@ -24,6 +24,7 @@ If there is a conflict, higher precedence wins. If a required input is missing, 
 ## Bootstrap Context Policy
 - Startup should load only BOOTSTRAP + PROJECT + CONSTITUTION.
 - Load PRD and L1 contexts on-demand.
+If `settings.startup.profile=fast`, avoid directory listings and script reads unless required.
 
 ## Settings and Overrides
 Primary settings live in `.agentic/settings.json`. Environment variables override settings:
@@ -53,10 +54,19 @@ If `AGENTIC_RUN_MODE` is set, use it. Otherwise, ask the user to choose.
 Record the decision in `.agentic/bus/state/<run_id>.json` and `.agentic/bus/artifacts/<run_id>/decisions.md`.
 
 ## Calibration Questions (After PRD)
-After the PRD is provided, the system must ask a short calibration set (3–7 questions).
+After the PRD is provided, the system must ask a short calibration set.
 - The run mode question must be asked here, with `AgentX` as the suggested option.
 - If the user does not answer, default to `AgentL`.
 - Calibration questions are non-blocking unless a critical input is missing (then follow normal BLOCK rules).
+If `settings.startup.profile=fast`:
+- Ask only missing inputs (read the PRD first).
+- Cap the initial set at `settings.startup.max_initial_questions`.
+- Defer non-critical decisions to the planning phase.
+
+## Startup Performance (Fast Profile)
+If `settings.startup.profile=fast`:
+- Do not read scripts under `scripts/`; call them directly when automation is enabled.
+- Avoid listing directories; rely on `repo_manifest.json` or `TREE.md` only when required.
 
 ## Communication Style by Mode
 - `AgentX`: short, decisive. Do not ask “move on?” prompts. Proceed unless a critical blocker appears.

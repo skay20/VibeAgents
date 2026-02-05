@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/adapters/UNIVERSAL.md
-Template-Version: 1.0.0
-Last-Generated: 2026-02-05T12:45:00Z
+Template-Version: 1.1.0
+Last-Generated: 2026-02-05T15:48:01Z
 Ownership: Managed
 ---
 
@@ -24,6 +24,11 @@ Ownership: Managed
 - L0/L1 on-demand only.
 - L2 (Architecture) only when planning or implementing.
 - L3 artifacts only for the active run.
+
+## Startup Performance
+If `settings.startup.profile=fast`:
+- Ask only missing calibration inputs, max `settings.startup.max_initial_questions`.
+- Do not read `scripts/*`; call them directly when automation is enabled.
 
 ## Automation Defaults
 - If `settings.automation.run_scripts=true`, run scripts automatically:

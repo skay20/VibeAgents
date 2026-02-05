@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/TREE.md
-Template-Version: 1.13.0
-Last-Generated: 2026-02-04T17:55:11Z
+Template-Version: 1.14.0
+Last-Generated: 2026-02-05T15:33:50Z
 Ownership: Managed
 ---
 # Repository Tree
@@ -42,6 +42,8 @@ This file is generated. Update it via the orchestrator and templates.
 │  ├─ WORKFLOWS_GUIDE.md
 │  ├─ AGENTS_CATALOG.md
 │  ├─ settings.json
+│  ├─ adapters/
+│  │  └─ UNIVERSAL.md
 │  ├─ templates/.gitkeep
 │  ├─ migrations/.gitkeep
 │  ├─ migrations/0.4.0/README.md
@@ -110,7 +112,9 @@ This file is generated. Update it via the orchestrator and templates.
 │     ├─ qa.md
 │     └─ release.md
 ├─ .github/
-│  └─ copilot-instructions.md
+│  ├─ copilot-instructions.md
+│  └─ workflows/
+│     └─ node-ci.yml
 └─ scripts/
    ├─ init-project.sh
    ├─ log-run.sh

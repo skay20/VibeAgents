@@ -1,0 +1,110 @@
+# Managed-By: AgenticRepoBuilder
+# Template-Source: templates/.github/workflows/node-ci.yml
+# Template-Version: 1.0.0
+# Last-Generated: 2026-02-05T15:33:50Z
+# Ownership: Managed
+
+name: Node CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  node-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: has_pkg
+        run: |
+          if [ -f package.json ]; then
+            echo "has_pkg=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_pkg=false" >> $GITHUB_OUTPUT
+          fi
+
+      - if: steps.has_pkg.outputs.has_pkg == 'true'
+        id: pm
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            echo "pm=pnpm" >> $GITHUB_OUTPUT
+          elif [ -f yarn.lock ]; then
+            echo "pm=yarn" >> $GITHUB_OUTPUT
+          else
+            echo "pm=npm" >> $GITHUB_OUTPUT
+          fi
+
+      - if: steps.has_pkg.outputs.has_pkg == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: ${{ steps.pm.outputs.pm }}
+
+      - if: steps.has_pkg.outputs.has_pkg == 'true' && steps.pm.outputs.pm == 'pnpm'
+        run: npm i -g pnpm
+
+      - name: Install deps
+        if: steps.has_pkg.outputs.has_pkg == 'true'
+        run: |
+          PM="${{ steps.pm.outputs.pm }}"
+          if [ "$PM" = "pnpm" ]; then
+            pnpm install --frozen-lockfile
+          elif [ "$PM" = "yarn" ]; then
+            yarn install --frozen-lockfile
+          else
+            npm ci
+          fi
+
+      - name: Lint
+        if: steps.has_pkg.outputs.has_pkg == 'true'
+        run: |
+          PM="${{ steps.pm.outputs.pm }}"
+          if node -e "const p=require('./package.json'); process.exit(p.scripts && p.scripts.lint ? 0 : 1)"; then
+            if [ "$PM" = "pnpm" ]; then
+              pnpm run lint
+            elif [ "$PM" = "yarn" ]; then
+              yarn lint
+            else
+              npm run lint
+            fi
+          else
+            echo "No lint script; skipping"
+          fi
+
+      - name: Typecheck
+        if: steps.has_pkg.outputs.has_pkg == 'true'
+        run: |
+          PM="${{ steps.pm.outputs.pm }}"
+          if node -e "const p=require('./package.json'); process.exit(p.scripts && p.scripts.typecheck ? 0 : 1)"; then
+            if [ "$PM" = "pnpm" ]; then
+              pnpm run typecheck
+            elif [ "$PM" = "yarn" ]; then
+              yarn typecheck
+            else
+              npm run typecheck
+            fi
+          else
+            echo "No typecheck script; skipping"
+          fi
+
+      - name: Build
+        if: steps.has_pkg.outputs.has_pkg == 'true'
+        run: |
+          PM="${{ steps.pm.outputs.pm }}"
+          if node -e "const p=require('./package.json'); process.exit(p.scripts && p.scripts.build ? 0 : 1)"; then
+            if [ "$PM" = "pnpm" ]; then
+              pnpm run build
+            elif [ "$PM" = "yarn" ]; then
+              yarn build
+            else
+              npm run build
+            fi
+          else
+            echo "No build script; skipping"
+          fi
+
+      - name: Skip
+        if: steps.has_pkg.outputs.has_pkg != 'true'
+        run: echo "No package.json; skipping Node CI."

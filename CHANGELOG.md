@@ -1,12 +1,20 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/CHANGELOG.md
-Template-Version: 1.18.0
-Last-Generated: 2026-02-04T17:55:11Z
+Template-Version: 1.20.0
+Last-Generated: 2026-02-05T15:48:01Z
 Ownership: Managed
 ---
 
 # Changelog
+
+## 0.1.21 - 2026-02-05
+- Add fast-start profile settings to reduce startup questions and script reads.
+
+## 0.1.20 - 2026-02-05
+- Add universal adapter references to reduce tool adapter duplication.
+- Add Node CI workflow with conditional package manager detection.
+- Improve preflight reporting for network-restricted installs.
 
 ## 0.1.19 - 2026-02-04
 - Add preflight scripts and automation flags for auto-run checks.

@@ -1,8 +1,8 @@
 {
   "Managed-By": "AgenticRepoBuilder",
   "Template-Source": "templates/repo_manifest.json",
-  "Template-Version": "1.18.0",
-  "Last-Generated": "2026-02-05T12:45:00Z",
+  "Template-Version": "1.19.0",
+  "Last-Generated": "2026-02-05T15:33:50Z",
   "repo": {
     "slug": "vibeagents",
     "mode": "no-app-first",
@@ -490,6 +490,11 @@
       "path": ".agentic/adapters/UNIVERSAL.md",
       "ownership": "Managed",
       "template": "templates/.agentic/adapters/UNIVERSAL.md"
+    },
+    {
+      "path": ".github/workflows/node-ci.yml",
+      "ownership": "Managed",
+      "template": "templates/.github/workflows/node-ci.yml"
     }
   ],
   "directories": [
@@ -518,6 +523,7 @@
     "docs",
     "docs/ADR",
     "scripts",
-    ".agentic/adapters"
+    ".agentic/adapters",
+    ".github/workflows"
   ]
 }
