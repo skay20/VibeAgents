@@ -12,6 +12,8 @@ Ownership: Managed
 This repository is the product. It contains rules, agents, workflows, and state to turn research and PRD inputs into a plug-and-play repo without a separate app.
 
 ## Quickstart
+Guia completa: `/Users/matiassouza/Desktop/Projects/VibeAgents/docs/QUICKSTART.md`
+
 1. Review and complete `docs/PRD.md`.
 2. Confirm commands in `docs/RUNBOOK.md`.
 3. Use workflows in `.agentic/WORKFLOWS_GUIDE.md`.
