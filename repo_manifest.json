@@ -1,8 +1,8 @@
 {
   "Managed-By": "AgenticRepoBuilder",
   "Template-Source": "templates/repo_manifest.json",
-  "Template-Version": "1.19.0",
-  "Last-Generated": "2026-02-05T15:33:50Z",
+  "Template-Version": "1.21.0",
+  "Last-Generated": "2026-02-05T23:51:57Z",
   "repo": {
     "slug": "vibeagents",
     "mode": "no-app-first",
@@ -247,6 +247,11 @@
       "template": "templates/.ai/context/PROJECT.md"
     },
     {
+      "path": ".ai/context/RUNTIME_MIN.md",
+      "ownership": "Managed",
+      "template": "templates/.ai/context/RUNTIME_MIN.md"
+    },
+    {
       "path": ".ai/context/SECURITY.md",
       "ownership": "Managed",
       "template": "templates/.ai/context/SECURITY.md"
@@ -420,6 +425,11 @@
       "path": "docs/PRD.md",
       "ownership": "Hybrid",
       "template": "templates/docs/PRD.md"
+    },
+    {
+      "path": "docs/QUICKSTART.md",
+      "ownership": "Human",
+      "template": ""
     },
     {
       "path": "docs/RUNBOOK.md",

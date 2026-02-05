@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/docs/STRUCTURE.md
-Template-Version: 1.14.0
-Last-Generated: 2026-02-05T15:33:50Z
+Template-Version: 1.15.0
+Last-Generated: 2026-02-05T23:51:57Z
 Ownership: Managed
 ---
 # Project Structure
@@ -16,6 +16,7 @@ Ownership: Managed
 ├─ docs/
 │  ├─ PRD.md
 │  ├─ ARCHITECTURE.md
+│  ├─ QUICKSTART.md
 │  ├─ RUNBOOK.md
 │  ├─ STRUCTURE.md
 │  ├─ GENERICITY_FIX_REPORT.md
@@ -26,6 +27,7 @@ Ownership: Managed
 │  │  ├─ BOOTSTRAP.md
 │  │  ├─ CORE.md
 │  │  ├─ PROJECT.md
+│  │  ├─ RUNTIME_MIN.md
 │  │  ├─ STANDARDS.md
 │  │  ├─ SECURITY.md
 │  │  └─ TESTING.md

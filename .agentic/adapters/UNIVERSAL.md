@@ -1,14 +1,15 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/adapters/UNIVERSAL.md
-Template-Version: 1.1.0
-Last-Generated: 2026-02-05T15:48:01Z
+Template-Version: 1.2.0
+Last-Generated: 2026-02-05T23:51:57Z
 Ownership: Managed
 ---
 
 # Universal Adapter Rules
 
 ## Bootstrap Context (Required)
+- `.ai/context/RUNTIME_MIN.md`
 - `.ai/context/BOOTSTRAP.md`
 - `.ai/context/PROJECT.md`
 - `.agentic/CONSTITUTION.md`

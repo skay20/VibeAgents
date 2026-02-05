@@ -1,12 +1,17 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/CHANGELOG.md
-Template-Version: 1.20.0
-Last-Generated: 2026-02-05T15:48:01Z
+Template-Version: 1.21.0
+Last-Generated: 2026-02-05T23:51:57Z
 Ownership: Managed
 ---
 
 # Changelog
+
+## 0.1.22 - 2026-02-05
+- Add runtime-min startup context and single-message calibration defaults.
+- Add startup batch logging policy to reduce first-response overhead.
+- Register `docs/QUICKSTART.md` as Human-owned in repo manifest.
 
 ## 0.1.21 - 2026-02-05
 - Add fast-start profile settings to reduce startup questions and script reads.

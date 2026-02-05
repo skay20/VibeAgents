@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/verify.sh
-# Template-Version: 1.16.0
-# Last-Generated: 2026-02-04T17:55:11Z
+# Template-Version: 1.17.0
+# Last-Generated: 2026-02-05T23:51:57Z
 # Ownership: Managed
 
 set -euo pipefail
@@ -14,19 +14,24 @@ fail() {
   FAIL=1
 }
 
-# 1) Managed header checks for all managed files
+# 1) Header checks for non-human-owned files
 MANAGED_FILES=$(python3 - <<'PYCODE'
 import json
 from pathlib import Path
 m=json.loads(Path('repo_manifest.json').read_text())
 for f in m['files']:
-    print(f['path'])
+    print(f"{f['path']}|{f.get('ownership', 'Managed')}")
 PYCODE
 )
 
-for f in $MANAGED_FILES; do
+for item in $MANAGED_FILES; do
+  f="${item%%|*}"
+  ownership="${item##*|}"
   if [[ ! -f "$f" ]]; then
     fail "Missing managed file: $f"
+    continue
+  fi
+  if [[ "$ownership" == "Human" ]]; then
     continue
   fi
   if ! grep -q "Managed-By" "$f"; then
@@ -43,6 +48,7 @@ for f in $MANAGED_FILES; do
 # 2) Placeholder check (TO_CONFIRM) with allowlist
 ALLOWLIST=("docs/PRD.md" "docs/RUNBOOK.md" "README.md" ".agentic/agents/god_orchestrator.md" "scripts/verify.sh")
 for f in $MANAGED_FILES; do
+  f="${f%%|*}"
   skip=0
   for a in "${ALLOWLIST[@]}"; do
     if [[ "$f" == "$a" ]]; then
@@ -86,6 +92,9 @@ fi
 if [[ ! -d ".agentic/bus/metrics" ]]; then
   fail "Missing metrics directory"
 fi
+if [[ ! -f ".ai/context/RUNTIME_MIN.md" ]]; then
+  fail "Missing .ai/context/RUNTIME_MIN.md"
+fi
 
 # 2e) Settings file check
 if [[ ! -f ".agentic/settings.json" ]]; then
@@ -107,6 +116,7 @@ if not isinstance(settings, dict):
 tele = settings.get("telemetry", {})
 run_start = settings.get("run_start", {})
 run_mode = settings.get("run_mode", {})
+startup = settings.get("startup", {})
 automation = settings.get("automation", {})
 checks = settings.get("checks", {})
 validation = settings.get("validation", {})
@@ -120,6 +130,13 @@ required = [
     ("run_start.write_run_meta", run_start.get("write_run_meta", None)),
     ("run_mode.preferred", run_mode.get("preferred", None)),
     ("run_mode.default_if_unanswered", run_mode.get("default_if_unanswered", None)),
+    ("startup.profile", startup.get("profile", None)),
+    ("startup.max_initial_questions", startup.get("max_initial_questions", None)),
+    ("startup.ask_only_missing", startup.get("ask_only_missing", None)),
+    ("startup.avoid_script_reads", startup.get("avoid_script_reads", None)),
+    ("startup.defer_repo_map", startup.get("defer_repo_map", None)),
+    ("startup.single_calibration_message", startup.get("single_calibration_message", None)),
+    ("startup.batch_startup_logging", startup.get("batch_startup_logging", None)),
     ("automation.run_scripts", automation.get("run_scripts", None)),
     ("automation.auto_start_run", automation.get("auto_start_run", None)),
     ("automation.auto_log_questions", automation.get("auto_log_questions", None)),

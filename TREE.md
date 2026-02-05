@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/TREE.md
-Template-Version: 1.14.0
-Last-Generated: 2026-02-05T15:33:50Z
+Template-Version: 1.15.0
+Last-Generated: 2026-02-05T23:51:57Z
 Ownership: Managed
 ---
 # Repository Tree
@@ -18,6 +18,7 @@ This file is generated. Update it via the orchestrator and templates.
 ├─ docs/
 │  ├─ PRD.md
 │  ├─ ARCHITECTURE.md
+│  ├─ QUICKSTART.md
 │  ├─ RUNBOOK.md
 │  ├─ STRUCTURE.md
 │  ├─ GENERICITY_FIX_REPORT.md
@@ -28,6 +29,7 @@ This file is generated. Update it via the orchestrator and templates.
 │  │  ├─ BOOTSTRAP.md
 │  │  ├─ CORE.md
 │  │  ├─ PROJECT.md
+│  │  ├─ RUNTIME_MIN.md
 │  │  ├─ STANDARDS.md
 │  │  ├─ SECURITY.md
 │  │  └─ TESTING.md

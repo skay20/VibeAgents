@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CONSTITUTION.md
-Template-Version: 2.8.0
-Last-Generated: 2026-02-05T15:48:01Z
+Template-Version: 2.9.0
+Last-Generated: 2026-02-05T23:51:57Z
 Ownership: Managed
 ---
 
@@ -22,7 +22,7 @@ Ownership: Managed
 If there is a conflict, higher precedence wins. If a required input is missing, the agent must BLOCK.
 
 ## Bootstrap Context Policy
-- Startup should load only BOOTSTRAP + PROJECT + CONSTITUTION.
+- Startup should load only RUNTIME_MIN + BOOTSTRAP + PROJECT.
 - Load PRD and L1 contexts on-demand.
 If `settings.startup.profile=fast`, avoid directory listings and script reads unless required.
 
@@ -62,11 +62,13 @@ If `settings.startup.profile=fast`:
 - Ask only missing inputs (read the PRD first).
 - Cap the initial set at `settings.startup.max_initial_questions`.
 - Defer non-critical decisions to the planning phase.
+- If `settings.startup.single_calibration_message=true`, ask calibration in one bundled message.
 
 ## Startup Performance (Fast Profile)
 If `settings.startup.profile=fast`:
 - Do not read scripts under `scripts/`; call them directly when automation is enabled.
 - Avoid listing directories; rely on `repo_manifest.json` or `TREE.md` only when required.
+- If `settings.startup.batch_startup_logging=true`, emit one startup calibration log entry (`Q_CALIBRATION`) instead of per-question logs.
 
 ## Communication Style by Mode
 - `AgentX`: short, decisive. Do not ask “move on?” prompts. Proceed unless a critical blocker appears.

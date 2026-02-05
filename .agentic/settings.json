@@ -1,8 +1,8 @@
 {
   "Managed-By": "AgenticRepoBuilder",
   "Template-Source": "templates/.agentic/settings.json",
-  "Template-Version": "1.8.0",
-  "Last-Generated": "2026-02-05T15:48:01Z",
+  "Template-Version": "1.9.0",
+  "Last-Generated": "2026-02-05T23:51:57Z",
   "Ownership": "Managed",
   "settings": {
     "run_mode": {
@@ -15,7 +15,9 @@
       "max_initial_questions": 3,
       "ask_only_missing": true,
       "avoid_script_reads": true,
-      "defer_repo_map": true
+      "defer_repo_map": true,
+      "single_calibration_message": true,
+      "batch_startup_logging": true
     },
     "approvals": {
       "auto_approve_in_agentx": true
@@ -48,7 +50,7 @@
       "default_run_mode": "AgentL"
     },
     "calibration_questions": {
-      "min": 3,
+      "min": 1,
       "max": 7
     },
     "validation": {

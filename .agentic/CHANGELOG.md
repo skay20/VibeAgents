@@ -1,12 +1,17 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CHANGELOG.md
-Template-Version: 1.20.0
-Last-Generated: 2026-02-05T15:48:01Z
+Template-Version: 1.21.0
+Last-Generated: 2026-02-05T23:51:57Z
 Ownership: Managed
 ---
 
 # Agentic Changelog
+
+## 0.22.0 - 2026-02-05
+- Add `RUNTIME_MIN.md` ultra-short startup context.
+- Add single-message startup calibration and startup batch logging policy.
+- Update orchestrator and intent translator contracts for reduced startup overhead.
 
 ## 0.21.0 - 2026-02-05
 - Add fast-start profile settings to reduce startup questions and script reads.
