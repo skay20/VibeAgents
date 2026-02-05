@@ -21,7 +21,6 @@ Antes de cualquier cambio:
 2. ✅ `npm run lint` - 0 errores
 3. ✅ `npm run typecheck` - 0 errores
 4. ✅ `npm run build` - Exitoso
-> Consultar `.ai/context/CORE.md` para los comandos exactos de Quality Gates.
 
 ## Estructura del Proyecto
 
