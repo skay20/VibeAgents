@@ -1,12 +1,18 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CHANGELOG.md
-Template-Version: 1.24.0
-Last-Generated: 2026-02-06T17:00:00Z
+Template-Version: 1.25.0
+Last-Generated: 2026-02-06T16:26:32Z
 Ownership: Managed
 ---
 
 # Agentic Changelog
+
+## 0.26.0 - 2026-02-06
+- Add mandatory structure-driven PRD intake policy (no keyword dependency) in Constitution and adapters.
+- Add incremental PRD evolution/versioning contract for feature additions (`prd_delta` + `prd_versions` artifacts).
+- Update intent translator v2 and orchestrator v2 to classify `new_prd|prd_update|not_prd` and route PRD updates before calibration.
+- Extend verification with `settings.prd_intake` contract checks and PRD intake/versioning prompt checks.
 
 ## 0.25.0 - 2026-02-06
 - Add adaptive flow policy (`lean|standard|strict`) with required-agent evidence rules in Constitution.

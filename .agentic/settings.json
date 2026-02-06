@@ -1,10 +1,26 @@
 {
   "Managed-By": "AgenticRepoBuilder",
   "Template-Source": "templates/.agentic/settings.json",
-  "Template-Version": "2.1.0",
-  "Last-Generated": "2026-02-06T17:00:00Z",
+  "Template-Version": "2.2.0",
+  "Last-Generated": "2026-02-06T16:26:32Z",
   "Ownership": "Managed",
   "settings": {
+    "prd_intake": {
+      "detect_without_keyword": true,
+      "min_structural_signals": 3,
+      "structural_signals": [
+        "PROJECT:",
+        "ROLE",
+        "PRIMARY GOAL",
+        "INFORMATION ARCHITECTURE",
+        "REQUIREMENTS",
+        "OUTPUT EXPECTATION"
+      ],
+      "on_ambiguity": "confirm_once",
+      "update_strategy": "incremental",
+      "create_new_prd_on_scope_reset": true,
+      "write_prd_versions": true
+    },
     "run_mode": {
       "ask_on_prd": true,
       "preferred": "AgentX",

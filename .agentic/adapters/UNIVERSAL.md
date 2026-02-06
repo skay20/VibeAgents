@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/adapters/UNIVERSAL.md
-Template-Version: 1.3.1
-Last-Generated: 2026-02-06T16:10:18Z
+Template-Version: 1.4.0
+Last-Generated: 2026-02-06T16:26:32Z
 Ownership: Managed
 ---
 
@@ -18,7 +18,7 @@ Ownership: Managed
 ## Startup Handshake (Must Happen, In This Order)
 1. Load bootstrap context (list above).
 2. If automation is enabled and no run exists yet, create `run_id` by calling `scripts/start-run.sh`.
-3. If the user provided a PRD in chat, ingest it into `docs/PRD.md` by editing only `BEGIN_MANAGED` / `END_MANAGED` (preserve header/markers).
+3. Detect PRD from chat by structure (not only by keyword). If it matches configured PRD signals, ingest into `docs/PRD.md` by editing only `BEGIN_MANAGED` / `END_MANAGED` (preserve header/markers).
 4. Ask calibration once (single bundled message when configured), including run mode if `AGENTIC_RUN_MODE` is not set. Default per `.agentic/settings.json` if unanswered.
 5. Only then proceed to planning/implementation agents per flow tier.
 
@@ -28,6 +28,9 @@ Ownership: Managed
   - Write the PRD into `docs/PRD.md` (Hybrid file) by editing only the `BEGIN_MANAGED` / `END_MANAGED` block.
   - Preserve the PRD header and managed markers.
   - Record `PRD ingested` in `.agentic/bus/artifacts/<run_id>/decisions.md`.
+- PRD evolution is mandatory when new features are requested:
+  - Update PRD incrementally instead of replacing prior validated scope.
+  - Write PRD versions in `.agentic/bus/artifacts/<run_id>/prd_versions/` and summarize changes in `.agentic/bus/artifacts/<run_id>/prd_delta.md`.
 - If PRD is missing or placeholder-only after ingest, output `BLOCKED` and ask minimal questions.
 - Run mode: use `AGENTIC_RUN_MODE` if set; otherwise ask once (after PRD ingest) and default per settings.
 - Telemetry + automation: honor `.agentic/settings.json` flags.

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/verify.sh
-# Template-Version: 1.20.0
-# Last-Generated: 2026-02-06T17:00:00Z
+# Template-Version: 1.21.0
+# Last-Generated: 2026-02-06T16:26:32Z
 # Ownership: Managed
 
 set -euo pipefail
@@ -113,6 +113,9 @@ if [[ -f ".agentic/adapters/UNIVERSAL.md" ]]; then
   if ! head -n 80 ".agentic/adapters/UNIVERSAL.md" | grep -q "Ingest.*docs/PRD.md\\|PRD ingest"; then
     fail "UNIVERSAL.md must mention PRD ingest near the top"
   fi
+  if ! head -n 80 ".agentic/adapters/UNIVERSAL.md" | grep -q "structure\\|keyword"; then
+    fail "UNIVERSAL.md must mention structure-driven PRD detection near the top"
+  fi
 fi
 
 # 2h) Codex adapter must reference RUNTIME_MIN
@@ -146,6 +149,7 @@ settings = data.get("settings")
 if not isinstance(settings, dict):
     print("[FAIL] Missing settings key in .agentic/settings.json")
     sys.exit(1)
+prd_intake = settings.get("prd_intake", {})
 tele = settings.get("telemetry", {})
 run_start = settings.get("run_start", {})
 run_mode = settings.get("run_mode", {})
@@ -157,6 +161,13 @@ prompt_resolution = settings.get("prompt_resolution", {})
 flow_control = settings.get("flow_control", {})
 required_agents = flow_control.get("required_agents", {})
 required = [
+    ("prd_intake.detect_without_keyword", prd_intake.get("detect_without_keyword", None)),
+    ("prd_intake.min_structural_signals", prd_intake.get("min_structural_signals", None)),
+    ("prd_intake.structural_signals", prd_intake.get("structural_signals", None)),
+    ("prd_intake.on_ambiguity", prd_intake.get("on_ambiguity", None)),
+    ("prd_intake.update_strategy", prd_intake.get("update_strategy", None)),
+    ("prd_intake.create_new_prd_on_scope_reset", prd_intake.get("create_new_prd_on_scope_reset", None)),
+    ("prd_intake.write_prd_versions", prd_intake.get("write_prd_versions", None)),
     ("telemetry.enabled", tele.get("enabled", None)),
     ("telemetry.capture_tokens", tele.get("capture_tokens", None)),
     ("telemetry.events", tele.get("events", None)),
@@ -212,6 +223,15 @@ strict_triggers = flow_control.get("strict_triggers", [])
 if not isinstance(strict_triggers, list):
     print("[FAIL] flow_control.strict_triggers must be a list")
     sys.exit(1)
+if not isinstance(prd_intake.get("structural_signals", []), list) or len(prd_intake.get("structural_signals", [])) < 3:
+    print("[FAIL] prd_intake.structural_signals must be a list with at least 3 entries")
+    sys.exit(1)
+if prd_intake.get("on_ambiguity") not in {"confirm_once", "block"}:
+    print("[FAIL] prd_intake.on_ambiguity must be confirm_once|block")
+    sys.exit(1)
+if prd_intake.get("update_strategy") not in {"incremental", "replace"}:
+    print("[FAIL] prd_intake.update_strategy must be incremental|replace")
+    sys.exit(1)
 PYCODE
   if [[ $? -ne 0 ]]; then
     FAIL=1
@@ -228,9 +248,18 @@ done
 # 2g) Orchestrator adaptive flow checks
 ORCH_V2=".agentic/agents/god_orchestrator.v2.md"
 if [[ -f "$ORCH_V2" ]]; then
-  for text in "Flow tier:" "Classify change risk and select flow tier" "Missing metrics/artifact evidence for any required agent"; do
+  for text in "Flow tier:" "Classify change risk and select flow tier" "Missing metrics/artifact evidence for any required agent" "structured PRD"; do
     if ! grep -q "$text" "$ORCH_V2"; then
       fail "Orchestrator v2 missing adaptive flow requirement: $text"
+    fi
+  done
+fi
+
+INTENT_V2=".agentic/agents/intent_translator.v2.md"
+if [[ -f "$INTENT_V2" ]]; then
+  for text in "structure signals" "new_prd|prd_update|not_prd" "prd_versions"; do
+    if ! grep -q "$text" "$INTENT_V2"; then
+      fail "Intent translator v2 missing PRD intake/versioning requirement: $text"
     fi
   done
 fi

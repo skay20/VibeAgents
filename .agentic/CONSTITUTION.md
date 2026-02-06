@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CONSTITUTION.md
-Template-Version: 2.10.0
-Last-Generated: 2026-02-06T17:00:00Z
+Template-Version: 2.11.0
+Last-Generated: 2026-02-06T16:26:32Z
 Ownership: Managed
 ---
 
@@ -25,6 +25,15 @@ If there is a conflict, higher precedence wins. If a required input is missing, 
 - Startup should load only RUNTIME_MIN + BOOTSTRAP + PROJECT.
 - Load PRD and L1 contexts on-demand.
 If `settings.startup.profile=fast`, avoid directory listings and script reads unless required.
+
+## PRD Intake and Evolution (Mandatory)
+PRD intake must be structure-driven, not keyword-driven.
+- If user input matches PRD structure signals from `settings.prd_intake.structural_signals` and reaches `settings.prd_intake.min_structural_signals`, treat it as PRD even without phrases like `new PRD`.
+- If ambiguous, ask exactly one confirmation question when `settings.prd_intake.on_ambiguity=confirm_once`.
+- Always normalize accepted PRD content into `docs/PRD.md` by editing only `BEGIN_MANAGED` / `END_MANAGED`.
+- On follow-up feature requests, update PRD incrementally (do not discard prior valid scope) when `settings.prd_intake.update_strategy=incremental`.
+- If scope is a full reset and `settings.prd_intake.create_new_prd_on_scope_reset=true`, create a new PRD lineage entry and record rationale in decisions.
+- If `settings.prd_intake.write_prd_versions=true`, write versioned snapshots under `.agentic/bus/artifacts/<run_id>/prd_versions/` and summarize delta in `.agentic/bus/artifacts/<run_id>/prd_delta.md`.
 
 ## Settings and Overrides
 Primary settings live in `.agentic/settings.json`. Environment variables override settings:
@@ -72,6 +81,7 @@ Reading a prompt file does not count as execution evidence.
 
 ## Calibration Questions (After PRD)
 After the PRD is provided, the system must ask a short calibration set.
+- PRD provision includes structured PRD text in chat, even when no explicit keyword is used.
 - The run mode question must be asked here, with `AgentX` as the suggested option.
 - If the user does not answer, default to `AgentL`.
 - Calibration questions are non-blocking unless a critical input is missing (then follow normal BLOCK rules).

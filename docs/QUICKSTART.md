@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/docs/QUICKSTART.md
-Template-Version: 1.3.0
-Last-Generated: 2026-02-06T16:10:18Z
+Template-Version: 1.4.0
+Last-Generated: 2026-02-06T16:26:32Z
 Ownership: Managed
 ---
 
@@ -79,6 +79,10 @@ AGENTIC_AGENT_ID=god_orchestrator /Users/matiassouza/Desktop/Projects/VibeAgents
 6) Explain: did you run the Startup Handshake steps (PRD ingest then calibration)? If not, which step was skipped and why.
 ```
 
+PRD intake baseline rule:
+- The assistant must detect PRD by structure, not only by keywords like `new PRD`.
+- Structured project briefs (for example with `PROJECT:`, `ROLE`, requirements, routes, output expectation) must be treated as PRD input.
+
 ## Prompt System (v1/v2)
 Dual-track prompt model:
 - v1 standalone prompt: `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/agents/<agent_id>.md`
@@ -102,6 +106,7 @@ If compiled artifacts are enabled:
 
 ## Settings You Will Use Most
 - `settings.run_mode`: AgentX/AgentL/AgentM behavior
+- `settings.prd_intake`: structure-based PRD detection and PRD version evolution policy
 - `settings.startup`: startup speed and question count
 - `settings.telemetry`: events/questions/tokens capture
 - `settings.automation`: automatic run/log script behavior

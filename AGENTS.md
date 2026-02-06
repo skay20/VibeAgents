@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/AGENTS.md
-Template-Version: 2.1.1
-Last-Generated: 2026-02-06T16:10:18Z
+Template-Version: 2.2.0
+Last-Generated: 2026-02-06T16:26:32Z
 Ownership: Managed
 ---
 
@@ -17,7 +17,7 @@ Bootstrap context:
 
 Startup handshake (must happen even on fast runs):
 - Create `run_id` via `scripts/start-run.sh` (when automation enabled).
-- Ingest PRD from chat into `docs/PRD.md` (managed block) before calibration.
+- Detect PRD by structure (not only keyword) and ingest/update `docs/PRD.md` (managed block) before calibration.
 - Ask calibration once, including run mode if `AGENTIC_RUN_MODE` is unset.
 
 ## Codex-Specific

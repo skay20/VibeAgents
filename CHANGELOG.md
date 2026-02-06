@@ -1,12 +1,18 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/CHANGELOG.md
-Template-Version: 1.25.0
-Last-Generated: 2026-02-06T17:00:00Z
+Template-Version: 1.26.0
+Last-Generated: 2026-02-06T16:26:32Z
 Ownership: Managed
 ---
 
 # Changelog
+
+## 0.1.27 - 2026-02-06
+- Add base PRD-intake contract to detect PRD by structure (without requiring `new PRD` keyword).
+- Add incremental PRD evolution/versioning policy for follow-up feature requests.
+- Update startup contracts (`UNIVERSAL`, `RUNTIME_MIN`, `AGENTS`) to enforce PRD ingest/update before calibration.
+- Extend `scripts/verify.sh` with `settings.prd_intake` and intake/versioning checks.
 
 ## 0.1.26 - 2026-02-06
 - Add adaptive flow-control settings for risk-tiered dispatch (`lean|standard|strict`) in `.agentic/settings.json`.
