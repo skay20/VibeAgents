@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CONSTITUTION.md
-Template-Version: 2.9.0
-Last-Generated: 2026-02-05T23:51:57Z
+Template-Version: 2.10.0
+Last-Generated: 2026-02-06T17:00:00Z
 Ownership: Managed
 ---
 
@@ -52,6 +52,23 @@ The orchestrator must select a run mode the first time a PRD is ingested for a r
 
 If `AGENTIC_RUN_MODE` is set, use it. Otherwise, ask the user to choose.
 Record the decision in `.agentic/bus/state/<run_id>.json` and `.agentic/bus/artifacts/<run_id>/decisions.md`.
+
+## Adaptive Flow Policy (Quality + Speed)
+Execution must use a risk tier to avoid unnecessary overhead while enforcing minimum safety.
+
+`settings.flow_control.default_tier` defines fallback behavior. If `settings.flow_control.auto_tier_by_change=true`, select tier by change risk:
+- `lean`: low-risk edits (copy/style/docs/localized UI without dependency, build, API, security, or architecture impact)
+- `standard`: normal feature/code changes (default)
+- `strict`: high-risk changes triggered by `settings.flow_control.strict_triggers`
+
+Required agents by tier come from `settings.flow_control.required_agents`.
+
+Minimum required evidence for every required agent:
+- Metrics file: `.agentic/bus/metrics/<run_id>/<agent_id>.json`
+- At least one artifact output or decision entry in `.agentic/bus/artifacts/<run_id>/`
+
+If required evidence is missing, output `BLOCKED` and do not release.
+Reading a prompt file does not count as execution evidence.
 
 ## Calibration Questions (After PRD)
 After the PRD is provided, the system must ask a short calibration set.

@@ -1,12 +1,18 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/CHANGELOG.md
-Template-Version: 1.24.0
-Last-Generated: 2026-02-06T16:25:00Z
+Template-Version: 1.25.0
+Last-Generated: 2026-02-06T17:00:00Z
 Ownership: Managed
 ---
 
 # Changelog
+
+## 0.1.26 - 2026-02-06
+- Add adaptive flow-control settings for risk-tiered dispatch (`lean|standard|strict`) in `.agentic/settings.json`.
+- Add adaptive flow policy and required-agent evidence rules in `.agentic/CONSTITUTION.md`.
+- Update orchestrator v2 and verification checks to enforce tier selection and evidence gating.
+- Update workflow and quickstart docs for the adaptive flow model.
 
 ## 0.1.25 - 2026-02-06
 - Add `scripts/metrics_compare.py` for A/B run comparison (`feature OFF` vs `feature ON`).

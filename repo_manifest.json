@@ -1,8 +1,8 @@
 {
   "Managed-By": "AgenticRepoBuilder",
   "Template-Source": "templates/repo_manifest.json",
-  "Template-Version": "1.24.0",
-  "Last-Generated": "2026-02-06T16:25:00Z",
+  "Template-Version": "1.25.0",
+  "Last-Generated": "2026-02-06T17:00:00Z",
   "repo": {
     "slug": "vibeagents",
     "mode": "no-app-first",

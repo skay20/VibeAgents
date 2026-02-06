@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/docs/QUICKSTART.md
-Template-Version: 1.1.0
-Last-Generated: 2026-02-06T16:25:00Z
+Template-Version: 1.2.0
+Last-Generated: 2026-02-06T17:00:00Z
 Ownership: Managed
 ---
 
@@ -67,6 +67,7 @@ If compiled artifacts are enabled:
 - `settings.telemetry`: events/questions/tokens capture
 - `settings.automation`: automatic run/log script behavior
 - `settings.prompt_resolution`: v1/v2 resolver control
+- `settings.flow_control`: adaptive agent flow by risk tier (`lean|standard|strict`)
 - `settings.checks`: preflight install/dev checks
 - `settings.validation`: strict validation flags
 
@@ -119,6 +120,22 @@ Canonical benchmark output:
 - `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/benchmarks/<benchmark_id>/baseline_report.md`
 - `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/benchmarks/<benchmark_id>/experiment_report.md`
 - `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/benchmarks/<benchmark_id>/comparison.md`
+
+## Adaptive Agent Flow (Quality + Speed)
+Tier behavior:
+- `lean`: low-risk work, minimal required agents.
+- `standard`: default, balanced quality/speed.
+- `strict`: high-risk changes with expanded required-agent checks.
+
+Settings:
+- `settings.flow_control.default_tier`
+- `settings.flow_control.auto_tier_by_change`
+- `settings.flow_control.required_agents`
+- `settings.flow_control.strict_triggers`
+
+Goal:
+- avoid full-pipeline overhead on low-risk changes
+- block release when required-agent evidence is missing for the selected tier
 
 ## Preflight for Web Projects
 Run preflight before release decisions:

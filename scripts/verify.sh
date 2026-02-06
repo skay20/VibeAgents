@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/verify.sh
-# Template-Version: 1.19.0
-# Last-Generated: 2026-02-06T14:05:00Z
+# Template-Version: 1.20.0
+# Last-Generated: 2026-02-06T17:00:00Z
 # Ownership: Managed
 
 set -euo pipefail
@@ -130,6 +130,8 @@ automation = settings.get("automation", {})
 checks = settings.get("checks", {})
 validation = settings.get("validation", {})
 prompt_resolution = settings.get("prompt_resolution", {})
+flow_control = settings.get("flow_control", {})
+required_agents = flow_control.get("required_agents", {})
 required = [
     ("telemetry.enabled", tele.get("enabled", None)),
     ("telemetry.capture_tokens", tele.get("capture_tokens", None)),
@@ -156,6 +158,13 @@ required = [
     ("prompt_resolution.pilot_agents", prompt_resolution.get("pilot_agents", None)),
     ("prompt_resolution.fallback_version", prompt_resolution.get("fallback_version", None)),
     ("prompt_resolution.write_compiled_artifacts", prompt_resolution.get("write_compiled_artifacts", None)),
+    ("flow_control.default_tier", flow_control.get("default_tier", None)),
+    ("flow_control.auto_tier_by_change", flow_control.get("auto_tier_by_change", None)),
+    ("flow_control.required_agents.lean", required_agents.get("lean", None)),
+    ("flow_control.required_agents.standard", required_agents.get("standard", None)),
+    ("flow_control.required_agents.strict", required_agents.get("strict", None)),
+    ("flow_control.strict_triggers", flow_control.get("strict_triggers", None)),
+    ("flow_control.max_parallel_agents", flow_control.get("max_parallel_agents", None)),
     ("checks.preflight_enabled", checks.get("preflight_enabled", None)),
     ("checks.preflight_run_install", checks.get("preflight_run_install", None)),
     ("checks.preflight_run_dev", checks.get("preflight_run_dev", None)),
@@ -166,6 +175,18 @@ required = [
 missing = [k for k,v in required if v is None]
 if missing:
     print("[FAIL] Missing settings keys: " + ", ".join(missing))
+    sys.exit(1)
+if flow_control.get("default_tier") not in {"lean", "standard", "strict"}:
+    print("[FAIL] flow_control.default_tier must be one of lean|standard|strict")
+    sys.exit(1)
+for key in ("lean", "standard", "strict"):
+    value = required_agents.get(key, [])
+    if not isinstance(value, list) or not value:
+        print(f"[FAIL] flow_control.required_agents.{key} must be a non-empty list")
+        sys.exit(1)
+strict_triggers = flow_control.get("strict_triggers", [])
+if not isinstance(strict_triggers, list):
+    print("[FAIL] flow_control.strict_triggers must be a list")
     sys.exit(1)
 PYCODE
   if [[ $? -ne 0 ]]; then
@@ -179,6 +200,16 @@ for s in scripts/start-run.sh scripts/log-event.sh scripts/log-question.sh scrip
     fail "Missing script: $s"
   fi
 done
+
+# 2g) Orchestrator adaptive flow checks
+ORCH_V2=".agentic/agents/god_orchestrator.v2.md"
+if [[ -f "$ORCH_V2" ]]; then
+  for text in "Flow tier:" "Classify change risk and select flow tier" "Missing metrics/artifact evidence for any required agent"; do
+    if ! grep -q "$text" "$ORCH_V2"; then
+      fail "Orchestrator v2 missing adaptive flow requirement: $text"
+    fi
+  done
+fi
 
 # 3) Adapter coherence (bootstrap)
 ADAPTERS=(

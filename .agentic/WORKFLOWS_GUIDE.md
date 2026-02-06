@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/WORKFLOWS_GUIDE.md
-Template-Version: 2.4.0
-Last-Generated: 2026-02-04T17:55:11Z
+Template-Version: 2.5.0
+Last-Generated: 2026-02-06T17:00:00Z
 Ownership: Managed
 ---
 
@@ -14,6 +14,19 @@ Ownership: Managed
 3. implement
 4. qa
 5. release
+
+## Adaptive Flow Tiers
+- `lean` (low risk): required agents `implementer`
+- `standard` (default): required agents `implementer`, `qa_reviewer`, `docs_writer`
+- `strict` (high risk): required agents `planner`, `implementer`, `qa_reviewer`, `security_reviewer`, `docs_writer`, `release_manager`
+
+Tier selection:
+- Use `settings.flow_control.default_tier` if no trigger applies.
+- If `settings.flow_control.auto_tier_by_change=true`, promote to `strict` when a strict trigger matches.
+- Triggers come from `settings.flow_control.strict_triggers`.
+
+Release guard:
+- A tier is complete only if every required agent has metrics and artifact/decision evidence.
 
 ## Upgrade Flow
 1. detect

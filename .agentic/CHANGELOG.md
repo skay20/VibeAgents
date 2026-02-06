@@ -1,12 +1,18 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CHANGELOG.md
-Template-Version: 1.23.0
-Last-Generated: 2026-02-06T14:05:00Z
+Template-Version: 1.24.0
+Last-Generated: 2026-02-06T17:00:00Z
 Ownership: Managed
 ---
 
 # Agentic Changelog
+
+## 0.25.0 - 2026-02-06
+- Add adaptive flow policy (`lean|standard|strict`) with required-agent evidence rules in Constitution.
+- Extend orchestrator v2 contract with risk classification, tier dispatch, and missing-evidence blockers.
+- Add flow-control settings contract and strict key validation in `scripts/verify.sh`.
+- Document adaptive tier routing in workflows and quickstart.
 
 ## 0.24.0 - 2026-02-06
 - Add dual-track prompt system with shared core (`_CORE.md`) and thin `*.v2.md` prompts for all agents.
