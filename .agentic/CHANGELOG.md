@@ -1,12 +1,17 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CHANGELOG.md
-Template-Version: 1.22.0
-Last-Generated: 2026-02-05T23:51:57Z
+Template-Version: 1.23.0
+Last-Generated: 2026-02-06T14:05:00Z
 Ownership: Managed
 ---
 
 # Agentic Changelog
+
+## 0.24.0 - 2026-02-06
+- Add dual-track prompt system with shared core (`_CORE.md`) and thin `*.v2.md` prompts for all agents.
+- Add `scripts/render-agent-prompt.sh` to resolve `v1|v2|auto` and write compiled prompts into run artifacts.
+- Update verification to enforce v1 + core + v2 prompt contracts and prompt resolution settings keys.
 
 ## 0.23.0 - 2026-02-05
 - Revamp all agent prompt contracts with startup behavior and hard/soft blocker escalation.

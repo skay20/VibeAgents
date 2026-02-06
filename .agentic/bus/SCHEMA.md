@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/bus/SCHEMA.md
-Template-Version: 1.14.0
-Last-Generated: 2026-02-05T23:51:57Z
+Template-Version: 1.15.0
+Last-Generated: 2026-02-06T14:05:00Z
 Ownership: Managed
 ---
 
@@ -18,6 +18,8 @@ Format: YYYYMMDD-HHMMSSZ-<slug>
 - Optional files: run_meta.md
 - Optional files: questions_log.md
 - Optional files: preflight_report.md
+- Optional directory: compiled_prompts/
+- Optional compiled prompt file: `.agentic/bus/artifacts/<run_id>/compiled_prompts/<agent_id>.md`
 - Schema references:
   - plan: `.agentic/bus/schemas/plan.schema.json`
   - diff summary: `.agentic/bus/schemas/diff_summary.schema.json`

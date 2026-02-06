@@ -1,8 +1,8 @@
 {
   "Managed-By": "AgenticRepoBuilder",
   "Template-Source": "templates/repo_manifest.json",
-  "Template-Version": "1.22.0",
-  "Last-Generated": "2026-02-05T23:51:57Z",
+  "Template-Version": "1.23.0",
+  "Last-Generated": "2026-02-06T14:05:00Z",
   "repo": {
     "slug": "vibeagents",
     "mode": "no-app-first",
@@ -67,9 +67,19 @@
       "template": "templates/.agentic/WORKFLOWS_GUIDE.md"
     },
     {
+      "path": ".agentic/agents/_CORE.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/_CORE.md"
+    },
+    {
       "path": ".agentic/agents/architect.md",
       "ownership": "Managed",
       "template": "templates/.agentic/agents/architect.md"
+    },
+    {
+      "path": ".agentic/agents/architect.v2.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/architect.v2.md"
     },
     {
       "path": ".agentic/agents/context_curator.md",
@@ -77,9 +87,19 @@
       "template": "templates/.agentic/agents/context_curator.md"
     },
     {
+      "path": ".agentic/agents/context_curator.v2.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/context_curator.v2.md"
+    },
+    {
       "path": ".agentic/agents/docs_writer.md",
       "ownership": "Managed",
       "template": "templates/.agentic/agents/docs_writer.md"
+    },
+    {
+      "path": ".agentic/agents/docs_writer.v2.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/docs_writer.v2.md"
     },
     {
       "path": ".agentic/agents/god_orchestrator.md",
@@ -87,9 +107,19 @@
       "template": "templates/.agentic/agents/god_orchestrator.md"
     },
     {
+      "path": ".agentic/agents/god_orchestrator.v2.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/god_orchestrator.v2.md"
+    },
+    {
       "path": ".agentic/agents/implementer.md",
       "ownership": "Managed",
       "template": "templates/.agentic/agents/implementer.md"
+    },
+    {
+      "path": ".agentic/agents/implementer.v2.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/implementer.v2.md"
     },
     {
       "path": ".agentic/agents/intent_translator.md",
@@ -97,9 +127,19 @@
       "template": "templates/.agentic/agents/intent_translator.md"
     },
     {
+      "path": ".agentic/agents/intent_translator.v2.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/intent_translator.v2.md"
+    },
+    {
       "path": ".agentic/agents/migration_manager.md",
       "ownership": "Managed",
       "template": "templates/.agentic/agents/migration_manager.md"
+    },
+    {
+      "path": ".agentic/agents/migration_manager.v2.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/migration_manager.v2.md"
     },
     {
       "path": ".agentic/agents/planner.md",
@@ -107,9 +147,19 @@
       "template": "templates/.agentic/agents/planner.md"
     },
     {
+      "path": ".agentic/agents/planner.v2.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/planner.v2.md"
+    },
+    {
       "path": ".agentic/agents/qa_reviewer.md",
       "ownership": "Managed",
       "template": "templates/.agentic/agents/qa_reviewer.md"
+    },
+    {
+      "path": ".agentic/agents/qa_reviewer.v2.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/qa_reviewer.v2.md"
     },
     {
       "path": ".agentic/agents/release_manager.md",
@@ -117,9 +167,19 @@
       "template": "templates/.agentic/agents/release_manager.md"
     },
     {
+      "path": ".agentic/agents/release_manager.v2.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/release_manager.v2.md"
+    },
+    {
       "path": ".agentic/agents/repo_maintainer.md",
       "ownership": "Managed",
       "template": "templates/.agentic/agents/repo_maintainer.md"
+    },
+    {
+      "path": ".agentic/agents/repo_maintainer.v2.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/repo_maintainer.v2.md"
     },
     {
       "path": ".agentic/agents/security_reviewer.md",
@@ -127,14 +187,29 @@
       "template": "templates/.agentic/agents/security_reviewer.md"
     },
     {
+      "path": ".agentic/agents/security_reviewer.v2.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/security_reviewer.v2.md"
+    },
+    {
       "path": ".agentic/agents/stack_advisor.md",
       "ownership": "Managed",
       "template": "templates/.agentic/agents/stack_advisor.md"
     },
     {
+      "path": ".agentic/agents/stack_advisor.v2.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/stack_advisor.v2.md"
+    },
+    {
       "path": ".agentic/agents/template_librarian.md",
       "ownership": "Managed",
       "template": "templates/.agentic/agents/template_librarian.md"
+    },
+    {
+      "path": ".agentic/agents/template_librarian.v2.md",
+      "ownership": "Managed",
+      "template": "templates/.agentic/agents/template_librarian.v2.md"
     },
     {
       "path": ".agentic/bus/SCHEMA.md",
@@ -507,6 +582,11 @@
       "template": "templates/scripts/start-run.sh"
     },
     {
+      "path": "scripts/render-agent-prompt.sh",
+      "ownership": "Managed",
+      "template": "templates/scripts/render-agent-prompt.sh"
+    },
+    {
       "path": "scripts/verify.sh",
       "ownership": "Managed",
       "template": "templates/scripts/verify.sh"
@@ -525,6 +605,7 @@
   "directories": [
     ".agentic",
     ".agentic/agents",
+    ".agentic/agents/backup_v1",
     ".agentic/bus",
     ".agentic/bus/artifacts",
     ".agentic/bus/locks",

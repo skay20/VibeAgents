@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/verify.sh
-# Template-Version: 1.18.0
-# Last-Generated: 2026-02-05T23:51:57Z
+# Template-Version: 1.19.0
+# Last-Generated: 2026-02-06T14:05:00Z
 # Ownership: Managed
 
 set -euo pipefail
@@ -129,6 +129,7 @@ startup = settings.get("startup", {})
 automation = settings.get("automation", {})
 checks = settings.get("checks", {})
 validation = settings.get("validation", {})
+prompt_resolution = settings.get("prompt_resolution", {})
 required = [
     ("telemetry.enabled", tele.get("enabled", None)),
     ("telemetry.capture_tokens", tele.get("capture_tokens", None)),
@@ -150,6 +151,11 @@ required = [
     ("automation.auto_start_run", automation.get("auto_start_run", None)),
     ("automation.auto_log_questions", automation.get("auto_log_questions", None)),
     ("automation.auto_log_agents", automation.get("auto_log_agents", None)),
+    ("prompt_resolution.default_version", prompt_resolution.get("default_version", None)),
+    ("prompt_resolution.pilot_v2_enabled", prompt_resolution.get("pilot_v2_enabled", None)),
+    ("prompt_resolution.pilot_agents", prompt_resolution.get("pilot_agents", None)),
+    ("prompt_resolution.fallback_version", prompt_resolution.get("fallback_version", None)),
+    ("prompt_resolution.write_compiled_artifacts", prompt_resolution.get("write_compiled_artifacts", None)),
     ("checks.preflight_enabled", checks.get("preflight_enabled", None)),
     ("checks.preflight_run_install", checks.get("preflight_run_install", None)),
     ("checks.preflight_run_dev", checks.get("preflight_run_dev", None)),
@@ -168,7 +174,7 @@ PYCODE
 fi
 
 # 2f) Scripts check
-for s in scripts/start-run.sh scripts/log-event.sh scripts/log-question.sh scripts/preflight.sh scripts/preflight.py; do
+for s in scripts/start-run.sh scripts/log-event.sh scripts/log-question.sh scripts/preflight.sh scripts/preflight.py scripts/render-agent-prompt.sh; do
   if [[ ! -f "$s" ]]; then
     fail "Missing script: $s"
   fi
@@ -194,21 +200,60 @@ for f in "${ADAPTERS[@]}"; do
   fi
  done
 
-# 4) Agent Spec v2 structural checks
+# 4) Agent prompt structural checks (v1 + core + v2)
 python3 - <<'PYCODE'
-import glob, re, sys
-required = [
+import re, sys
+
+agent_ids = [
+    "god_orchestrator",
+    "intent_translator",
+    "context_curator",
+    "stack_advisor",
+    "architect",
+    "planner",
+    "implementer",
+    "qa_reviewer",
+    "security_reviewer",
+    "docs_writer",
+    "release_manager",
+    "repo_maintainer",
+    "template_librarian",
+    "migration_manager",
+]
+
+v1_required = [
     '## Scope', '## Inputs', '## Outputs', '## Decision Matrix', '## Operating Loop',
     '## Quality Gates', '## Failure Taxonomy', '## Escalation Protocol', '## Verification',
     '## Anti-Generic Rules', '## Definition of Done', '## Changelog'
 ]
+v2_required = [
+    '## Unique Inputs', '## Unique Outputs', '## Unique Decisions', '## Unique Loop',
+    '## Hard Blockers'
+]
+core_required = [
+    '## Startup Policy',
+    '## Escalation Policy',
+    '## Verification Policy',
+    '## Anti-Generic Policy',
+    '## Telemetry and Logging',
+    '## Ownership Guardrails',
+    '## Definition of Done Baseline',
+]
+
 fail = False
-for path in glob.glob('.agentic/agents/*.md'):
-    text = open(path, encoding='utf-8').read()
+
+for agent_id in agent_ids:
+    path = f'.agentic/agents/{agent_id}.md'
+    try:
+        text = open(path, encoding='utf-8').read()
+    except FileNotFoundError:
+        print(f"[FAIL] Missing v1 prompt: {path}")
+        fail = True
+        continue
     if 'Prompt-ID:' not in text or 'Version:' not in text:
         print(f"[FAIL] Missing Prompt-ID or Version in {path}")
         fail = True
-    for sec in required:
+    for sec in v1_required:
         if sec not in text:
             print(f"[FAIL] Missing section {sec} in {path}")
             fail = True
@@ -221,6 +266,53 @@ for path in glob.glob('.agentic/agents/*.md'):
     if "Ask 3" in text and "questions when blocked" in text:
         print(f"[FAIL] Legacy escalation wording in {path}")
         fail = True
+
+core_path = '.agentic/agents/_CORE.md'
+try:
+    core_text = open(core_path, encoding='utf-8').read()
+except FileNotFoundError:
+    print(f"[FAIL] Missing core prompt: {core_path}")
+    fail = True
+    core_text = ''
+
+if core_text:
+    if 'Prompt-ID:' not in core_text or 'Version:' not in core_text:
+        print(f"[FAIL] Missing Prompt-ID or Version in {core_path}")
+        fail = True
+    for sec in core_required:
+        if sec not in core_text:
+            print(f"[FAIL] Missing section {sec} in {core_path}")
+            fail = True
+    if "Ask 3" in core_text and "questions when blocked" in core_text:
+        print(f"[FAIL] Legacy escalation wording in {core_path}")
+        fail = True
+
+for agent_id in agent_ids:
+    path = f'.agentic/agents/{agent_id}.v2.md'
+    try:
+        text = open(path, encoding='utf-8').read()
+    except FileNotFoundError:
+        print(f"[FAIL] Missing v2 prompt: {path}")
+        fail = True
+        continue
+    if 'Prompt-ID:' not in text or 'Version:' not in text or 'Agent-ID:' not in text:
+        print(f"[FAIL] Missing Prompt-ID/Version/Agent-ID in {path}")
+        fail = True
+    if '@_CORE.md' not in text:
+        print(f"[FAIL] Missing @_CORE include in {path}")
+        fail = True
+    for sec in v2_required:
+        if sec not in text:
+            print(f"[FAIL] Missing section {sec} in {path}")
+            fail = True
+    if "Schema reference:" not in text:
+        print(f"[FAIL] Missing schema reference in {path}")
+        fail = True
+    lower = text.lower()
+    if "ask 3-7 questions when blocked" in lower or ("ask 3" in lower and "questions when blocked" in lower):
+        print(f"[FAIL] Legacy escalation wording in {path}")
+        fail = True
+
 if fail:
     sys.exit(1)
 PYCODE

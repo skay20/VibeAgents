@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/TREE.md
-Template-Version: 1.16.0
-Last-Generated: 2026-02-05T23:51:57Z
+Template-Version: 1.17.0
+Last-Generated: 2026-02-06T14:05:00Z
 Ownership: Managed
 ---
 # Repository Tree
@@ -72,20 +72,36 @@ This file is generated. Update it via the orchestrator and templates.
 │  │  ├─ metrics/.gitkeep
 │  │  └─ state/.gitkeep
 │  └─ agents/
+│     ├─ _CORE.md
 │     ├─ god_orchestrator.md
+│     ├─ god_orchestrator.v2.md
 │     ├─ intent_translator.md
+│     ├─ intent_translator.v2.md
 │     ├─ context_curator.md
+│     ├─ context_curator.v2.md
 │     ├─ stack_advisor.md
+│     ├─ stack_advisor.v2.md
 │     ├─ architect.md
+│     ├─ architect.v2.md
 │     ├─ planner.md
+│     ├─ planner.v2.md
 │     ├─ implementer.md
+│     ├─ implementer.v2.md
 │     ├─ qa_reviewer.md
+│     ├─ qa_reviewer.v2.md
 │     ├─ security_reviewer.md
+│     ├─ security_reviewer.v2.md
 │     ├─ docs_writer.md
+│     ├─ docs_writer.v2.md
 │     ├─ release_manager.md
+│     ├─ release_manager.v2.md
 │     ├─ repo_maintainer.md
+│     ├─ repo_maintainer.v2.md
 │     ├─ template_librarian.md
-│     └─ migration_manager.md
+│     ├─ template_librarian.v2.md
+│     ├─ migration_manager.md
+│     ├─ migration_manager.v2.md
+│     └─ backup_v1/
 ├─ AGENTS.md
 ├─ GEMINI.md
 ├─ .gemini/
@@ -129,6 +145,7 @@ This file is generated. Update it via the orchestrator and templates.
    ├─ preflight.py
    ├─ preflight.sh
    ├─ start-run.sh
+   ├─ render-agent-prompt.sh
    ├─ metrics_summarize.py
    └─ verify.sh
 ```

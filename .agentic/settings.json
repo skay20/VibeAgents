@@ -1,8 +1,8 @@
 {
   "Managed-By": "AgenticRepoBuilder",
   "Template-Source": "templates/.agentic/settings.json",
-  "Template-Version": "1.9.0",
-  "Last-Generated": "2026-02-05T23:51:57Z",
+  "Template-Version": "2.0.0",
+  "Last-Generated": "2026-02-06T14:05:00Z",
   "Ownership": "Managed",
   "settings": {
     "run_mode": {
@@ -34,6 +34,17 @@
       "auto_start_run": true,
       "auto_log_questions": true,
       "auto_log_agents": true
+    },
+    "prompt_resolution": {
+      "default_version": "v1",
+      "pilot_v2_enabled": true,
+      "pilot_agents": [
+        "god_orchestrator",
+        "intent_translator",
+        "planner"
+      ],
+      "fallback_version": "v1",
+      "write_compiled_artifacts": true
     },
     "checks": {
       "preflight_enabled": true,
