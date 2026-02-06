@@ -162,6 +162,9 @@ validation = settings.get("validation", {})
 prompt_resolution = settings.get("prompt_resolution", {})
 flow_control = settings.get("flow_control", {})
 required_agents = flow_control.get("required_agents", {})
+agent_dispatch = settings.get("agent_dispatch", {})
+dispatch_catalog = agent_dispatch.get("catalog", [])
+dispatch_always_required = agent_dispatch.get("always_required_agents", [])
 required = [
     ("prd_intake.detect_without_keyword", prd_intake.get("detect_without_keyword", None)),
     ("prd_intake.min_structural_signals", prd_intake.get("min_structural_signals", None)),
@@ -202,6 +205,13 @@ required = [
     ("flow_control.required_agents.strict", required_agents.get("strict", None)),
     ("flow_control.strict_triggers", flow_control.get("strict_triggers", None)),
     ("flow_control.max_parallel_agents", flow_control.get("max_parallel_agents", None)),
+    ("agent_dispatch.mode", agent_dispatch.get("mode", None)),
+    ("agent_dispatch.evaluate_all_agents", agent_dispatch.get("evaluate_all_agents", None)),
+    ("agent_dispatch.catalog", dispatch_catalog),
+    ("agent_dispatch.always_required_agents", dispatch_always_required),
+    ("agent_dispatch.signal_weights", agent_dispatch.get("signal_weights", None)),
+    ("agent_dispatch.trigger_detection", agent_dispatch.get("trigger_detection", None)),
+    ("agent_dispatch.conditional_agents", agent_dispatch.get("conditional_agents", None)),
     ("checks.preflight_enabled", checks.get("preflight_enabled", None)),
     ("checks.preflight_run_install", checks.get("preflight_run_install", None)),
     ("checks.preflight_run_dev", checks.get("preflight_run_dev", None)),
@@ -228,6 +238,25 @@ for key in ("lean", "standard", "strict"):
 strict_triggers = flow_control.get("strict_triggers", [])
 if not isinstance(strict_triggers, list):
     print("[FAIL] flow_control.strict_triggers must be a list")
+    sys.exit(1)
+if agent_dispatch.get("mode") not in {"hybrid", "tier_only", "conditional_only"}:
+    print("[FAIL] agent_dispatch.mode must be one of hybrid|tier_only|conditional_only")
+    sys.exit(1)
+if not isinstance(dispatch_catalog, list) or len(dispatch_catalog) < 14:
+    print("[FAIL] agent_dispatch.catalog must contain all agent ids")
+    sys.exit(1)
+if not isinstance(dispatch_always_required, list) or len(dispatch_always_required) < 3:
+    print("[FAIL] agent_dispatch.always_required_agents must contain at least architect, qa_reviewer, docs_writer")
+    sys.exit(1)
+required_core = {"architect", "qa_reviewer", "docs_writer"}
+if not required_core.issubset(set(dispatch_always_required)):
+    print("[FAIL] agent_dispatch.always_required_agents must include architect, qa_reviewer, docs_writer")
+    sys.exit(1)
+if not required_core.issubset(set(required_agents.get("lean", []))):
+    print("[FAIL] flow_control.required_agents.lean must include architect, qa_reviewer, docs_writer")
+    sys.exit(1)
+if "architect" not in required_agents.get("standard", []):
+    print("[FAIL] flow_control.required_agents.standard must include architect")
     sys.exit(1)
 if not isinstance(prd_intake.get("structural_signals", []), list) or len(prd_intake.get("structural_signals", [])) < 3:
     print("[FAIL] prd_intake.structural_signals must be a list with at least 3 entries")
@@ -260,7 +289,7 @@ done
 # 2g) Orchestrator adaptive flow checks
 ORCH_V2=".agentic/agents/god_orchestrator.v2.md"
 if [[ -f "$ORCH_V2" ]]; then
-  for text in "Flow tier:" "Classify change risk and select flow tier" "Missing metrics/artifact evidence for any required agent" "structured PRD" "tier_decision.md" "planned_agents.md" "flow_evidence.md" "enforce-flow.sh" "check-project-meta.sh"; do
+  for text in "Flow tier:" "Classify change risk and select flow tier" "Missing metrics/artifact evidence for any required agent" "structured PRD" "tier_decision.md" "dispatch_signals.md" "dispatch_resolution.md" "planned_agents.md" "flow_evidence.md" "enforce-flow.sh" "check-project-meta.sh" "never omit"; do
     if ! grep -q "$text" "$ORCH_V2"; then
       fail "Orchestrator v2 missing adaptive flow requirement: $text"
     fi

@@ -8,6 +8,13 @@ Ownership: Managed
 
 # Changelog
 
+## 0.1.29 - 2026-02-06
+- Add hybrid agent-dispatch settings to enforce full catalog evaluation with conditional execution.
+- Make `architect`, `qa_reviewer`, and `docs_writer` required baseline coverage for implementation runs.
+- Add dispatch governance artifacts (`dispatch_signals.md`, `dispatch_resolution.md`) to runtime flow evidence.
+- Harden `scripts/enforce-flow.sh` and `scripts/verify.sh` to block runs that omit catalog rows or required evidence.
+- Update quickstart and workflows for adaptive dispatch behavior without unnecessary overhead.
+
 ## 0.1.28 - 2026-02-06
 - Add hard runtime flow checker `scripts/enforce-flow.sh` to block release when required tier agents are missing evidence.
 - Add project-meta compatibility checker `scripts/check-project-meta.sh` to detect outdated side-project templates/contracts before implementation.

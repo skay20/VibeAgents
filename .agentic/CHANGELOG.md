@@ -8,6 +8,13 @@ Ownership: Managed
 
 # Agentic Changelog
 
+## 0.28.0 - 2026-02-06
+- Add hybrid adaptive dispatch contract with full catalog evaluation (`settings.agent_dispatch.*`) and always-required agents.
+- Make `architect`, `qa_reviewer`, and `docs_writer` non-omittable in implementation runs.
+- Extend flow artifacts with `dispatch_signals.md` and `dispatch_resolution.md`.
+- Harden `scripts/enforce-flow.sh` to validate full catalog resolution rows and effective required-agent evidence.
+- Extend verification and workflow docs for hybrid dispatch rules.
+
 ## 0.27.0 - 2026-02-06
 - Add hard runtime flow checker script `scripts/enforce-flow.sh` with `pre_release|final` modes and deterministic pass/fail reasons.
 - Add project-meta compatibility checker `scripts/check-project-meta.sh` with minimum template-version and required-key validation.

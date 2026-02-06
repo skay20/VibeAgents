@@ -152,6 +152,8 @@ Telemetry (if enabled):
 
 Flow governance artifacts:
 - `.agentic/bus/artifacts/<run_id>/tier_decision.md`
+- `.agentic/bus/artifacts/<run_id>/dispatch_signals.md`
+- `.agentic/bus/artifacts/<run_id>/dispatch_resolution.md`
 - `.agentic/bus/artifacts/<run_id>/planned_agents.md`
 - `.agentic/bus/artifacts/<run_id>/flow_evidence.md`
 
@@ -186,10 +188,14 @@ Settings:
 - `settings.flow_control.auto_tier_by_change`
 - `settings.flow_control.required_agents`
 - `settings.flow_control.strict_triggers`
+- `settings.agent_dispatch.mode`
+- `settings.agent_dispatch.catalog`
+- `settings.agent_dispatch.always_required_agents`
 
 Goal:
 - avoid full-pipeline overhead on low-risk changes
 - block release when required-agent evidence is missing for the selected tier
+- evaluate all agents every run but execute only required/triggered ones
 
 Runtime enforcement:
 ```bash

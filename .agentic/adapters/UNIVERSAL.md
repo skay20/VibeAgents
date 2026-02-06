@@ -22,6 +22,9 @@ Ownership: Managed
 4. Detect PRD from chat by structure (not only by keyword). If it matches configured PRD signals, ingest into `docs/PRD.md` by editing only `BEGIN_MANAGED` / `END_MANAGED` (preserve header/markers).
 5. Ask calibration once (single bundled message when configured), including run mode if `AGENTIC_RUN_MODE` is not set. Default per `.agentic/settings.json` if unanswered.
 6. Only then proceed to planning/implementation agents per flow tier.
+7. Build dispatch artifacts before implementation:
+   - `dispatch_signals.md` with trigger signals and scores.
+   - `dispatch_resolution.md` listing all catalog agents and whether each is selected.
 
 ## Agent Behavior
 - Apply Agent Prompt Spec v2 and anti-genericity rubric.
@@ -35,6 +38,8 @@ Ownership: Managed
 - If PRD is missing or placeholder-only after ingest, output `BLOCKED` and ask minimal questions.
 - Run mode: use `AGENTIC_RUN_MODE` if set; otherwise ask once (after PRD ingest) and default per settings.
 - Telemetry + automation: honor `.agentic/settings.json` flags.
+- Always evaluate full agent catalog and select execution set from tier + triggers.
+- Never skip `architect`, `qa_reviewer`, or `docs_writer` during implementation runs.
 
 ## Context Loading Rules
 - L0/L1 on-demand only.

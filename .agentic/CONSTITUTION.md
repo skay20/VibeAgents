@@ -71,6 +71,24 @@ Execution must use a risk tier to avoid unnecessary overhead while enforcing min
 - `strict`: high-risk changes triggered by `settings.flow_control.strict_triggers`
 
 Required agents by tier come from `settings.flow_control.required_agents`.
+Dispatch mode comes from `settings.agent_dispatch.mode`.
+
+Mandatory dispatch behavior:
+- Evaluate the full agent catalog from `settings.agent_dispatch.catalog` on every run.
+- Write `.agentic/bus/artifacts/<run_id>/dispatch_signals.md` (detected signals and scores).
+- Write `.agentic/bus/artifacts/<run_id>/dispatch_resolution.md` with one explicit row per catalog agent:
+  - `agent_id`
+  - `selected=true|false`
+  - `required=true|false`
+  - `reason=required|triggered|not_needed`
+  - `score=<integer>`
+- Missing any catalog row is a hard failure.
+
+Required chain guardrails:
+- `architect`, `qa_reviewer`, and `docs_writer` are never omittable for implementation runs.
+- `planner` is required for `standard|strict`.
+- `security_reviewer` and `release_manager` are required for `strict`.
+- Conditional agents may be omitted only when marked `not_needed` in `dispatch_resolution.md`.
 
 Minimum required evidence for every required agent:
 - Metrics file: `.agentic/bus/metrics/<run_id>/<agent_id>.json`
@@ -88,6 +106,12 @@ Pre-release gate must execute:
 - `scripts/enforce-flow.sh <run_id> <tier> pre_release`
 
 If the check fails, output `BLOCKED` and include missing-agent reasons.
+
+Documentation guardrail:
+- Every implementation run must produce documentation evidence:
+  - `.agentic/bus/artifacts/<run_id>/diff_summary.md`
+  - change entry in `CHANGELOG.md` (repo)
+  - change entry in `.agentic/CHANGELOG.md` when prompt/rule contracts change
 
 ## Documentation Target Contract
 - Global `docs/RUNBOOK.md` remains framework-level unless explicitly requested otherwise.

@@ -67,14 +67,20 @@
       "auto_tier_by_change": true,
       "required_agents": {
         "lean": [
-          "implementer"
+          "architect",
+          "implementer",
+          "qa_reviewer",
+          "docs_writer"
         ],
         "standard": [
+          "architect",
+          "planner",
           "implementer",
           "qa_reviewer",
           "docs_writer"
         ],
         "strict": [
+          "architect",
           "planner",
           "implementer",
           "qa_reviewer",
@@ -91,6 +97,68 @@
         "architecture_or_adr_changed"
       ],
       "max_parallel_agents": 2
+    },
+    "agent_dispatch": {
+      "mode": "hybrid",
+      "evaluate_all_agents": true,
+      "catalog": [
+        "god_orchestrator",
+        "intent_translator",
+        "context_curator",
+        "stack_advisor",
+        "architect",
+        "planner",
+        "implementer",
+        "qa_reviewer",
+        "security_reviewer",
+        "docs_writer",
+        "release_manager",
+        "repo_maintainer",
+        "template_librarian",
+        "migration_manager"
+      ],
+      "always_required_agents": [
+        "architect",
+        "qa_reviewer",
+        "docs_writer"
+      ],
+      "signal_weights": {
+        "file_match": 2,
+        "prd_keyword": 1,
+        "diff_hint": 2,
+        "history_hint": 1
+      },
+      "trigger_detection": {
+        "file_patterns": true,
+        "prd_keywords": true,
+        "git_diff_analysis": true
+      },
+      "conditional_agents": {
+        "stack_advisor": {
+          "tier_min": "standard",
+          "min_score": 2
+        },
+        "architect": {
+          "tier_min": "lean",
+          "min_score": 1
+        },
+        "security_reviewer": {
+          "tier_min": "standard",
+          "min_score": 2
+        },
+        "migration_manager": {
+          "tier_min": "standard",
+          "min_score": 2
+        },
+        "repo_maintainer": {
+          "tier_min": "lean",
+          "min_score": 2
+        },
+        "template_librarian": {
+          "tier_min": "standard",
+          "min_score": 2
+        }
+      }
     },
     "checks": {
       "preflight_enabled": true,

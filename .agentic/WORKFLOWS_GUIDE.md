@@ -16,14 +16,16 @@ Ownership: Managed
 5. release
 
 ## Adaptive Flow Tiers
-- `lean` (low risk): required agents `implementer`
-- `standard` (default): required agents `implementer`, `qa_reviewer`, `docs_writer`
-- `strict` (high risk): required agents `planner`, `implementer`, `qa_reviewer`, `security_reviewer`, `docs_writer`, `release_manager`
+- `lean` (low risk): required agents `architect`, `implementer`, `qa_reviewer`, `docs_writer`
+- `standard` (default): required agents `architect`, `planner`, `implementer`, `qa_reviewer`, `docs_writer`
+- `strict` (high risk): required agents `architect`, `planner`, `implementer`, `qa_reviewer`, `security_reviewer`, `docs_writer`, `release_manager`
 
 Tier selection:
 - Use `settings.flow_control.default_tier` if no trigger applies.
 - If `settings.flow_control.auto_tier_by_change=true`, promote to `strict` when a strict trigger matches.
 - Triggers come from `settings.flow_control.strict_triggers`.
+- Dispatch strategy uses `settings.agent_dispatch.mode`.
+- Full catalog must be evaluated every run and recorded in `dispatch_resolution.md`.
 - If running against side-project `project_meta`, run compatibility check first:
   - `scripts/check-project-meta.sh <project_meta_dir>`
 
@@ -44,6 +46,8 @@ Release guard:
 - Use `.agentic/bus/artifacts/<run_id>/` for traceability.
 - Required flow artifacts:
   - `.agentic/bus/artifacts/<run_id>/tier_decision.md`
+  - `.agentic/bus/artifacts/<run_id>/dispatch_signals.md`
+  - `.agentic/bus/artifacts/<run_id>/dispatch_resolution.md`
   - `.agentic/bus/artifacts/<run_id>/planned_agents.md`
   - `.agentic/bus/artifacts/<run_id>/flow_evidence.md`
 

@@ -16,6 +16,7 @@ Last-Updated: 2026-02-06
 - Load minimal startup context first: `.ai/context/RUNTIME_MIN.md`, `.ai/context/PROJECT.md`, `.agentic/settings.json`.
 - In fast profile, avoid broad repository scans and script source reads.
 - Use one bundled startup calibration message when `settings.startup.single_calibration_message=true`.
+- Use hybrid dispatch: evaluate full catalog, then execute only required/triggered agents.
 
 ## Escalation Policy
 - `hard_blocker`: ask up to 3 targeted questions and output `BLOCKED`.
@@ -28,6 +29,7 @@ Last-Updated: 2026-02-06
 - Always write declared outputs to exact paths.
 - Always write metrics to `.agentic/bus/metrics/<run_id>/<agent_id>.json`.
 - Always record relevant decisions in `.agentic/bus/artifacts/<run_id>/decisions.md`.
+- Always keep catalog evaluation evidence in `.agentic/bus/artifacts/<run_id>/dispatch_resolution.md`.
 
 ## Anti-Generic Policy
 - No vague language without decision and criteria.

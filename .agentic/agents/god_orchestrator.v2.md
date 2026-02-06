@@ -26,6 +26,8 @@ Agent-ID: god_orchestrator
 - `.agentic/bus/artifacts/<run_id>/qa_report.md`
 - `.agentic/bus/artifacts/<run_id>/release_notes.md`
 - `.agentic/bus/artifacts/<run_id>/tier_decision.md`
+- `.agentic/bus/artifacts/<run_id>/dispatch_signals.md`
+- `.agentic/bus/artifacts/<run_id>/dispatch_resolution.md`
 - `.agentic/bus/artifacts/<run_id>/planned_agents.md`
 - `.agentic/bus/artifacts/<run_id>/flow_evidence.md`
 - `.agentic/bus/artifacts/<run_id>/questions.md` (only when blocked/headless)
@@ -38,6 +40,7 @@ Agent-ID: god_orchestrator
 - PRD version action: `increment|new_lineage`
 - Flow tier: `lean|standard|strict`
 - Required agents for tier: from `settings.flow_control.required_agents`
+- Dispatch mode: from `settings.agent_dispatch.mode`
 
 ## Unique Loop
 1. Start run.
@@ -46,12 +49,14 @@ Agent-ID: god_orchestrator
 4. Dispatch `intent_translator` to normalize/update `docs/PRD.md` and generate PRD delta/version artifacts when configured.
 5. Ask calibration (bundled when configured) including run mode if not set.
 6. Classify change risk and select flow tier (`lean|standard|strict`) from settings and triggers, then write `tier_decision.md`.
-7. Build and write dispatch plan to `planned_agents.md` (required agents for selected tier).
-8. Dispatch only required agents for the selected tier.
-9. Run pre-release flow checker: `scripts/enforce-flow.sh <run_id> <tier> pre_release`.
-10. Enforce gates between phases and verify required-agent evidence exists.
-11. Before finalizing run state, run: `scripts/enforce-flow.sh <run_id> <tier> final`.
-12. Consolidate artifacts and finalize run state with `gate_status=approved` only on successful final check.
+7. Evaluate all agents from `settings.agent_dispatch.catalog`; write signals to `dispatch_signals.md`.
+8. Resolve selected/not-needed agents and write full catalog resolution to `dispatch_resolution.md` (one row per agent).
+9. Build and write dispatch plan to `planned_agents.md` using: required-by-tier + always-required + triggered conditionals.
+10. Dispatch selected agents only, but never omit `architect`, `qa_reviewer`, or `docs_writer`.
+11. Run pre-release flow checker: `scripts/enforce-flow.sh <run_id> <tier> pre_release`.
+12. Enforce gates between phases and verify required-agent evidence exists.
+13. Before finalizing run state, run: `scripts/enforce-flow.sh <run_id> <tier> final`.
+14. Consolidate artifacts and finalize run state with `gate_status=approved` only on successful final check.
 
 ## Hard Blockers
 - Missing/placeholder PRD.
@@ -60,4 +65,6 @@ Agent-ID: god_orchestrator
 - Unapproved phase advance in `AgentL/AgentM`.
 - Incomplete run pack at release gate.
 - Missing metrics/artifact evidence for any required agent in the selected tier.
+- Missing `dispatch_signals.md` or `dispatch_resolution.md`.
+- Any catalog agent missing from `dispatch_resolution.md`.
 - `scripts/enforce-flow.sh` failure at pre-release or final gate.
