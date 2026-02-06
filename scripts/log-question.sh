@@ -8,19 +8,55 @@
 set -euo pipefail
 
 RUN_ID="${1:-}"
-AGENT_ID="${2:-}"
-QUESTION_ID="${3:-}"
-QUESTION_TEXT="${4:-}"
-ANSWER_TEXT="${5:-}"
-PHASE="${6:-}"
-TOOL="${7:-${AGENTIC_TOOL:-}}"
+ARG2="${2:-}"
+ARG3="${3:-}"
+ARG4="${4:-}"
+ARG5="${5:-}"
+ARG6="${6:-}"
+ARG7="${7:-}"
+
+SETTINGS_FILE=".agentic/settings.json"
+
+allowed_agent_ids() {
+  if [[ -d ".agentic/agents" ]]; then
+    ls .agentic/agents/*.md 2>/dev/null | xargs -n1 basename | sed 's/\.md$//'
+  fi
+}
+
+is_allowed_agent_id() {
+  local cand="$1"
+  [[ -z "$cand" ]] && return 1
+  allowed_agent_ids | grep -qx "$cand"
+}
+
+# Two supported signatures:
+# 1) scripts/log-question.sh <run_id> <agent_id> <question_id> <question_text> [answer_text] [phase] [tool]
+# 2) scripts/log-question.sh <run_id> <question_id> <question_text> [answer_text] [phase] [tool]
+#
+# Detect by checking whether ARG2 looks like a valid agent id.
+if is_allowed_agent_id "$ARG2"; then
+  AGENT_ID="$ARG2"
+  QUESTION_ID="$ARG3"
+  QUESTION_TEXT="$ARG4"
+  ANSWER_TEXT="$ARG5"
+  PHASE="$ARG6"
+  TOOL="${ARG7:-${AGENTIC_TOOL:-}}"
+else
+  AGENT_ID="${AGENTIC_AGENT_ID:-god_orchestrator}"
+  QUESTION_ID="$ARG2"
+  QUESTION_TEXT="$ARG3"
+  ANSWER_TEXT="$ARG4"
+  PHASE="$ARG5"
+  TOOL="${ARG6:-${AGENTIC_TOOL:-}}"
+fi
 
 if [[ -z "$RUN_ID" || -z "$QUESTION_ID" || -z "$QUESTION_TEXT" ]]; then
-  echo "Usage: scripts/log-question.sh <run_id> <agent_id> <question_id> <question_text> [answer_text] [phase] [tool]"
+  echo "Usage:"
+  echo "  scripts/log-question.sh <run_id> <agent_id> <question_id> <question_text> [answer_text] [phase] [tool]"
+  echo "  scripts/log-question.sh <run_id> <question_id> <question_text> [answer_text] [phase] [tool]"
   exit 1
 fi
 
-SETTINGS_FILE=".agentic/settings.json"
 telemetry_enabled="true"
 telemetry_events="true"
 telemetry_questions="true"

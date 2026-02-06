@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/AGENTS.md
-Template-Version: 2.1.0
-Last-Generated: 2026-02-05T15:33:50Z
+Template-Version: 2.1.1
+Last-Generated: 2026-02-06T16:10:18Z
 Ownership: Managed
 ---
 
@@ -11,8 +11,14 @@ Ownership: Managed
 ## Shared Rules
 Read `.agentic/adapters/UNIVERSAL.md`.
 Bootstrap context:
+- `.ai/context/RUNTIME_MIN.md`
 - `.ai/context/BOOTSTRAP.md`
 - `.ai/context/PROJECT.md`
+
+Startup handshake (must happen even on fast runs):
+- Create `run_id` via `scripts/start-run.sh` (when automation enabled).
+- Ingest PRD from chat into `docs/PRD.md` (managed block) before calibration.
+- Ask calibration once, including run mode if `AGENTIC_RUN_MODE` is unset.
 
 ## Codex-Specific
 - Precedence: `AGENTS.override.md` > `AGENTS.md`.

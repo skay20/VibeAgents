@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.ai/context/RUNTIME_MIN.md
-Template-Version: 1.0.0
-Last-Generated: 2026-02-05T23:51:57Z
+Template-Version: 1.0.1
+Last-Generated: 2026-02-06T16:10:18Z
 Ownership: Managed
 ---
 
@@ -23,6 +23,7 @@ Load only:
 - Ask only missing inputs from PRD.
 - Respect `settings.startup.max_initial_questions` as hard cap.
 - In `AgentX`, use defaults and continue unless critical blocker exists.
+- If the user provided a PRD in chat, ingest it into `docs/PRD.md` by editing only `BEGIN_MANAGED` / `END_MANAGED` before calibration.
 
 ## Logging Rules
 - If `settings.startup.batch_startup_logging=true`, log calibration as one bundled entry.

@@ -9,13 +9,42 @@ set -euo pipefail
 
 RUN_ID="${1:-}"
 EVENT_TYPE="${2:-}"
-AGENT_ID="${3:-}"
-MESSAGE="${4:-}"
-PHASE="${5:-}"
-TOOL="${6:-${AGENTIC_TOOL:-}}"
+ARG3="${3:-}"
+ARG4="${4:-}"
+ARG5="${5:-}"
+ARG6="${6:-}"
+
+allowed_agent_ids() {
+  if [[ -d ".agentic/agents" ]]; then
+    ls .agentic/agents/*.md 2>/dev/null | xargs -n1 basename | sed 's/\.md$//'
+  fi
+}
+
+is_allowed_agent_id() {
+  local cand="$1"
+  [[ -z "$cand" ]] && return 1
+  allowed_agent_ids | grep -qx "$cand"
+}
+
+# Two supported signatures:
+# 1) scripts/log-event.sh <run_id> <event_type> <agent_id> <message> [phase] [tool]
+# 2) scripts/log-event.sh <run_id> <event_type> <message> [phase] [tool]
+if is_allowed_agent_id "$ARG3"; then
+  AGENT_ID="$ARG3"
+  MESSAGE="$ARG4"
+  PHASE="$ARG5"
+  TOOL="${ARG6:-${AGENTIC_TOOL:-}}"
+else
+  AGENT_ID="${AGENTIC_AGENT_ID:-god_orchestrator}"
+  MESSAGE="$ARG3"
+  PHASE="$ARG4"
+  TOOL="${ARG5:-${AGENTIC_TOOL:-}}"
+fi
 
 if [[ -z "$RUN_ID" || -z "$EVENT_TYPE" ]]; then
-  echo "Usage: scripts/log-event.sh <run_id> <event_type> [agent_id] [message] [phase] [tool]"
+  echo "Usage:"
+  echo "  scripts/log-event.sh <run_id> <event_type> <agent_id> <message> [phase] [tool]"
+  echo "  scripts/log-event.sh <run_id> <event_type> <message> [phase] [tool]"
   exit 1
 fi
 

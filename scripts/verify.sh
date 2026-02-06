@@ -105,6 +105,30 @@ if [[ ! -f ".ai/context/RUNTIME_MIN.md" ]]; then
   fail "Missing .ai/context/RUNTIME_MIN.md"
 fi
 
+# 2g) Startup handshake must be near the top of UNIVERSAL adapter
+if [[ -f ".agentic/adapters/UNIVERSAL.md" ]]; then
+  if ! head -n 60 ".agentic/adapters/UNIVERSAL.md" | grep -q "Startup Handshake"; then
+    fail "UNIVERSAL.md must contain Startup Handshake within first 60 lines"
+  fi
+  if ! head -n 80 ".agentic/adapters/UNIVERSAL.md" | grep -q "Ingest.*docs/PRD.md\\|PRD ingest"; then
+    fail "UNIVERSAL.md must mention PRD ingest near the top"
+  fi
+fi
+
+# 2h) Codex adapter must reference RUNTIME_MIN
+if [[ -f "AGENTS.md" ]]; then
+  if ! grep -q "RUNTIME_MIN" "AGENTS.md"; then
+    fail "AGENTS.md must include .ai/context/RUNTIME_MIN.md in bootstrap context"
+  fi
+fi
+
+# 2i) RUNTIME_MIN must mention PRD ingest
+if [[ -f ".ai/context/RUNTIME_MIN.md" ]]; then
+  if ! head -n 80 ".ai/context/RUNTIME_MIN.md" | grep -q "Ingest.*docs/PRD.md\\|PRD"; then
+    fail "RUNTIME_MIN.md must mention PRD ingest before calibration"
+  fi
+fi
+
 # 2e) Settings file check
 if [[ ! -f ".agentic/settings.json" ]]; then
   fail "Missing .agentic/settings.json"

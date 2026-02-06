@@ -8,7 +8,7 @@
 set -euo pipefail
 
 RUN_ID="$1"
-AGENT_ID="$2"
+AGENT_ID="${2:-${AGENTIC_AGENT_ID:-god_orchestrator}}"
 STATUS="$3"  # ok|blocked|failed
 START_AT="$4"
 END_AT="$5"

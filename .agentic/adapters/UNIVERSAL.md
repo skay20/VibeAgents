@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/adapters/UNIVERSAL.md
-Template-Version: 1.3.0
-Last-Generated: 2026-02-06T17:20:00Z
+Template-Version: 1.3.1
+Last-Generated: 2026-02-06T16:10:18Z
 Ownership: Managed
 ---
 
@@ -14,6 +14,13 @@ Ownership: Managed
 - `.ai/context/PROJECT.md`
 - `.agentic/CONSTITUTION.md`
 - `.agentic/settings.json`
+
+## Startup Handshake (Must Happen, In This Order)
+1. Load bootstrap context (list above).
+2. If automation is enabled and no run exists yet, create `run_id` by calling `scripts/start-run.sh`.
+3. If the user provided a PRD in chat, ingest it into `docs/PRD.md` by editing only `BEGIN_MANAGED` / `END_MANAGED` (preserve header/markers).
+4. Ask calibration once (single bundled message when configured), including run mode if `AGENTIC_RUN_MODE` is not set. Default per `.agentic/settings.json` if unanswered.
+5. Only then proceed to planning/implementation agents per flow tier.
 
 ## Agent Behavior
 - Apply Agent Prompt Spec v2 and anti-genericity rubric.
@@ -41,13 +48,6 @@ If `settings.startup.profile=fast`:
   - `scripts/log-event.sh`
   - `scripts/log-question.sh`
   - `scripts/log-metrics.sh`
-
-## Startup Handshake (Order)
-1. Load bootstrap context (RUNTIME_MIN + BOOTSTRAP + PROJECT + CONSTITUTION + settings).
-2. If automation is enabled and no run exists yet, call `scripts/start-run.sh` to create `run_id`.
-3. Ingest PRD from chat into `docs/PRD.md` managed block.
-4. Ask calibration (single bundled message when configured), including run mode if not set.
-5. Only then proceed to planning/implementation agents per flow tier.
 
 ## Blocking Rule
 - If required inputs are missing, stop and request them.

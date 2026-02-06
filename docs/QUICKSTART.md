@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/docs/QUICKSTART.md
-Template-Version: 1.2.0
-Last-Generated: 2026-02-06T17:00:00Z
+Template-Version: 1.3.0
+Last-Generated: 2026-02-06T16:10:18Z
 Ownership: Managed
 ---
 
@@ -38,6 +38,45 @@ AGENTIC_TOOL=codex /Users/matiassouza/Desktop/Projects/VibeAgents/scripts/start-
 6. Verify repository contracts:
 ```bash
 /Users/matiassouza/Desktop/Projects/VibeAgents/scripts/verify.sh
+```
+
+## Startup Handshake (If You See “No Questions” or “PRD Not Ingested”)
+Common failure mode: the tool only reads the top part of shared instruction files. This repo keeps the handshake in the first lines of:
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/adapters/UNIVERSAL.md`
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/AGENTS.md`
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/.ai/context/RUNTIME_MIN.md`
+
+If your assistant skipped calibration questions or did not write `docs/PRD.md`, run this diagnostic prompt inside the side project session (copy/paste verbatim):
+
+```text
+PRE-FLIGHT CHECK (before PRD) - do not invent.
+
+1) Confirm you can read these files and quote 1 sentence from each (with absolute path):
+- /Users/matiassouza/Desktop/Projects/VibeAgents/AGENTS.md
+- /Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/adapters/UNIVERSAL.md
+- /Users/matiassouza/Desktop/Projects/VibeAgents/.ai/context/RUNTIME_MIN.md
+- /Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/settings.json
+
+2) Print the effective startup settings you are using (exact keys/values):
+- settings.run_mode.preferred
+- settings.run_mode.default_if_unanswered
+- settings.telemetry.enabled / events / questions / questions_log
+- settings.automation.run_scripts / auto_start_run / auto_log_questions
+
+3) Execute a no-PRD run start (do not continue to implementation):
+AGENTIC_TOOL=codex /Users/matiassouza/Desktop/Projects/VibeAgents/scripts/start-run.sh "" "side-project" ""
+Return the RUN_ID.
+
+4) Log one calibration question and the answer using real agent_id:
+AGENTIC_AGENT_ID=god_orchestrator /Users/matiassouza/Desktop/Projects/VibeAgents/scripts/log-question.sh <RUN_ID> Q_CALIBRATION "preflight ok?" "yes" "preflight" "codex"
+
+5) Show me the evidence paths you created (do not paste full file contents):
+- /Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/state/<RUN_ID>.json
+- /Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<RUN_ID>/run_meta.md
+- /Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/metrics/<RUN_ID>/events.jsonl
+- /Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<RUN_ID>/questions_log.md
+
+6) Explain: did you run the Startup Handshake steps (PRD ingest then calibration)? If not, which step was skipped and why.
 ```
 
 ## Prompt System (v1/v2)
