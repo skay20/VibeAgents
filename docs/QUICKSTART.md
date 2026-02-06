@@ -12,10 +12,10 @@ Ownership: Managed
 This repository turns a PRD into agentic execution with file-based state, artifacts, and verification.
 
 Authoritative operational files:
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/CONSTITUTION.md`
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/settings.json`
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/AGENTS_CATALOG.md`
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/SCHEMA.md`
+- `.agentic/CONSTITUTION.md`
+- `.agentic/settings.json`
+- `.agentic/AGENTS_CATALOG.md`
+- `.agentic/bus/SCHEMA.md`
 
 ## Fast Start
 1. Validate root:
@@ -24,7 +24,7 @@ pwd
 ```
 2. Check settings:
 ```bash
-cat /Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/settings.json
+cat .agentic/settings.json
 ```
 3. Optional run mode:
 ```bash
@@ -32,24 +32,24 @@ export AGENTIC_RUN_MODE=AgentX
 ```
 4. Start run:
 ```bash
-AGENTIC_TOOL=codex /Users/matiassouza/Desktop/Projects/VibeAgents/scripts/start-run.sh
+AGENTIC_TOOL=codex scripts/start-run.sh
 ```
 5. Provide PRD to the assistant and answer startup calibration.
 6. Verify repository contracts:
 ```bash
-/Users/matiassouza/Desktop/Projects/VibeAgents/scripts/verify.sh
+scripts/verify.sh
 ```
 
 If running this framework inside a generated side project with `project_meta`, run:
 ```bash
-/Users/matiassouza/Desktop/Projects/VibeAgents/scripts/check-project-meta.sh <project_meta_dir>
+scripts/check-project-meta.sh <project_meta_dir>
 ```
 
 ## Startup Handshake (If You See “No Questions” or “PRD Not Ingested”)
 Common failure mode: the tool only reads the top part of shared instruction files. This repo keeps the handshake in the first lines of:
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/adapters/UNIVERSAL.md`
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/AGENTS.md`
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.ai/context/RUNTIME_MIN.md`
+- `.agentic/adapters/UNIVERSAL.md`
+- `AGENTS.md`
+- `.ai/context/RUNTIME_MIN.md`
 
 If your assistant skipped calibration questions or did not write `docs/PRD.md`, run this diagnostic prompt inside the side project session (copy/paste verbatim):
 
@@ -57,10 +57,10 @@ If your assistant skipped calibration questions or did not write `docs/PRD.md`, 
 PRE-FLIGHT CHECK (before PRD) - do not invent.
 
 1) Confirm you can read these files and quote 1 sentence from each (with absolute path):
-- /Users/matiassouza/Desktop/Projects/VibeAgents/AGENTS.md
-- /Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/adapters/UNIVERSAL.md
-- /Users/matiassouza/Desktop/Projects/VibeAgents/.ai/context/RUNTIME_MIN.md
-- /Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/settings.json
+- AGENTS.md
+- .agentic/adapters/UNIVERSAL.md
+- .ai/context/RUNTIME_MIN.md
+- .agentic/settings.json
 
 2) Print the effective startup settings you are using (exact keys/values):
 - settings.run_mode.preferred
@@ -69,17 +69,17 @@ PRE-FLIGHT CHECK (before PRD) - do not invent.
 - settings.automation.run_scripts / auto_start_run / auto_log_questions
 
 3) Execute a no-PRD run start (do not continue to implementation):
-AGENTIC_TOOL=codex /Users/matiassouza/Desktop/Projects/VibeAgents/scripts/start-run.sh "" "side-project" ""
+AGENTIC_TOOL=codex scripts/start-run.sh "" "side-project" ""
 Return the RUN_ID.
 
 4) Log one calibration question and the answer using real agent_id:
-AGENTIC_AGENT_ID=god_orchestrator /Users/matiassouza/Desktop/Projects/VibeAgents/scripts/log-question.sh <RUN_ID> Q_CALIBRATION "preflight ok?" "yes" "preflight" "codex"
+AGENTIC_AGENT_ID=god_orchestrator scripts/log-question.sh <RUN_ID> Q_CALIBRATION "preflight ok?" "yes" "preflight" "codex"
 
 5) Show me the evidence paths you created (do not paste full file contents):
-- /Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/state/<RUN_ID>.json
-- /Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<RUN_ID>/run_meta.md
-- /Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/metrics/<RUN_ID>/events.jsonl
-- /Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<RUN_ID>/questions_log.md
+- .agentic/bus/state/<RUN_ID>.json
+- .agentic/bus/artifacts/<RUN_ID>/run_meta.md
+- .agentic/bus/metrics/<RUN_ID>/events.jsonl
+- .agentic/bus/artifacts/<RUN_ID>/questions_log.md
 
 6) Explain: did you run the Startup Handshake steps (PRD ingest then calibration)? If not, which step was skipped and why.
 ```
@@ -90,16 +90,16 @@ PRD intake baseline rule:
 
 ## Prompt System (v1/v2)
 Dual-track prompt model:
-- v1 standalone prompt: `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/agents/<agent_id>.md`
-- v2 thin prompt: `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/agents/<agent_id>.v2.md`
-- shared core for v2: `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/agents/_CORE.md`
+- v1 standalone prompt: `.agentic/agents/<agent_id>.md`
+- v2 thin prompt: `.agentic/agents/<agent_id>.v2.md`
+- shared core for v2: `.agentic/agents/_CORE.md`
 
 Deterministic resolution:
 ```bash
-/Users/matiassouza/Desktop/Projects/VibeAgents/scripts/render-agent-prompt.sh <agent_id> <v1|v2|auto> [run_id]
+scripts/render-agent-prompt.sh <agent_id> <v1|v2|auto> [run_id]
 ```
 
-`auto` reads `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/settings.json`:
+`auto` reads `.agentic/settings.json`:
 - `settings.prompt_resolution.default_version`
 - `settings.prompt_resolution.pilot_v2_enabled`
 - `settings.prompt_resolution.pilot_agents`
@@ -107,7 +107,7 @@ Deterministic resolution:
 - `settings.prompt_resolution.write_compiled_artifacts`
 
 If compiled artifacts are enabled:
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/compiled_prompts/<agent_id>.md`
+- `.agentic/bus/artifacts/<run_id>/compiled_prompts/<agent_id>.md`
 
 ## Settings You Will Use Most
 - `settings.run_mode`: AgentX/AgentL/AgentM behavior
@@ -136,44 +136,44 @@ Disable telemetry/logging fast path:
 
 ## Run Artifacts and Metrics
 Main run state:
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/state/<run_id>.json`
+- `.agentic/bus/state/<run_id>.json`
 
 Operational artifacts:
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/plan.md`
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/decisions.md`
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/diff_summary.md`
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/qa_report.md`
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/release_notes.md`
+- `.agentic/bus/artifacts/<run_id>/plan.md`
+- `.agentic/bus/artifacts/<run_id>/decisions.md`
+- `.agentic/bus/artifacts/<run_id>/diff_summary.md`
+- `.agentic/bus/artifacts/<run_id>/qa_report.md`
+- `.agentic/bus/artifacts/<run_id>/release_notes.md`
 
 Telemetry (if enabled):
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/metrics/<run_id>/events.jsonl`
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/metrics/<run_id>/<agent_id>.json`
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/questions_log.md`
+- `.agentic/bus/metrics/<run_id>/events.jsonl`
+- `.agentic/bus/metrics/<run_id>/<agent_id>.json`
+- `.agentic/bus/artifacts/<run_id>/questions_log.md`
 
 Flow governance artifacts:
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/tier_decision.md`
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/planned_agents.md`
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/flow_evidence.md`
+- `.agentic/bus/artifacts/<run_id>/tier_decision.md`
+- `.agentic/bus/artifacts/<run_id>/planned_agents.md`
+- `.agentic/bus/artifacts/<run_id>/flow_evidence.md`
 
 ## A/B Run Comparison
 Use this when you run `feature OFF` vs `feature ON` and want a single comparison package.
 
 1. Ensure both run IDs have metrics:
 ```bash
-/Users/matiassouza/Desktop/Projects/VibeAgents/scripts/metrics_summarize.py <baseline_run_id>
-/Users/matiassouza/Desktop/Projects/VibeAgents/scripts/metrics_summarize.py <experiment_run_id>
+scripts/metrics_summarize.py <baseline_run_id>
+scripts/metrics_summarize.py <experiment_run_id>
 ```
 2. Generate benchmark comparison:
 ```bash
-/Users/matiassouza/Desktop/Projects/VibeAgents/scripts/metrics_compare.py <baseline_run_id> <experiment_run_id> <benchmark_id>
+scripts/metrics_compare.py <baseline_run_id> <experiment_run_id> <benchmark_id>
 ```
 
 Canonical benchmark output:
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/benchmarks/<benchmark_id>/baseline_run_id.txt`
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/benchmarks/<benchmark_id>/experiment_run_id.txt`
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/benchmarks/<benchmark_id>/baseline_report.md`
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/benchmarks/<benchmark_id>/experiment_report.md`
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/benchmarks/<benchmark_id>/comparison.md`
+- `.agentic/bus/artifacts/benchmarks/<benchmark_id>/baseline_run_id.txt`
+- `.agentic/bus/artifacts/benchmarks/<benchmark_id>/experiment_run_id.txt`
+- `.agentic/bus/artifacts/benchmarks/<benchmark_id>/baseline_report.md`
+- `.agentic/bus/artifacts/benchmarks/<benchmark_id>/experiment_report.md`
+- `.agentic/bus/artifacts/benchmarks/<benchmark_id>/comparison.md`
 
 ## Adaptive Agent Flow (Quality + Speed)
 Tier behavior:
@@ -193,18 +193,18 @@ Goal:
 
 Runtime enforcement:
 ```bash
-/Users/matiassouza/Desktop/Projects/VibeAgents/scripts/enforce-flow.sh <run_id> <tier> pre_release
-/Users/matiassouza/Desktop/Projects/VibeAgents/scripts/enforce-flow.sh <run_id> <tier> final
+scripts/enforce-flow.sh <run_id> <tier> pre_release
+scripts/enforce-flow.sh <run_id> <tier> final
 ```
 
 ## Preflight for Web Projects
 Run preflight before release decisions:
 ```bash
-/Users/matiassouza/Desktop/Projects/VibeAgents/scripts/preflight.sh <run_id> <project_root>
+scripts/preflight.sh <run_id> <project_root>
 ```
 
 Output:
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/preflight_report.md`
+- `.agentic/bus/artifacts/<run_id>/preflight_report.md`
 
 ## Generated Project Docs
 - Global `docs/RUNBOOK.md` is framework-level.
@@ -220,4 +220,4 @@ Output:
 - required artifact paths or schemas
 
 If an iteration has no Quickstart-impacting changes, docs writer must record `No Quickstart delta` in:
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/docs_report.md`
+- `.agentic/bus/artifacts/<run_id>/docs_report.md`
