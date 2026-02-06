@@ -1,12 +1,17 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/CHANGELOG.md
-Template-Version: 1.23.0
-Last-Generated: 2026-02-06T14:05:00Z
+Template-Version: 1.24.0
+Last-Generated: 2026-02-06T16:25:00Z
 Ownership: Managed
 ---
 
 # Changelog
+
+## 0.1.25 - 2026-02-06
+- Add `scripts/metrics_compare.py` for A/B run comparison (`feature OFF` vs `feature ON`).
+- Add canonical benchmark artifacts under `.agentic/bus/artifacts/benchmarks/<benchmark_id>/`.
+- Update `docs/QUICKSTART.md` with one-command A/B comparison workflow.
 
 ## 0.1.24 - 2026-02-06
 - Add `_CORE.md` plus `*.v2.md` dual-track prompt set for all 14 agents.

@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/docs/QUICKSTART.md
-Template-Version: 1.0.0
-Last-Generated: 2026-02-06T14:35:00Z
+Template-Version: 1.1.0
+Last-Generated: 2026-02-06T16:25:00Z
 Ownership: Managed
 ---
 
@@ -99,6 +99,26 @@ Telemetry (if enabled):
 - `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/metrics/<run_id>/events.jsonl`
 - `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/metrics/<run_id>/<agent_id>.json`
 - `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/questions_log.md`
+
+## A/B Run Comparison
+Use this when you run `feature OFF` vs `feature ON` and want a single comparison package.
+
+1. Ensure both run IDs have metrics:
+```bash
+/Users/matiassouza/Desktop/Projects/VibeAgents/scripts/metrics_summarize.py <baseline_run_id>
+/Users/matiassouza/Desktop/Projects/VibeAgents/scripts/metrics_summarize.py <experiment_run_id>
+```
+2. Generate benchmark comparison:
+```bash
+/Users/matiassouza/Desktop/Projects/VibeAgents/scripts/metrics_compare.py <baseline_run_id> <experiment_run_id> <benchmark_id>
+```
+
+Canonical benchmark output:
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/benchmarks/<benchmark_id>/baseline_run_id.txt`
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/benchmarks/<benchmark_id>/experiment_run_id.txt`
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/benchmarks/<benchmark_id>/baseline_report.md`
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/benchmarks/<benchmark_id>/experiment_report.md`
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/benchmarks/<benchmark_id>/comparison.md`
 
 ## Preflight for Web Projects
 Run preflight before release decisions:

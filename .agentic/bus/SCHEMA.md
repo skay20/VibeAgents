@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/bus/SCHEMA.md
-Template-Version: 1.15.0
-Last-Generated: 2026-02-06T14:05:00Z
+Template-Version: 1.16.0
+Last-Generated: 2026-02-06T16:25:00Z
 Ownership: Managed
 ---
 
@@ -48,3 +48,12 @@ Format: YYYYMMDD-HHMMSSZ-<slug>
 
 ## Metrics Report
 - `.agentic/bus/artifacts/<run_id>/agent_performance_report.md`
+
+## Benchmark Comparison (A/B)
+- Path: `.agentic/bus/artifacts/benchmarks/<benchmark_id>/`
+- Required files:
+  - `baseline_run_id.txt`
+  - `experiment_run_id.txt`
+  - `baseline_report.md`
+  - `experiment_report.md`
+  - `comparison.md`
