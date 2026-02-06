@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/WORKFLOWS_GUIDE.md
-Template-Version: 2.5.0
-Last-Generated: 2026-02-06T17:00:00Z
+Template-Version: 2.6.0
+Last-Generated: 2026-02-06T16:43:23Z
 Ownership: Managed
 ---
 
@@ -24,9 +24,13 @@ Tier selection:
 - Use `settings.flow_control.default_tier` if no trigger applies.
 - If `settings.flow_control.auto_tier_by_change=true`, promote to `strict` when a strict trigger matches.
 - Triggers come from `settings.flow_control.strict_triggers`.
+- If running against side-project `project_meta`, run compatibility check first:
+  - `scripts/check-project-meta.sh <project_meta_dir>`
 
 Release guard:
 - A tier is complete only if every required agent has metrics and artifact/decision evidence.
+- Pre-release gate must run: `scripts/enforce-flow.sh <run_id> <tier> pre_release`.
+- Finalization gate must run: `scripts/enforce-flow.sh <run_id> <tier> final`.
 
 ## Upgrade Flow
 1. detect
@@ -38,6 +42,10 @@ Release guard:
 ## PRD→Repo Engine
 - PRD changes trigger decision records, file updates, version bumps, and migrations.
 - Use `.agentic/bus/artifacts/<run_id>/` for traceability.
+- Required flow artifacts:
+  - `.agentic/bus/artifacts/<run_id>/tier_decision.md`
+  - `.agentic/bus/artifacts/<run_id>/planned_agents.md`
+  - `.agentic/bus/artifacts/<run_id>/flow_evidence.md`
 
 ## Run Modes
 - `AgentX`: minimal questions. Auto-advance gates after calibration. Document changes at the end.
@@ -49,6 +57,14 @@ Release guard:
 - Always write `diff_summary.md` before applying changes.
 - Never overwrite human-owned files.
 - Block if PRD conflicts with Constitution.
+
+## Documentation Scope
+- Keep framework-level `docs/RUNBOOK.md` generic.
+- For generated projects, docs stage must write runbook to `settings.docs.project_runbook_path`.
+
+## Project Meta Compatibility
+- For side-project execution using `project_meta`, validate compatibility before implementation when enabled in settings.
+- Block if required project_meta files or minimum template versions are not met.
 
 ## Notes
 - Each workflow writes artifacts to the bus.

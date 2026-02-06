@@ -1,12 +1,19 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CHANGELOG.md
-Template-Version: 1.25.0
-Last-Generated: 2026-02-06T16:26:32Z
+Template-Version: 1.26.0
+Last-Generated: 2026-02-06T16:43:23Z
 Ownership: Managed
 ---
 
 # Agentic Changelog
+
+## 0.27.0 - 2026-02-06
+- Add hard runtime flow checker script `scripts/enforce-flow.sh` with `pre_release|final` modes and deterministic pass/fail reasons.
+- Add project-meta compatibility checker `scripts/check-project-meta.sh` with minimum template-version and required-key validation.
+- Harden orchestrator/release/docs-writer v2 contracts with tier decision artifacts, planned dispatch evidence, final flow enforcement, and project runbook target handling.
+- Extend settings contract with `docs.project_runbook_path` and `project_meta.*` compatibility controls.
+- Extend verification checks to require new scripts, settings keys, and flow-enforcement contract strings.
 
 ## 0.26.0 - 2026-02-06
 - Add mandatory structure-driven PRD intake policy (no keyword dependency) in Constitution and adapters.

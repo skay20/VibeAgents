@@ -1,8 +1,8 @@
 {
   "Managed-By": "AgenticRepoBuilder",
   "Template-Source": "templates/.agentic/settings.json",
-  "Template-Version": "2.2.0",
-  "Last-Generated": "2026-02-06T16:26:32Z",
+  "Template-Version": "2.3.0",
+  "Last-Generated": "2026-02-06T16:43:23Z",
   "Ownership": "Managed",
   "settings": {
     "prd_intake": {
@@ -98,6 +98,22 @@
       "preflight_run_dev": true,
       "preflight_timeout_sec": 20,
       "package_manager_auto": true
+    },
+    "docs": {
+      "project_runbook_path": "<project_root>/RUNBOOK.md"
+    },
+    "project_meta": {
+      "enforce_compatibility": true,
+      "required_files": [
+        "AGENTS.md",
+        "UNIVERSAL.md",
+        "settings.json"
+      ],
+      "min_template_versions": {
+        "AGENTS.md": "2.2.0",
+        "UNIVERSAL.md": "1.4.0",
+        "settings.json": "2.3.0"
+      }
     },
     "run_start": {
       "enabled": true,

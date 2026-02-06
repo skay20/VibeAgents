@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/verify.sh
-# Template-Version: 1.21.0
-# Last-Generated: 2026-02-06T16:26:32Z
+# Template-Version: 1.22.0
+# Last-Generated: 2026-02-06T16:43:23Z
 # Ownership: Managed
 
 set -euo pipefail
@@ -156,6 +156,8 @@ run_mode = settings.get("run_mode", {})
 startup = settings.get("startup", {})
 automation = settings.get("automation", {})
 checks = settings.get("checks", {})
+docs_cfg = settings.get("docs", {})
+project_meta = settings.get("project_meta", {})
 validation = settings.get("validation", {})
 prompt_resolution = settings.get("prompt_resolution", {})
 flow_control = settings.get("flow_control", {})
@@ -205,6 +207,10 @@ required = [
     ("checks.preflight_run_dev", checks.get("preflight_run_dev", None)),
     ("checks.preflight_timeout_sec", checks.get("preflight_timeout_sec", None)),
     ("checks.package_manager_auto", checks.get("package_manager_auto", None)),
+    ("docs.project_runbook_path", docs_cfg.get("project_runbook_path", None)),
+    ("project_meta.enforce_compatibility", project_meta.get("enforce_compatibility", None)),
+    ("project_meta.required_files", project_meta.get("required_files", None)),
+    ("project_meta.min_template_versions", project_meta.get("min_template_versions", None)),
     ("validation.enforce_agent_id", validation.get("enforce_agent_id", None)),
 ]
 missing = [k for k,v in required if v is None]
@@ -232,6 +238,12 @@ if prd_intake.get("on_ambiguity") not in {"confirm_once", "block"}:
 if prd_intake.get("update_strategy") not in {"incremental", "replace"}:
     print("[FAIL] prd_intake.update_strategy must be incremental|replace")
     sys.exit(1)
+if not isinstance(project_meta.get("required_files", []), list) or len(project_meta.get("required_files", [])) < 3:
+    print("[FAIL] project_meta.required_files must be a list with at least 3 entries")
+    sys.exit(1)
+if not isinstance(project_meta.get("min_template_versions", {}), dict) or not project_meta.get("min_template_versions"):
+    print("[FAIL] project_meta.min_template_versions must be a non-empty object")
+    sys.exit(1)
 PYCODE
   if [[ $? -ne 0 ]]; then
     FAIL=1
@@ -239,7 +251,7 @@ PYCODE
 fi
 
 # 2f) Scripts check
-for s in scripts/start-run.sh scripts/log-event.sh scripts/log-question.sh scripts/preflight.sh scripts/preflight.py scripts/render-agent-prompt.sh; do
+for s in scripts/start-run.sh scripts/log-event.sh scripts/log-question.sh scripts/preflight.sh scripts/preflight.py scripts/render-agent-prompt.sh scripts/enforce-flow.sh scripts/check-project-meta.sh; do
   if [[ ! -f "$s" ]]; then
     fail "Missing script: $s"
   fi
@@ -248,7 +260,7 @@ done
 # 2g) Orchestrator adaptive flow checks
 ORCH_V2=".agentic/agents/god_orchestrator.v2.md"
 if [[ -f "$ORCH_V2" ]]; then
-  for text in "Flow tier:" "Classify change risk and select flow tier" "Missing metrics/artifact evidence for any required agent" "structured PRD"; do
+  for text in "Flow tier:" "Classify change risk and select flow tier" "Missing metrics/artifact evidence for any required agent" "structured PRD" "tier_decision.md" "planned_agents.md" "flow_evidence.md" "enforce-flow.sh" "check-project-meta.sh"; do
     if ! grep -q "$text" "$ORCH_V2"; then
       fail "Orchestrator v2 missing adaptive flow requirement: $text"
     fi
@@ -260,6 +272,24 @@ if [[ -f "$INTENT_V2" ]]; then
   for text in "structure signals" "new_prd|prd_update|not_prd" "prd_versions"; do
     if ! grep -q "$text" "$INTENT_V2"; then
       fail "Intent translator v2 missing PRD intake/versioning requirement: $text"
+    fi
+  done
+fi
+
+RELEASE_V2=".agentic/agents/release_manager.v2.md"
+if [[ -f "$RELEASE_V2" ]]; then
+  for text in "enforce-flow.sh" "tier_decision.md" "planned_agents.md"; do
+    if ! grep -q "$text" "$RELEASE_V2"; then
+      fail "Release manager v2 missing flow enforcement requirement: $text"
+    fi
+  done
+fi
+
+DOCS_V2=".agentic/agents/docs_writer.v2.md"
+if [[ -f "$DOCS_V2" ]]; then
+  for text in "project_runbook_path" "RUNBOOK.md"; do
+    if ! grep -q "$text" "$DOCS_V2"; then
+      fail "Docs writer v2 missing project runbook requirement: $text"
     fi
   done
 fi

@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/docs/QUICKSTART.md
-Template-Version: 1.4.0
-Last-Generated: 2026-02-06T16:26:32Z
+Template-Version: 1.5.0
+Last-Generated: 2026-02-06T16:43:23Z
 Ownership: Managed
 ---
 
@@ -38,6 +38,11 @@ AGENTIC_TOOL=codex /Users/matiassouza/Desktop/Projects/VibeAgents/scripts/start-
 6. Verify repository contracts:
 ```bash
 /Users/matiassouza/Desktop/Projects/VibeAgents/scripts/verify.sh
+```
+
+If running this framework inside a generated side project with `project_meta`, run:
+```bash
+/Users/matiassouza/Desktop/Projects/VibeAgents/scripts/check-project-meta.sh <project_meta_dir>
 ```
 
 ## Startup Handshake (If You See “No Questions” or “PRD Not Ingested”)
@@ -145,6 +150,11 @@ Telemetry (if enabled):
 - `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/metrics/<run_id>/<agent_id>.json`
 - `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/questions_log.md`
 
+Flow governance artifacts:
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/tier_decision.md`
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/planned_agents.md`
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/flow_evidence.md`
+
 ## A/B Run Comparison
 Use this when you run `feature OFF` vs `feature ON` and want a single comparison package.
 
@@ -181,6 +191,12 @@ Goal:
 - avoid full-pipeline overhead on low-risk changes
 - block release when required-agent evidence is missing for the selected tier
 
+Runtime enforcement:
+```bash
+/Users/matiassouza/Desktop/Projects/VibeAgents/scripts/enforce-flow.sh <run_id> <tier> pre_release
+/Users/matiassouza/Desktop/Projects/VibeAgents/scripts/enforce-flow.sh <run_id> <tier> final
+```
+
 ## Preflight for Web Projects
 Run preflight before release decisions:
 ```bash
@@ -189,6 +205,11 @@ Run preflight before release decisions:
 
 Output:
 - `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/preflight_report.md`
+
+## Generated Project Docs
+- Global `docs/RUNBOOK.md` is framework-level.
+- Generated project runbook target is controlled by:
+  - `settings.docs.project_runbook_path` (default `<project_root>/RUNBOOK.md`)
 
 ## Maintenance Policy
 `docs/QUICKSTART.md` is managed and must be updated on iterations that change:

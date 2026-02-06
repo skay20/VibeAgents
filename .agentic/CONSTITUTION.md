@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CONSTITUTION.md
-Template-Version: 2.11.0
-Last-Generated: 2026-02-06T16:26:32Z
+Template-Version: 2.12.0
+Last-Generated: 2026-02-06T16:43:23Z
 Ownership: Managed
 ---
 
@@ -78,6 +78,29 @@ Minimum required evidence for every required agent:
 
 If required evidence is missing, output `BLOCKED` and do not release.
 Reading a prompt file does not count as execution evidence.
+
+## Run Completion Contract (Mandatory)
+A run can be finalized only when both conditions hold:
+- `gate_status=approved` in `.agentic/bus/state/<run_id>.json`
+- Flow evidence passes for the selected tier (`scripts/enforce-flow.sh <run_id> <tier> final`)
+
+Pre-release gate must execute:
+- `scripts/enforce-flow.sh <run_id> <tier> pre_release`
+
+If the check fails, output `BLOCKED` and include missing-agent reasons.
+
+## Documentation Target Contract
+- Global `docs/RUNBOOK.md` remains framework-level unless explicitly requested otherwise.
+- Project-specific generated documentation must be written by docs flow to `settings.docs.project_runbook_path` (default `<project_root>/RUNBOOK.md`).
+- Documentation stage is incomplete if project runbook target is missing for generated projects.
+
+## Project Template Compatibility (Cross-Project)
+When running this system against a generated side project (`project_meta`):
+- Validate compatibility when `settings.project_meta.enforce_compatibility=true`.
+- Required files and minimum template versions come from:
+  - `settings.project_meta.required_files`
+  - `settings.project_meta.min_template_versions`
+- If compatibility check fails, block run with actionable error before implementation.
 
 ## Calibration Questions (After PRD)
 After the PRD is provided, the system must ask a short calibration set.

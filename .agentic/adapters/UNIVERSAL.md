@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/adapters/UNIVERSAL.md
-Template-Version: 1.4.0
-Last-Generated: 2026-02-06T16:26:32Z
+Template-Version: 1.5.0
+Last-Generated: 2026-02-06T16:43:23Z
 Ownership: Managed
 ---
 
@@ -18,9 +18,10 @@ Ownership: Managed
 ## Startup Handshake (Must Happen, In This Order)
 1. Load bootstrap context (list above).
 2. If automation is enabled and no run exists yet, create `run_id` by calling `scripts/start-run.sh`.
-3. Detect PRD from chat by structure (not only by keyword). If it matches configured PRD signals, ingest into `docs/PRD.md` by editing only `BEGIN_MANAGED` / `END_MANAGED` (preserve header/markers).
-4. Ask calibration once (single bundled message when configured), including run mode if `AGENTIC_RUN_MODE` is not set. Default per `.agentic/settings.json` if unanswered.
-5. Only then proceed to planning/implementation agents per flow tier.
+3. If a `project_meta` directory is present, run compatibility check (`scripts/check-project-meta.sh <project_meta_dir>`).
+4. Detect PRD from chat by structure (not only by keyword). If it matches configured PRD signals, ingest into `docs/PRD.md` by editing only `BEGIN_MANAGED` / `END_MANAGED` (preserve header/markers).
+5. Ask calibration once (single bundled message when configured), including run mode if `AGENTIC_RUN_MODE` is not set. Default per `.agentic/settings.json` if unanswered.
+6. Only then proceed to planning/implementation agents per flow tier.
 
 ## Agent Behavior
 - Apply Agent Prompt Spec v2 and anti-genericity rubric.

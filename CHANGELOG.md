@@ -1,12 +1,18 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/CHANGELOG.md
-Template-Version: 1.26.0
-Last-Generated: 2026-02-06T16:26:32Z
+Template-Version: 1.27.0
+Last-Generated: 2026-02-06T16:43:23Z
 Ownership: Managed
 ---
 
 # Changelog
+
+## 0.1.28 - 2026-02-06
+- Add hard runtime flow checker `scripts/enforce-flow.sh` to block release when required tier agents are missing evidence.
+- Add project-meta compatibility checker `scripts/check-project-meta.sh` to detect outdated side-project templates/contracts before implementation.
+- Add docs target contract (`settings.docs.project_runbook_path`) and project-meta compatibility settings in `.agentic/settings.json`.
+- Harden orchestrator/release/docs contracts and verification so flow governance is enforced at runtime and not only by prompt intent.
 
 ## 0.1.27 - 2026-02-06
 - Add base PRD-intake contract to detect PRD by structure (without requiring `new PRD` keyword).
