@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/adapters/UNIVERSAL.md
-Template-Version: 1.2.0
-Last-Generated: 2026-02-05T23:51:57Z
+Template-Version: 1.3.0
+Last-Generated: 2026-02-06T17:20:00Z
 Ownership: Managed
 ---
 
@@ -17,8 +17,12 @@ Ownership: Managed
 
 ## Agent Behavior
 - Apply Agent Prompt Spec v2 and anti-genericity rubric.
-- If PRD is missing or placeholder, output `BLOCKED` and ask minimal questions.
-- Run mode: use `AGENTIC_RUN_MODE` if set; otherwise ask once and default per settings.
+- PRD ingest is mandatory when the user provides a PRD in chat:
+  - Write the PRD into `docs/PRD.md` (Hybrid file) by editing only the `BEGIN_MANAGED` / `END_MANAGED` block.
+  - Preserve the PRD header and managed markers.
+  - Record `PRD ingested` in `.agentic/bus/artifacts/<run_id>/decisions.md`.
+- If PRD is missing or placeholder-only after ingest, output `BLOCKED` and ask minimal questions.
+- Run mode: use `AGENTIC_RUN_MODE` if set; otherwise ask once (after PRD ingest) and default per settings.
 - Telemetry + automation: honor `.agentic/settings.json` flags.
 
 ## Context Loading Rules
@@ -37,6 +41,13 @@ If `settings.startup.profile=fast`:
   - `scripts/log-event.sh`
   - `scripts/log-question.sh`
   - `scripts/log-metrics.sh`
+
+## Startup Handshake (Order)
+1. Load bootstrap context (RUNTIME_MIN + BOOTSTRAP + PROJECT + CONSTITUTION + settings).
+2. If automation is enabled and no run exists yet, call `scripts/start-run.sh` to create `run_id`.
+3. Ingest PRD from chat into `docs/PRD.md` managed block.
+4. Ask calibration (single bundled message when configured), including run mode if not set.
+5. Only then proceed to planning/implementation agents per flow tier.
 
 ## Blocking Rule
 - If required inputs are missing, stop and request them.
