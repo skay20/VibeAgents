@@ -1,185 +1,121 @@
-# VibeAgents Quickstart Guide
+---
+Managed-By: AgenticRepoBuilder
+Template-Source: templates/docs/QUICKSTART.md
+Template-Version: 1.0.0
+Last-Generated: 2026-02-06T14:35:00Z
+Ownership: Managed
+---
 
-## 1) Que es este repositorio
-Este repositorio es un sistema no-app-first para convertir un PRD en ejecucion guiada por agentes, con trazabilidad por archivos.
+# VibeAgents Quickstart
 
-Single source of truth operativo:
-- Reglas y comportamiento: `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/CONSTITUTION.md`
-- Configuracion de features: `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/settings.json`
-- Contexto base: `/Users/matiassouza/Desktop/Projects/VibeAgents/.ai/context/`
-- Orquestacion y artefactos: `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/`
+## Purpose
+This repository turns a PRD into agentic execution with file-based state, artifacts, and verification.
 
-Nota: este archivo esta pensado para este proyecto y no debe regenerarse automaticamente cuando uses esta base para otros repos.
+Authoritative operational files:
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/CONSTITUTION.md`
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/settings.json`
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/AGENTS_CATALOG.md`
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/SCHEMA.md`
 
-## 2) Flujo rapido (5 minutos)
-1. Validar que estas en la raiz del repo:
+## Fast Start
+1. Validate root:
 ```bash
 pwd
 ```
-2. Revisar settings actuales:
+2. Check settings:
 ```bash
 cat /Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/settings.json
 ```
-3. Elegir run mode por variable de entorno (opcional pero recomendado):
+3. Optional run mode:
 ```bash
 export AGENTIC_RUN_MODE=AgentX
 ```
-Opciones:
-- `AgentX`: minimo de preguntas, mayor autonomia.
-- `AgentL`: balanceado.
-- `AgentM`: mas explicacion y checkpoints.
-4. Iniciar un run y guardar `run_id`:
+4. Start run:
 ```bash
 AGENTIC_TOOL=codex /Users/matiassouza/Desktop/Projects/VibeAgents/scripts/start-run.sh
 ```
-5. Entregar PRD al asistente y responder calibracion minima.
-6. Verificar run:
+5. Provide PRD to the assistant and answer startup calibration.
+6. Verify repository contracts:
 ```bash
 /Users/matiassouza/Desktop/Projects/VibeAgents/scripts/verify.sh
 ```
 
-## 3) Mapa de arquitectura operativa
-Capas:
-- L0 bootstrap: `/Users/matiassouza/Desktop/Projects/VibeAgents/.ai/context/BOOTSTRAP.md`
-- L1 standards: `/Users/matiassouza/Desktop/Projects/VibeAgents/.ai/context/CORE.md`, `/Users/matiassouza/Desktop/Projects/VibeAgents/.ai/context/STANDARDS.md`, `/Users/matiassouza/Desktop/Projects/VibeAgents/.ai/context/SECURITY.md`, `/Users/matiassouza/Desktop/Projects/VibeAgents/.ai/context/TESTING.md`
-- L2 arquitectura: `/Users/matiassouza/Desktop/Projects/VibeAgents/docs/ARCHITECTURE.md`, `/Users/matiassouza/Desktop/Projects/VibeAgents/docs/ADR/`
-- L3 run artifacts: `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/`
+## Prompt System (v1/v2)
+Dual-track prompt model:
+- v1 standalone prompt: `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/agents/<agent_id>.md`
+- v2 thin prompt: `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/agents/<agent_id>.v2.md`
+- shared core for v2: `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/agents/_CORE.md`
 
-Regla de precedencia:
-1. Instruccion del usuario actual.
-2. `docs/PRD.md`.
-3. Contexto y constitucion.
+Deterministic resolution:
+```bash
+/Users/matiassouza/Desktop/Projects/VibeAgents/scripts/render-agent-prompt.sh <agent_id> <v1|v2|auto> [run_id]
+```
 
-## 4) Agentes (que hace cada uno)
-Catalogo completo:
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/AGENTS_CATALOG.md`
+`auto` reads `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/settings.json`:
+- `settings.prompt_resolution.default_version`
+- `settings.prompt_resolution.pilot_v2_enabled`
+- `settings.prompt_resolution.pilot_agents`
+- `settings.prompt_resolution.fallback_version`
+- `settings.prompt_resolution.write_compiled_artifacts`
 
-Core de operacion:
-- Orquestador: `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/agents/god_orchestrator.md`
-- Intent: `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/agents/intent_translator.md`
-- Planner: `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/agents/planner.md`
-- Implementer: `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/agents/implementer.md`
-- QA/Security: `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/agents/qa_reviewer.md`, `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/agents/security_reviewer.md`
-- Mantenimiento: `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/agents/repo_maintainer.md`
+If compiled artifacts are enabled:
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/compiled_prompts/<agent_id>.md`
 
-Como saber si realmente se usaron:
-- Eventos: `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/metrics/<run_id>/events.jsonl`
-- Metricas por agente: `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/metrics/<run_id>/<agent_id>.json`
-- Reporte consolidado: `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/agent_performance_report.md`
+## Settings You Will Use Most
+- `settings.run_mode`: AgentX/AgentL/AgentM behavior
+- `settings.startup`: startup speed and question count
+- `settings.telemetry`: events/questions/tokens capture
+- `settings.automation`: automatic run/log script behavior
+- `settings.prompt_resolution`: v1/v2 resolver control
+- `settings.checks`: preflight install/dev checks
+- `settings.validation`: strict validation flags
 
-## 5) Settings criticos (on/off)
-Archivo:
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/settings.json`
+Disable telemetry/logging fast path:
+- Set these to `false`:
+  - `settings.telemetry.enabled`
+  - `settings.telemetry.capture_tokens`
+  - `settings.telemetry.events`
+  - `settings.telemetry.questions`
+  - `settings.telemetry.questions_log`
+  - `settings.automation.run_scripts`
+  - `settings.automation.auto_start_run`
+  - `settings.automation.auto_log_questions`
+  - `settings.automation.auto_log_agents`
+  - `settings.run_start.enabled`
+  - `settings.run_start.write_run_meta`
 
-Bloques importantes:
-- `settings.run_mode`: comportamiento de autonomia.
-- `settings.startup`: velocidad de arranque y numero maximo de preguntas iniciales.
-- `settings.telemetry`: captura de eventos, preguntas y tokens.
-- `settings.automation`: ejecucion automatica de scripts de logging.
-- `settings.checks`: preflight y controles npm/dev.
-- `settings.validation`: validaciones duras como `enforce_agent_id`.
+## Run Artifacts and Metrics
+Main run state:
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/state/<run_id>.json`
 
-Preset recomendado para velocidad:
-- `settings.startup.profile=fast`
-- `settings.startup.ask_only_missing=true`
-- `settings.startup.max_initial_questions=3`
+Operational artifacts:
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/plan.md`
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/decisions.md`
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/diff_summary.md`
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/qa_report.md`
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/release_notes.md`
 
-Preset recomendado para maximo tracking:
-- `settings.telemetry.enabled=true`
-- `settings.telemetry.events=true`
-- `settings.telemetry.questions=true`
-- `settings.telemetry.questions_log=true`
-- `settings.automation.run_scripts=true`
+Telemetry (if enabled):
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/metrics/<run_id>/events.jsonl`
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/metrics/<run_id>/<agent_id>.json`
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/questions_log.md`
 
-## 6) Telemetria y trazabilidad
-Objetivo: saber que se ejecuto, cuando, por quien, y cuanto duro.
-
-Rutas clave:
-- Estado del run: `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/state/<run_id>.json`
-- Eventos: `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/metrics/<run_id>/events.jsonl`
-- Preguntas y respuestas: `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/questions_log.md`
-- Decisiones: `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/decisions.md`
-- Diff y QA: `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/diff_summary.md`, `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/qa_report.md`
-
-Si faltan logs:
-1. Verifica que `settings.telemetry.enabled=true`.
-2. Verifica que `settings.automation.run_scripts=true`.
-3. Verifica `AGENTIC_TOOL` y `agent_id` valido.
-
-## 7) Preflight (evitar sorpresas de npm/dev)
-Comando:
+## Preflight for Web Projects
+Run preflight before release decisions:
 ```bash
 /Users/matiassouza/Desktop/Projects/VibeAgents/scripts/preflight.sh <run_id> <project_root>
 ```
 
-Salida esperada:
+Output:
 - `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/preflight_report.md`
 
-Que valida:
-- Instalacion de dependencias.
-- Arranque de `dev` con timeout configurable.
-- Diagnostico explicito para errores de red/registry y dependencias no resolubles.
+## Maintenance Policy
+`docs/QUICKSTART.md` is managed and must be updated on iterations that change:
+- workflow or phase gates
+- settings keys/defaults
+- prompt routing (`v1/v2`, resolver behavior)
+- scripts used during startup, logging, or verification
+- required artifact paths or schemas
 
-Uso recomendado:
-- Ejecutar antes de cerrar una fase de implementacion web app.
-- Bloquear release si preflight falla y no hay waiver explicito.
-
-## 8) CI y quality gates
-Workflow:
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.github/workflows/node-ci.yml`
-
-Que corre (si hay `package.json`):
-- Install (`npm ci`/`pnpm install --frozen-lockfile`/`yarn install --frozen-lockfile`)
-- `lint` (si script existe)
-- `typecheck` (si script existe)
-- `build` (si script existe)
-
-Verificacion local de repo:
-```bash
-/Users/matiassouza/Desktop/Projects/VibeAgents/scripts/verify.sh
-```
-
-## 9) Troubleshooting rapido
-Problema: demasiadas preguntas al inicio.
-- Ajustar `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/settings.json`:
-  - `startup.profile=fast`
-  - `startup.max_initial_questions=1..3`
-  - `startup.ask_only_missing=true`
-
-Problema: solo aparece `codex` en metrica.
-- Confirmar que cada agente llama `log-metrics.sh` con `agent_id` real.
-- Confirmar `validation.enforce_agent_id` y que los ids coinciden con archivos en `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/agents/`.
-
-Problema: `npm install` falla por red en entorno restringido.
-- Ejecutar preflight en entorno con red.
-- Revisar reporte de preflight y registrar waiver si aplica.
-
-Problema: PRD incompleto bloquea.
-- Completar campos criticos o responder preguntas de calibracion.
-- Mantener consistencia con constitucion y ownership policy.
-
-## 10) Ejemplo de corrida
-1. Iniciar:
-```bash
-AGENTIC_TOOL=codex /Users/matiassouza/Desktop/Projects/VibeAgents/scripts/start-run.sh
-```
-2. Guardar `run_id` devuelto.
-3. Entregar PRD y responder calibracion.
-4. Revisar:
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/state/<run_id>.json`
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/decisions.md`
-- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/metrics/<run_id>/events.jsonl`
-5. Cerrar con:
-```bash
-/Users/matiassouza/Desktop/Projects/VibeAgents/scripts/verify.sh
-```
-
-## 11) Checklist final
-- PRD cargado y calibracion resuelta.
-- Run mode documentado.
-- Artefactos de run generados.
-- Logs de eventos y preguntas presentes (si telemetry on).
-- Preflight ejecutado para web app.
-- `scripts/verify.sh` en verde.
-- Changelog actualizado si hubo cambios de reglas/prompts.
-
+If an iteration has no Quickstart-impacting changes, docs writer must record `No Quickstart delta` in:
+- `/Users/matiassouza/Desktop/Projects/VibeAgents/.agentic/bus/artifacts/<run_id>/docs_report.md`

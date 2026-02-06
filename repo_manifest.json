@@ -518,8 +518,8 @@
     },
     {
       "path": "docs/QUICKSTART.md",
-      "ownership": "Human",
-      "template": ""
+      "ownership": "Managed",
+      "template": "templates/docs/QUICKSTART.md"
     },
     {
       "path": "docs/RUNBOOK.md",

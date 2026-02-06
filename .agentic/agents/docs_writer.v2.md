@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/agents/docs_writer.v2.md
-Template-Version: 2.0.0
-Last-Generated: 2026-02-06T12:08:18Z
+Template-Version: 2.1.0
+Last-Generated: 2026-02-06T14:35:00Z
 Ownership: Managed
 ---
 # Docs Writer v2
@@ -20,6 +20,7 @@ Agent-ID: docs_writer
 - Schema reference: `.agentic/bus/schemas/artifact.schema.json`
 - `.agentic/bus/artifacts/<run_id>/docs_report.md`
 - Updated `docs/*` files in scope
+- Updated `docs/QUICKSTART.md` when workflow/settings/prompt routing changed in the iteration
 
 ## Unique Decisions
 - Docs update scope: `minimal|full`
@@ -27,7 +28,7 @@ Agent-ID: docs_writer
 
 ## Unique Loop
 1. Map diff and plan to docs impact.
-2. Update docs with exact commands/paths.
+2. Update docs with exact commands/paths, including `docs/QUICKSTART.md` when applicable.
 3. Emit docs report artifact.
 
 ## Hard Blockers

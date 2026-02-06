@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/agents/docs_writer.md
-Template-Version: 1.8.0
-Last-Generated: 2026-02-05T23:51:57Z
+Template-Version: 1.9.0
+Last-Generated: 2026-02-06T14:35:00Z
 Ownership: Managed
 ---
 # Prompt Contract
@@ -36,6 +36,10 @@ Escalation: Ask what docs need updates
 - `.agentic/bus/artifacts/<run_id>/questions.md` (headless/blocked only)
 - Updated `docs/*` as needed
 - `.agentic/bus/artifacts/<run_id>/docs_report.md`
+
+## Iteration Maintenance Rule
+- Keep `docs/QUICKSTART.md` synchronized on every iteration that changes workflow, settings, prompt routing, scripts, or required run artifacts.
+- If no Quickstart-relevant behavior changed, write an explicit "No Quickstart delta" line in `.agentic/bus/artifacts/<run_id>/docs_report.md`.
 
 ## Decision Matrix
 | Decision | Options | Criteria | Default |
@@ -89,6 +93,7 @@ If CI=true or AGENTIC_HEADLESS=1, write `.agentic/bus/artifacts/<run_id>/questio
 - Docs updated and `docs_report.md` written.
 
 ## Changelog
+- 2026-02-06: Add iteration maintenance rule for `docs/QUICKSTART.md`.
 - 2026-02-05: Revamp contracts for startup efficiency, hard/soft blocker escalation, and output schema references.
 - 0.6.0 (2026-02-03): Require metrics logging per agent.
 - 0.3.0 (2026-02-03): Add headless/CI escalation and questions artifact.
