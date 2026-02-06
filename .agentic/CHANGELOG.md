@@ -1,12 +1,17 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CHANGELOG.md
-Template-Version: 1.21.0
+Template-Version: 1.22.0
 Last-Generated: 2026-02-05T23:51:57Z
 Ownership: Managed
 ---
 
 # Agentic Changelog
+
+## 0.23.0 - 2026-02-05
+- Revamp all agent prompt contracts with startup behavior and hard/soft blocker escalation.
+- Require output schema references in all agent contracts.
+- Add plan, diff_summary, and qa_report bus schemas.
 
 ## 0.22.0 - 2026-02-05
 - Add `RUNTIME_MIN.md` ultra-short startup context.

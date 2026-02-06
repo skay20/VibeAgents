@@ -1,7 +1,7 @@
 {
   "Managed-By": "AgenticRepoBuilder",
   "Template-Source": "templates/repo_manifest.json",
-  "Template-Version": "1.21.0",
+  "Template-Version": "1.22.0",
   "Last-Generated": "2026-02-05T23:51:57Z",
   "repo": {
     "slug": "vibeagents",
@@ -167,6 +167,11 @@
       "template": "templates/.agentic/bus/schemas/artifact.schema.json"
     },
     {
+      "path": ".agentic/bus/schemas/diff_summary.schema.json",
+      "ownership": "Managed",
+      "template": "templates/.agentic/bus/schemas/diff_summary.schema.json"
+    },
+    {
       "path": ".agentic/bus/schemas/decision.schema.json",
       "ownership": "Managed",
       "template": "templates/.agentic/bus/schemas/decision.schema.json"
@@ -175,6 +180,16 @@
       "path": ".agentic/bus/schemas/event.schema.json",
       "ownership": "Managed",
       "template": "templates/.agentic/bus/schemas/event.schema.json"
+    },
+    {
+      "path": ".agentic/bus/schemas/plan.schema.json",
+      "ownership": "Managed",
+      "template": "templates/.agentic/bus/schemas/plan.schema.json"
+    },
+    {
+      "path": ".agentic/bus/schemas/qa_report.schema.json",
+      "ownership": "Managed",
+      "template": "templates/.agentic/bus/schemas/qa_report.schema.json"
     },
     {
       "path": ".agentic/bus/schemas/runstate.schema.json",

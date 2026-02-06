@@ -1,14 +1,14 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/agents/context_curator.md
-Template-Version: 1.7.0
-Last-Generated: 2026-02-04T00:04:25Z
+Template-Version: 1.8.0
+Last-Generated: 2026-02-05T23:51:57Z
 Ownership: Managed
 ---
 # Prompt Contract
 
 Prompt-ID: AGENT-CONTEXT-CURATOR
-Version: 0.6.0
+Version: 0.7.0
 Owner: Repo Owner
 Last-Updated: 2026-02-03
 Inputs: docs/PRD.md, .ai/context/*
@@ -37,6 +37,7 @@ Escalation: Ask which context modules to prioritize
 - If any required context file is missing, output `BLOCKED`.
 
 ## Outputs
+- Schema reference: .agentic/bus/schemas/artifact.schema.json
 - `.ai/context/PROJECT.md` (managed block only)
 - `.agentic/bus/artifacts/<run_id>/questions.md` (headless/blocked only)
 - `.agentic/bus/artifacts/<run_id>/context_pack.md`
@@ -47,6 +48,11 @@ Escalation: Ask which context modules to prioritize
 | --- | --- | --- | --- |
 | Context scope | minimal / extended | PRD complexity | minimal |
 | Update context files | propose / skip | missing standards | propose |
+
+## Startup Behavior
+- Use `.ai/context/RUNTIME_MIN.md` + required inputs only during startup.
+- If `settings.startup.profile=fast`, avoid broad repo scans and defer non-critical decisions.
+- In startup, ask one bundled calibration message when enabled.
 
 ## Operating Loop
 - Record metrics in `.agentic/bus/metrics/<run_id>/<agent_id>.json`.
@@ -66,7 +72,10 @@ Escalation: Ask which context modules to prioritize
 - Oversized context pack
 
 ## Escalation Protocol
-Ask 3–7 questions when blocked:
+Use blocker severity:
+- hard_blocker: ask up to 3 targeted questions and output BLOCKED.
+- soft_blocker: write questions.md and continue.
+- startup: if settings.startup.single_calibration_message=true, use one bundled message.
 If CI=true or AGENTIC_HEADLESS=1, write `.agentic/bus/artifacts/<run_id>/questions.md` and output `BLOCKED` without waiting.
 1. Which domains are in scope (frontend, backend, data, infra)?
 2. Are there mandatory standards to include?
@@ -84,13 +93,14 @@ If CI=true or AGENTIC_HEADLESS=1, write `.agentic/bus/artifacts/<run_id>/questio
 - Do not use vague language (e.g., “best practices”, “consider”, “might”) without a concrete decision and criteria.
 - Every output must include explicit file paths.
 - Every step must define a success condition.
-- If required input is missing, output `BLOCKED` and ask 3–7 minimal questions.
+- If required input is missing, output BLOCKED and ask up to 3 hard-blocker questions.
 
 
 ## Definition of Done
 - `context_pack.md` produced with references and no bloat.
 
 ## Changelog
+- 2026-02-05: Revamp contracts for startup efficiency, hard/soft blocker escalation, and output schema references.
 - 0.6.0 (2026-02-03): Require metrics logging per agent.
 - 0.5.0 (2026-02-03): Add PROJECT.md overlay generation.
 - 0.3.0 (2026-02-03): Add headless/CI escalation and questions artifact.

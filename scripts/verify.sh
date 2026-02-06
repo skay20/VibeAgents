@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/verify.sh
-# Template-Version: 1.17.0
+# Template-Version: 1.18.0
 # Last-Generated: 2026-02-05T23:51:57Z
 # Ownership: Managed
 
@@ -88,6 +88,15 @@ if [[ ! -f ".agentic/bus/schemas/agent_metrics.schema.json" ]]; then
 fi
 if [[ ! -f ".agentic/bus/schemas/event.schema.json" ]]; then
   fail "Missing event schema"
+fi
+if [[ ! -f ".agentic/bus/schemas/plan.schema.json" ]]; then
+  fail "Missing plan schema"
+fi
+if [[ ! -f ".agentic/bus/schemas/diff_summary.schema.json" ]]; then
+  fail "Missing diff summary schema"
+fi
+if [[ ! -f ".agentic/bus/schemas/qa_report.schema.json" ]]; then
+  fail "Missing qa report schema"
 fi
 if [[ ! -d ".agentic/bus/metrics" ]]; then
   fail "Missing metrics directory"
@@ -205,6 +214,12 @@ for path in glob.glob('.agentic/agents/*.md'):
             fail = True
     if not re.search(r'`[^`]+/[^`]+`', text):
         print(f"[FAIL] No explicit file paths in {path}")
+        fail = True
+    if "Schema reference:" not in text:
+        print(f"[FAIL] Missing schema reference in {path}")
+        fail = True
+    if "Ask 3" in text and "questions when blocked" in text:
+        print(f"[FAIL] Legacy escalation wording in {path}")
         fail = True
 if fail:
     sys.exit(1)

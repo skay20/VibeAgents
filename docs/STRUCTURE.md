@@ -1,7 +1,7 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/docs/STRUCTURE.md
-Template-Version: 1.15.0
+Template-Version: 1.16.0
 Last-Generated: 2026-02-05T23:51:57Z
 Ownership: Managed
 ---
@@ -59,6 +59,9 @@ Ownership: Managed
 │  │  │  ├─ task.schema.json
 │  │  │  ├─ decision.schema.json
 │  │  │  ├─ artifact.schema.json
+│  │  │  ├─ diff_summary.schema.json
+│  │  │  ├─ plan.schema.json
+│  │  │  ├─ qa_report.schema.json
 │  │  │  ├─ runstate.schema.json
 │  │  │  ├─ agent_metrics.schema.json
 │  │  │  └─ event.schema.json

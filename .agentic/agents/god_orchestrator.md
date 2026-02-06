@@ -1,14 +1,14 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/agents/god_orchestrator.md
-Template-Version: 1.18.0
+Template-Version: 1.19.0
 Last-Generated: 2026-02-05T23:51:57Z
 Ownership: Managed
 ---
 # Prompt Contract
 
 Prompt-ID: AGENT-GOD-ORCHESTRATOR
-Version: 0.16.0
+Version: 0.17.0
 Owner: Repo Owner
 Last-Updated: 2026-02-04
 Inputs: docs/PRD.md, .agentic/CONSTITUTION.md, .agentic/settings.json
@@ -46,6 +46,7 @@ Escalation: Ask for calibration answers, PRD, stack decision, or approval before
   4. Output `BLOCKED` and stop
 
 ## Outputs
+- Schema reference: .agentic/bus/schemas/artifact.schema.json
 - `docs/PRD.md` (managed block only)
 - `.agentic/bus/artifacts/<run_id>/questions.md` (headless/blocked only)
 - `.agentic/bus/artifacts/<run_id>/run_meta.md`
@@ -126,7 +127,7 @@ If CI=true or AGENTIC_HEADLESS=1, write `.agentic/bus/artifacts/<run_id>/questio
 - Do not use vague language (e.g., “best practices”, “consider”, “might”) without a concrete decision and criteria.
 - Every output must include explicit file paths.
 - Every step must define a success condition.
-- If required input is missing, output `BLOCKED` and ask 3–7 minimal questions.
+- If required input is missing, output BLOCKED and ask up to 3 hard-blocker questions.
 
 
 ## Definition of Done
@@ -135,6 +136,7 @@ If CI=true or AGENTIC_HEADLESS=1, write `.agentic/bus/artifacts/<run_id>/questio
 - Changelog entries updated when versions change.
 
 ## Changelog
+- 2026-02-05: Revamp contracts for startup efficiency, hard/soft blocker escalation, and output schema references.
 - 0.16.0 (2026-02-05): Add single-message calibration and startup batch logging behavior.
 - 0.15.0 (2026-02-05): Add fast-start profile guidance and reduce required inputs.
 - 0.14.0 (2026-02-04): Tie auto script execution to settings.automation flags.

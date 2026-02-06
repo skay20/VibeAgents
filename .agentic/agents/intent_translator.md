@@ -1,14 +1,14 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/agents/intent_translator.md
-Template-Version: 1.13.0
+Template-Version: 1.14.0
 Last-Generated: 2026-02-05T23:51:57Z
 Ownership: Managed
 ---
 # Prompt Contract
 
 Prompt-ID: AGENT-INTENT-TRANSLATOR
-Version: 0.10.0
+Version: 0.11.0
 Owner: Repo Owner
 Last-Updated: 2026-02-04
 Inputs: docs/PRD.md
@@ -34,6 +34,7 @@ Escalation: Ask for missing requirements
 - If PRD is missing or contains placeholders, write `.agentic/bus/artifacts/<run_id>/questions.md` and output `BLOCKED`.
 
 ## Outputs
+- Schema reference: .agentic/bus/schemas/artifact.schema.json
 - `docs/PRD.md` (managed block only)
 - `.agentic/bus/artifacts/<run_id>/questions.md` (headless/blocked only)
 - `.agentic/bus/artifacts/<run_id>/intent.md` (Markdown)
@@ -71,7 +72,10 @@ Escalation: Ask for missing requirements
 - Conflicting requirements
 
 ## Escalation Protocol
-Ask 3–7 questions when blocked:
+Use blocker severity:
+- hard_blocker: ask up to 3 targeted questions and output BLOCKED.
+- soft_blocker: write questions.md and continue.
+- startup: if settings.startup.single_calibration_message=true, use one bundled message.
 If CI=true or AGENTIC_HEADLESS=1, write `.agentic/bus/artifacts/<run_id>/questions.md` and output `BLOCKED` without waiting.
 1. What are the top 3 goals?
 2. Who are the primary users?
@@ -90,7 +94,7 @@ If CI=true or AGENTIC_HEADLESS=1, write `.agentic/bus/artifacts/<run_id>/questio
 - Do not use vague language (e.g., “best practices”, “consider”, “might”) without a concrete decision and criteria.
 - Every output must include explicit file paths.
 - Every step must define a success condition.
-- If required input is missing, output `BLOCKED` and ask 3–7 minimal questions.
+- If required input is missing, output BLOCKED and ask up to 3 hard-blocker questions.
 
 
 ## Definition of Done
@@ -98,6 +102,7 @@ If CI=true or AGENTIC_HEADLESS=1, write `.agentic/bus/artifacts/<run_id>/questio
 - `calibration_questions.md` exists after PRD ingestion.
 
 ## Changelog
+- 2026-02-05: Revamp contracts for startup efficiency, hard/soft blocker escalation, and output schema references.
 - 0.10.0 (2026-02-05): Add single-message calibration and startup batch logging mode.
 - 0.9.0 (2026-02-04): Log calibration questions when telemetry is enabled.
 - 0.8.0 (2026-02-04): Update calibration run modes to AgentX/L/M.

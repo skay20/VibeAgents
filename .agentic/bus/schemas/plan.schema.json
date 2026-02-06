@@ -1,0 +1,31 @@
+{
+  "Managed-By": "AgenticRepoBuilder",
+  "Template-Source": "templates/.agentic/bus/schemas/plan.schema.json",
+  "Template-Version": "1.0.0",
+  "Last-Generated": "2026-02-05T23:51:57Z",
+  "Ownership": "Managed",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PlanArtifact",
+  "type": "object",
+  "required": ["run_id", "summary", "slices", "gates"],
+  "properties": {
+    "run_id": { "type": "string" },
+    "summary": { "type": "string" },
+    "slices": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "goal", "files", "tests"],
+        "properties": {
+          "id": { "type": "string" },
+          "goal": { "type": "string" },
+          "files": { "type": "array", "items": { "type": "string" } },
+          "tests": { "type": "array", "items": { "type": "string" } }
+        },
+        "additionalProperties": false
+      }
+    },
+    "gates": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}
