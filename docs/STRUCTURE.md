@@ -144,6 +144,5 @@ Ownership: Managed
    ├─ preflight.sh
    ├─ start-run.sh
    ├─ render-agent-prompt.sh
-   ├─ metrics_summarize.py
    └─ verify.sh
 ```

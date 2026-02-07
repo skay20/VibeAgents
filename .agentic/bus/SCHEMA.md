@@ -49,12 +49,3 @@ Format: YYYYMMDD-HHMMSSZ-<slug>
 
 ## Metrics Report
 - `.agentic/bus/artifacts/<run_id>/agent_performance_report.md`
-
-## Benchmark Comparison (A/B)
-- Path: `.agentic/bus/artifacts/benchmarks/<benchmark_id>/`
-- Required files:
-  - `baseline_run_id.txt`
-  - `experiment_run_id.txt`
-  - `baseline_report.md`
-  - `experiment_report.md`
-  - `comparison.md`

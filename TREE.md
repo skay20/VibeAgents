@@ -146,6 +146,5 @@ This file is generated. Update it via the orchestrator and templates.
    ├─ preflight.sh
    ├─ start-run.sh
    ├─ render-agent-prompt.sh
-   ├─ metrics_summarize.py
    └─ verify.sh
 ```

@@ -572,16 +572,6 @@
       "template": "templates/scripts/log-run.sh"
     },
     {
-      "path": "scripts/metrics_summarize.py",
-      "ownership": "Managed",
-      "template": "templates/scripts/metrics_summarize.py"
-    },
-    {
-      "path": "scripts/metrics_compare.py",
-      "ownership": "Managed",
-      "template": "templates/scripts/metrics_compare.py"
-    },
-    {
       "path": "scripts/start-run.sh",
       "ownership": "Managed",
       "template": "templates/scripts/start-run.sh"

@@ -161,26 +161,6 @@ Flow governance artifacts:
 - `.agentic/bus/artifacts/<run_id>/planned_agents.md`
 - `.agentic/bus/artifacts/<run_id>/flow_evidence.md`
 
-## A/B Run Comparison
-Use this when you run `feature OFF` vs `feature ON` and want a single comparison package.
-
-1. Ensure both run IDs have metrics:
-```bash
-scripts/metrics_summarize.py <baseline_run_id>
-scripts/metrics_summarize.py <experiment_run_id>
-```
-2. Generate benchmark comparison:
-```bash
-scripts/metrics_compare.py <baseline_run_id> <experiment_run_id> <benchmark_id>
-```
-
-Canonical benchmark output:
-- `.agentic/bus/artifacts/benchmarks/<benchmark_id>/baseline_run_id.txt`
-- `.agentic/bus/artifacts/benchmarks/<benchmark_id>/experiment_run_id.txt`
-- `.agentic/bus/artifacts/benchmarks/<benchmark_id>/baseline_report.md`
-- `.agentic/bus/artifacts/benchmarks/<benchmark_id>/experiment_report.md`
-- `.agentic/bus/artifacts/benchmarks/<benchmark_id>/comparison.md`
-
 ## Adaptive Agent Flow (Quality + Speed)
 Tier behavior:
 - `lean`: low-risk work, minimal required agents.
