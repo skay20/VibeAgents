@@ -52,6 +52,11 @@
       "auto_log_questions": true,
       "auto_log_agents": true
     },
+    "docs": {
+      "project_runbook_path": "<project_root>/RUNBOOK.md",
+      "auto_generate_project_runbook": true,
+      "require_project_runbook_when_project_detected": true
+    },
     "prompt_resolution": {
       "default_version": "v1",
       "pilot_v2_enabled": true,

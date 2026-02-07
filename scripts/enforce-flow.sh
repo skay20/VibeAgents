@@ -64,6 +64,7 @@ cfg = settings.get("settings", {})
 flow = cfg.get("flow_control", {})
 dispatch = cfg.get("agent_dispatch", {})
 rollout = cfg.get("rollout", {})
+docs_cfg = cfg.get("docs", {})
 required_by_tier = flow.get("required_agents", {})
 default_tier = flow.get("default_tier", "standard")
 catalog = dispatch.get("catalog", [])
@@ -143,6 +144,7 @@ missing_metrics = []
 missing_evidence = []
 missing_planned = []
 timestamp_issues = []
+runbook_issue = None
 
 for agent in effective_required:
     agent_file = metrics_dir / f"{agent}.json"
@@ -245,6 +247,83 @@ if timestamp_issues:
     status = "FAIL"
     reasons.append("timestamp_inconsistency")
 
+# Project runbook enforcement (final only, zero overhead for runs without a detected project root)
+def _safe_read_json(path: Path):
+    try:
+        return json.loads(path.read_text())
+    except Exception:
+        return None
+
+def _resolve_project_root_rel() -> str:
+    # Prefer artifact if already written, else derive from metrics outputs_written.
+    p = art_dir / "project_root.txt"
+    if p.exists():
+        return p.read_text().strip()
+
+    outputs = []
+    for mf in metrics_files:
+        payload = _safe_read_json(mf)
+        if not isinstance(payload, dict):
+            continue
+        ow = payload.get("outputs_written", [])
+        if isinstance(ow, list):
+            for item in ow:
+                if isinstance(item, str) and item.strip():
+                    outputs.append(item.strip())
+
+    # Candidate roots: parent containing a supported marker file.
+    repo_root = Path(".").resolve()
+    markers = ["package.json", "pyproject.toml", "requirements.txt", "Cargo.toml", "go.mod"]
+    lockfiles = ["package-lock.json", "pnpm-lock.yaml", "yarn.lock", "Cargo.lock", "poetry.lock"]
+
+    best = None
+    best_score = -1
+
+    for rel in outputs:
+        relp = Path(rel)
+        if relp.is_absolute():
+            continue
+        if relp.parts and (relp.parts[0].startswith(".") or relp.parts[0] in {"docs", "scripts", "Research"}):
+            continue
+        absp = (repo_root / relp).resolve()
+        if not absp.exists():
+            continue
+        for parent in [absp] + list(absp.parents):
+            if parent == repo_root or repo_root not in parent.parents:
+                break
+            if parent.is_file():
+                parent = parent.parent
+            score = 0
+            for m in markers:
+                if (parent / m).exists():
+                    score += 10
+            for l in lockfiles:
+                if (parent / l).exists():
+                    score += 2
+            if score <= 0:
+                continue
+            if score > best_score:
+                best = parent
+                best_score = score
+
+    if best is None:
+        return ""
+    return os.path.relpath(str(best), str(Path(".").resolve()))
+
+
+if mode == "final" and "docs_writer" in effective_required:
+    # Only enforce if docs settings opt-in and we detect a project root.
+    if docs_cfg.get("require_project_runbook_when_project_detected", False):
+        project_root_rel = _resolve_project_root_rel()
+        if project_root_rel:
+            template = docs_cfg.get("project_runbook_path", "<project_root>/RUNBOOK.md")
+            runbook_rel = template.replace("<project_root>", project_root_rel).lstrip("./")
+            runbook_path = Path(".") / runbook_rel
+            if not runbook_path.exists():
+                status = "FAIL"
+                reasons.append("missing_project_runbook")
+                runbook_issue = f"Missing project runbook: {runbook_rel}"
+
 report = []
 report.append("# Flow Evidence")
 report.append("")
@@ -273,6 +352,8 @@ if missing_catalog_rows:
     report.append(f"- Missing Catalog Rows: {', '.join(missing_catalog_rows)}")
 if timestamp_issues:
     report.append(f"- Timestamp Issues: {', '.join(sorted(set(timestamp_issues)))}")
+if runbook_issue:
+    report.append(f"- Runbook Issue: {runbook_issue}")
 
 (art_dir / "flow_evidence.md").write_text("\n".join(report) + "\n")
 

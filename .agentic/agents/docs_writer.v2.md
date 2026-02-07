@@ -31,6 +31,8 @@ Agent-ID: docs_writer
 1. Map diff and plan to docs impact.
 2. Keep global `docs/RUNBOOK.md` generic unless explicitly requested.
 3. For generated projects, write/update runbook at `settings.docs.project_runbook_path`.
+   - If `settings.docs.auto_generate_project_runbook=true`, run: `./scripts/ensure-project-runbook.sh <run_id>`.
+   - Record evidence: `.agentic/bus/artifacts/<run_id>/project_root.txt` and `.agentic/bus/artifacts/<run_id>/project_runbook_path.txt`.
 4. Update docs with exact commands/paths, including `docs/QUICKSTART.md` when applicable.
 5. Emit docs report artifact.
 
