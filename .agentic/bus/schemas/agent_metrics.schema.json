@@ -1,7 +1,7 @@
 {
   "Managed-By": "AgenticRepoBuilder",
   "Template-Source": "templates/.agentic/bus/schemas/agent_metrics.schema.json",
-  "Template-Version": "1.8.0",
+  "Template-Version": "1.9.0",
   "Last-Generated": "2026-02-04T00:25:01Z",
   "Ownership": "Managed",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -29,17 +29,24 @@
     "status": {
       "type": "string",
       "enum": [
+        "planned",
         "ok",
         "blocked",
         "failed"
       ]
     },
     "start_at": {
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "format": "date-time"
     },
     "end_at": {
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "format": "date-time"
     },
     "duration_ms": {
@@ -67,6 +74,23 @@
       "type": [
         "integer",
         "null"
+      ]
+    },
+    "token_source": {
+      "type": "string",
+      "enum": [
+        "env",
+        "provider_usage",
+        "manual",
+        "none"
+      ]
+    },
+    "token_status": {
+      "type": "string",
+      "enum": [
+        "measured",
+        "estimated",
+        "unknown"
       ]
     },
     "notes": {

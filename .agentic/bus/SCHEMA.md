@@ -13,7 +13,7 @@ Format: YYYYMMDD-HHMMSSZ-<slug>
 
 ## Artifacts
 - Path: `.agentic/bus/artifacts/<run_id>/`
-- Required files: orchestrator_entrypoint.md, tier_decision.md, dispatch_signals.md, dispatch_resolution.md, planned_agents.md, plan.md, decisions.md, diff_summary.md, qa_report.md, release_notes.md
+- Required files: orchestrator_entrypoint.md, tier_decision.md, dispatch_signals.md, dispatch_resolution.md, agent_activation_matrix.md, planned_agents.md, token_summary.md, plan.md, decisions.md, diff_summary.md, qa_report.md, release_notes.md
 - Optional files: calibration_questions.md, intent.md, upgrade_plan.md
 - Optional files: run_meta.md
 - Optional files: questions_log.md
@@ -42,6 +42,11 @@ Format: YYYYMMDD-HHMMSSZ-<slug>
 - File per agent: `<agent_id>.json`
 - Schema: `.agentic/bus/schemas/agent_metrics.schema.json`
 - Each metrics file should include `tool` when available
+- Token semantics:
+  - `tokens_in/tokens_out`: `integer|null`
+  - `token_source`: `env|provider_usage|manual|none`
+  - `token_status`: `measured|estimated|unknown`
+  - `0` is valid only with `token_status=measured`; otherwise use `null`
 
 ## Events (Optional)
 - Path: `.agentic/bus/metrics/<run_id>/events.jsonl`

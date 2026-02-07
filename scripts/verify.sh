@@ -292,6 +292,29 @@ rollout = settings.get("rollout", {})
 if rollout.get("enforcement_mode") not in {"blocking", "report_only"}:
     print("[FAIL] rollout.enforcement_mode must be blocking|report_only")
     sys.exit(1)
+
+# Ensure every catalog agent is reachable via tier requirement, always_required,
+# or conditional trigger configuration.
+conditional_agents = agent_dispatch.get("conditional_agents", {})
+reachable = set(dispatch_always_required)
+reachable.update({"god_orchestrator", "intent_translator", "context_curator"})
+for tier_name in ("lean", "standard", "strict"):
+    value = required_agents.get(tier_name, [])
+    if isinstance(value, list):
+        reachable.update(value)
+
+for agent_id, cfg in conditional_agents.items():
+    if not isinstance(cfg, dict):
+        continue
+    fp = cfg.get("file_patterns", [])
+    pk = cfg.get("prd_keywords", [])
+    if (isinstance(fp, list) and len(fp) > 0) or (isinstance(pk, list) and len(pk) > 0):
+        reachable.add(agent_id)
+
+dead_agents = [agent for agent in dispatch_catalog if agent not in reachable]
+if dead_agents:
+    print("[FAIL] agent_dispatch.catalog contains unreachable agents: " + ", ".join(dead_agents))
+    sys.exit(1)
 PYCODE
   if [[ $? -ne 0 ]]; then
     FAIL=1
@@ -299,7 +322,7 @@ PYCODE
 fi
 
 # 2f) Scripts check
-for s in scripts/start-run.sh scripts/orchestrator-first.sh scripts/resolve-dispatch.sh scripts/log-event.sh scripts/log-question.sh scripts/preflight.sh scripts/preflight.py scripts/render-agent-prompt.sh scripts/enforce-flow.sh scripts/check-project-meta.sh scripts/resolve-project-root.sh scripts/resolve-project-root.py scripts/ensure-project-runbook.sh scripts/ensure-project-runbook.py scripts/ensure-project-readme.sh scripts/ensure-project-readme.py scripts/sync-agents.sh scripts/switch-context.sh scripts/gates/verify-tech.sh; do
+for s in scripts/start-run.sh scripts/orchestrator-first.sh scripts/resolve-dispatch.sh scripts/log-event.sh scripts/log-question.sh scripts/preflight.sh scripts/preflight.py scripts/render-agent-prompt.sh scripts/enforce-flow.sh scripts/check-project-meta.sh scripts/resolve-project-root.sh scripts/resolve-project-root.py scripts/ensure-project-runbook.sh scripts/ensure-project-runbook.py scripts/ensure-project-readme.sh scripts/ensure-project-readme.py scripts/sync-agents.sh scripts/switch-context.sh scripts/gates/verify-tech.sh scripts/metrics-token-summary.sh; do
   if [[ ! -f "$s" ]]; then
     fail "Missing script: $s"
   fi
@@ -309,6 +332,85 @@ done
 SYNC_PROFILE="${AGENTIC_CONTEXT_PROFILE:-default}"
 if ! scripts/sync-agents.sh --check --profile "$SYNC_PROFILE"; then
   fail "sync-agents check failed for profile=$SYNC_PROFILE"
+fi
+
+# 2k) Token semantics and per-run token summary checks
+python3 - <<'PYCODE'
+import json
+import sys
+from pathlib import Path
+
+settings_path = Path(".agentic/settings.json")
+if not settings_path.exists():
+    sys.exit(0)
+
+try:
+    settings = json.loads(settings_path.read_text()).get("settings", {})
+except Exception:
+    print("[FAIL] Unable to parse settings for token checks")
+    sys.exit(1)
+
+telemetry = settings.get("telemetry", {})
+capture_tokens = bool(telemetry.get("capture_tokens", True))
+if not capture_tokens:
+    sys.exit(0)
+
+state_dir = Path(".agentic/bus/state")
+if not state_dir.exists():
+    sys.exit(0)
+
+failures = []
+
+for state_file in sorted(state_dir.glob("*.json")):
+    try:
+        state = json.loads(state_file.read_text())
+    except Exception:
+        failures.append(f"Invalid state JSON: {state_file}")
+        continue
+
+    run_id = str(state.get("run_id", state_file.stem))
+    gate_status = str(state.get("gate_status", ""))
+    if gate_status != "approved":
+        continue
+    # Backward-compat: skip legacy runs created before adaptive-flow artifacts.
+    if "selected_tier" not in state and "planned_agents" not in state:
+        continue
+
+    art_dir = Path(".agentic/bus/artifacts") / run_id
+    token_summary = art_dir / "token_summary.md"
+    if not token_summary.exists():
+        failures.append(f"Missing token summary for approved run: {run_id}")
+
+    matrix_file = art_dir / "agent_activation_matrix.md"
+    if not matrix_file.exists():
+        failures.append(f"Missing agent activation matrix for approved run: {run_id}")
+
+    metrics_dir = Path(".agentic/bus/metrics") / run_id
+    if not metrics_dir.exists():
+        continue
+
+    for metric_file in sorted(metrics_dir.glob("*.json")):
+        try:
+            metric = json.loads(metric_file.read_text())
+        except Exception:
+            failures.append(f"Invalid metric JSON: {metric_file}")
+            continue
+        token_status = str(metric.get("token_status", "unknown"))
+        agent_id = str(metric.get("agent_id", metric_file.stem))
+        for key in ("tokens_in", "tokens_out"):
+            value = metric.get(key)
+            if value == 0 and token_status != "measured":
+                failures.append(
+                    f"Invalid {key}=0 without measured status in {run_id}:{agent_id}"
+                )
+
+if failures:
+    for item in failures:
+        print("[FAIL] " + item)
+    sys.exit(1)
+PYCODE
+if [[ $? -ne 0 ]]; then
+  FAIL=1
 fi
 
 # 2g) Orchestrator adaptive flow checks
@@ -480,6 +582,77 @@ for agent_id in agent_ids:
     if "ask 3-7 questions when blocked" in lower or ("ask 3" in lower and "questions when blocked" in lower):
         print(f"[FAIL] Legacy escalation wording in {path}")
         fail = True
+
+if fail:
+    sys.exit(1)
+PYCODE
+if [[ $? -ne 0 ]]; then
+  FAIL=1
+fi
+
+# 4b) Minimal v1/v2 parity checks for inputs/outputs/blockers
+python3 - <<'PYCODE'
+import re
+import sys
+from pathlib import Path
+
+agent_ids = [
+    "god_orchestrator",
+    "intent_translator",
+    "context_curator",
+    "stack_advisor",
+    "architect",
+    "planner",
+    "implementer",
+    "qa_reviewer",
+    "security_reviewer",
+    "docs_writer",
+    "release_manager",
+    "repo_maintainer",
+    "template_librarian",
+    "migration_manager",
+]
+
+core_path = Path(".agentic/agents/_CORE.md")
+core_text = core_path.read_text(encoding="utf-8").lower() if core_path.exists() else ""
+
+stopwords = {
+    "and", "or", "the", "from", "with", "only", "headless", "blocked",
+    "missing", "output", "inputs", "outputs", "schema", "reference",
+    "run_id", "agent", "mode", "phase"
+}
+
+def extract_frontmatter_value(text: str, key: str) -> str:
+    m = re.search(rf"^{re.escape(key)}:\s*(.+)$", text, flags=re.MULTILINE)
+    return m.group(1).strip() if m else ""
+
+def normalize_tokens(raw: str):
+    parts = re.findall(r"[a-zA-Z0-9_./-]+", raw.lower())
+    return [p for p in parts if len(p) >= 3 and p not in stopwords]
+
+fail = False
+for aid in agent_ids:
+    v1_path = Path(f".agentic/agents/{aid}.md")
+    v2_path = Path(f".agentic/agents/{aid}.v2.md")
+    if not v1_path.exists() or not v2_path.exists():
+        continue
+
+    v1 = v1_path.read_text(encoding="utf-8")
+    v2 = v2_path.read_text(encoding="utf-8").lower() + "\n" + core_text
+
+    checks = [
+        ("Inputs", extract_frontmatter_value(v1, "Inputs")),
+        ("Outputs", extract_frontmatter_value(v1, "Outputs")),
+        ("Failure-Modes", extract_frontmatter_value(v1, "Failure-Modes")),
+    ]
+    for label, raw in checks:
+        tokens = normalize_tokens(raw)
+        if not tokens:
+            continue
+        overlap = [t for t in tokens if t in v2]
+        if not overlap:
+            print(f"[FAIL] v1/v2 parity mismatch in {aid}: no {label} token overlap")
+            fail = True
 
 if fail:
     sys.exit(1)

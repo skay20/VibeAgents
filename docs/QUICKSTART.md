@@ -162,7 +162,9 @@ Flow governance artifacts:
 - `.agentic/bus/artifacts/<run_id>/tier_decision.md`
 - `.agentic/bus/artifacts/<run_id>/dispatch_signals.md`
 - `.agentic/bus/artifacts/<run_id>/dispatch_resolution.md`
+- `.agentic/bus/artifacts/<run_id>/agent_activation_matrix.md`
 - `.agentic/bus/artifacts/<run_id>/planned_agents.md`
+- `.agentic/bus/artifacts/<run_id>/token_summary.md`
 - `.agentic/bus/artifacts/<run_id>/flow_evidence.md`
 
 ## Adaptive Agent Flow (Quality + Speed)
@@ -189,6 +191,11 @@ Runtime enforcement:
 ```bash
 scripts/enforce-flow.sh <run_id> <tier> pre_release
 scripts/enforce-flow.sh <run_id> <tier> final
+```
+
+Token summary (on demand):
+```bash
+scripts/metrics-token-summary.sh <run_id>
 ```
 
 Execution evidence rule:

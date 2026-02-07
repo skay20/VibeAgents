@@ -259,6 +259,22 @@ for row in resolution:
     )
 (art_dir / "dispatch_resolution.md").write_text("\n".join(resolution_lines) + "\n", encoding="utf-8")
 
+matrix_lines = [
+    "# Agent Activation Matrix",
+    "",
+    f"- Run ID: {run_id}",
+    f"- Tier: {selected_tier}",
+    "",
+    "| agent_id | evaluated | selected | required | triggered_by | reason | score |",
+    "| --- | --- | --- | --- | --- | --- | ---: |",
+]
+for row in resolution:
+    signals = ", ".join(row["signals"]) if row["signals"] else "-"
+    matrix_lines.append(
+        f"| {row['agent_id']} | true | {'true' if row['selected'] else 'false'} | {'true' if row['required'] else 'false'} | {signals} | {row['reason']} | {row['score']} |"
+    )
+(art_dir / "agent_activation_matrix.md").write_text("\n".join(matrix_lines) + "\n", encoding="utf-8")
+
 planned_lines = [
     "# Planned Agents",
     "",
@@ -293,6 +309,8 @@ for agent in planned:
         "iterations": 0,
         "tokens_in": None,
         "tokens_out": None,
+        "token_source": "none",
+        "token_status": "unknown",
         "notes": "planned_by_dispatch",
     }
     target.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")

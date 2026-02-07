@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/log-metrics.sh
-# Template-Version: 1.13.0
+# Template-Version: 1.14.0
 # Last-Generated: 2026-02-04T14:22:29Z
 # Ownership: Managed
 
@@ -101,45 +101,142 @@ print(json.dumps(items))
 PY
 )
 
-pick_tokens() {
+TOKEN_SOURCE="none"
+TOKEN_STATUS="unknown"
+TOKENS_IN_SOURCE="none"
+TOKENS_IN_STATUS="unknown"
+TOKENS_OUT_SOURCE="none"
+TOKENS_OUT_STATUS="unknown"
+
+is_int() {
+  [[ "${1:-}" =~ ^-?[0-9]+$ ]]
+}
+
+read_auto_token() {
   local dir="$1"
+  local up
+  up="$(printf "%s" "$dir" | tr '[:lower:]' '[:upper:]')"
   local val=""
-  if [[ "$dir" == "in" ]]; then
-    val="${AGENTIC_TOKENS_IN:-}"
-  else
-    val="${AGENTIC_TOKENS_OUT:-}"
-  fi
-  if [[ -z "$val" && -n "$TOOL" ]]; then
-    case "$TOOL" in
-      codex) val="${CODEX_TOKENS_${dir^^}:-}" ;;
-      gemini) val="${GEMINI_TOKENS_${dir^^}:-}" ;;
-      claude) val="${CLAUDE_TOKENS_${dir^^}:-}" ;;
-      cursor) val="${CURSOR_TOKENS_${dir^^}:-}" ;;
-      windsurf) val="${WINDSURF_TOKENS_${dir^^}:-}" ;;
-      copilot) val="${COPILOT_TOKENS_${dir^^}:-}" ;;
-    esac
-  fi
-  if [[ -z "$val" ]]; then
+
+  # Provider/runtime usage first
+  for var in \
+    "AGENTIC_PROVIDER_TOKENS_${up}" \
+    "PROVIDER_TOKENS_${up}" \
+    "OPENAI_TOKENS_${up}" \
+    "ANTHROPIC_TOKENS_${up}" \
+    "GEMINI_PROVIDER_TOKENS_${up}" \
+    "CODEX_TOKENS_${up}" \
+    "CLAUDE_TOKENS_${up}" \
+    "GEMINI_TOKENS_${up}" \
+    "CURSOR_TOKENS_${up}" \
+    "WINDSURF_TOKENS_${up}" \
+    "COPILOT_TOKENS_${up}" \
+    "AGENTIC_TOKENS_${up}"
+  do
+    # shellcheck disable=SC2086,SC2016
+    val="$(eval printf '%s' \"\${$var:-}\")"
+    if [[ -n "$val" ]]; then
+      if is_int "$val"; then
+        echo "$val|provider_usage|measured"
+      else
+        echo "null|none|unknown"
+      fi
+      return 0
+    fi
+  done
+
+  echo "null|none|unknown"
+}
+
+normalize_token_value() {
+  local value="$1"
+  local status="$2"
+
+  if [[ -z "$value" || "$value" == "null" || "$value" == "NULL" ]]; then
     echo "null"
-  else
-    echo "$val"
+    return 0
   fi
+  if ! is_int "$value"; then
+    echo "null"
+    return 0
+  fi
+  if [[ "$value" == "0" && "$status" != "measured" ]]; then
+    echo "null"
+    return 0
+  fi
+  echo "$value"
 }
 
 if is_false "$capture_tokens"; then
   TOKENS_IN="null"
   TOKENS_OUT="null"
+  TOKENS_IN_SOURCE="none"
+  TOKENS_OUT_SOURCE="none"
+  TOKENS_IN_STATUS="unknown"
+  TOKENS_OUT_STATUS="unknown"
 else
   if [[ "$TOKENS_IN" == "auto" || "$TOKENS_IN" == "AUTO" || -z "$TOKENS_IN" ]]; then
-    TOKENS_IN="$(pick_tokens in)"
+    IFS='|' read -r TOKENS_IN TOKENS_IN_SOURCE TOKENS_IN_STATUS < <(read_auto_token in)
+  else
+    if is_int "$TOKENS_IN"; then
+      TOKENS_IN_SOURCE="manual"
+      TOKENS_IN_STATUS="estimated"
+    else
+      TOKENS_IN="null"
+      TOKENS_IN_SOURCE="none"
+      TOKENS_IN_STATUS="unknown"
+    fi
   fi
+
   if [[ "$TOKENS_OUT" == "auto" || "$TOKENS_OUT" == "AUTO" || -z "$TOKENS_OUT" ]]; then
-    TOKENS_OUT="$(pick_tokens out)"
+    IFS='|' read -r TOKENS_OUT TOKENS_OUT_SOURCE TOKENS_OUT_STATUS < <(read_auto_token out)
+  else
+    if is_int "$TOKENS_OUT"; then
+      TOKENS_OUT_SOURCE="manual"
+      TOKENS_OUT_STATUS="estimated"
+    else
+      TOKENS_OUT="null"
+      TOKENS_OUT_SOURCE="none"
+      TOKENS_OUT_STATUS="unknown"
+    fi
   fi
 fi
 
-if [[ -z "$TOKENS_IN" ]]; then TOKENS_IN="null"; fi
-if [[ -z "$TOKENS_OUT" ]]; then TOKENS_OUT="null"; fi
+TOKENS_IN="$(normalize_token_value "$TOKENS_IN" "$TOKENS_IN_STATUS")"
+TOKENS_OUT="$(normalize_token_value "$TOKENS_OUT" "$TOKENS_OUT_STATUS")"
+
+if [[ "$TOKENS_IN" == "null" && "$TOKENS_IN_STATUS" != "measured" ]]; then
+  TOKENS_IN_SOURCE="none"
+  TOKENS_IN_STATUS="unknown"
+fi
+if [[ "$TOKENS_OUT" == "null" && "$TOKENS_OUT_STATUS" != "measured" ]]; then
+  TOKENS_OUT_SOURCE="none"
+  TOKENS_OUT_STATUS="unknown"
+fi
+
+if [[ "$TOKENS_IN_STATUS" == "measured" || "$TOKENS_OUT_STATUS" == "measured" ]]; then
+  TOKEN_STATUS="measured"
+elif [[ "$TOKENS_IN_STATUS" == "estimated" || "$TOKENS_OUT_STATUS" == "estimated" ]]; then
+  TOKEN_STATUS="estimated"
+else
+  TOKEN_STATUS="unknown"
+fi
+
+if [[ "$TOKENS_IN_SOURCE" == "manual" || "$TOKENS_OUT_SOURCE" == "manual" ]]; then
+  TOKEN_SOURCE="manual"
+elif [[ "$TOKENS_IN_SOURCE" == "provider_usage" || "$TOKENS_OUT_SOURCE" == "provider_usage" ]]; then
+  TOKEN_SOURCE="provider_usage"
+elif [[ "$TOKENS_IN_SOURCE" == "env" || "$TOKENS_OUT_SOURCE" == "env" ]]; then
+  TOKEN_SOURCE="env"
+else
+  TOKEN_SOURCE="none"
+fi
+
+if [[ -n "$NOTES" ]]; then
+  NOTES="${NOTES}; token_provenance=in:${TOKENS_IN_SOURCE}/${TOKENS_IN_STATUS},out:${TOKENS_OUT_SOURCE}/${TOKENS_OUT_STATUS}"
+else
+  NOTES="token_provenance=in:${TOKENS_IN_SOURCE}/${TOKENS_IN_STATUS},out:${TOKENS_OUT_SOURCE}/${TOKENS_OUT_STATUS}"
+fi
 
 cat > "$METRICS_DIR/$AGENT_ID.json" <<EOF
 {
@@ -156,6 +253,8 @@ cat > "$METRICS_DIR/$AGENT_ID.json" <<EOF
   "iterations": $ITERATIONS,
   "tokens_in": $TOKENS_IN,
   "tokens_out": $TOKENS_OUT,
+  "token_source": "$TOKEN_SOURCE",
+  "token_status": "$TOKEN_STATUS",
   "notes": "$NOTES"
 }
 EOF

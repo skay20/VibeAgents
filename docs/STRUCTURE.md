@@ -31,6 +31,14 @@ Ownership: Managed
 │  │  ├─ STANDARDS.md
 │  │  ├─ SECURITY.md
 │  │  └─ TESTING.md
+│  ├─ source/
+│  │  ├─ BOOTSTRAP.md
+│  │  ├─ CORE.md
+│  │  ├─ PROJECT.md
+│  │  ├─ RUNTIME_MIN.md
+│  │  ├─ STANDARDS.md
+│  │  ├─ SECURITY.md
+│  │  └─ TESTING.md
 │  ├─ logs/
 │  │  └─ runs/.gitkeep
 │  └─ state/.gitkeep
@@ -144,6 +152,11 @@ Ownership: Managed
    ├─ preflight.sh
    ├─ start-run.sh
    ├─ render-agent-prompt.sh
+   ├─ sync-agents.sh
+   ├─ switch-context.sh
+   ├─ metrics-token-summary.sh
+   ├─ gates/
+   │  └─ verify-tech.sh
    ├─ resolve-project-root.py
    ├─ resolve-project-root.sh
    ├─ ensure-project-runbook.py

@@ -43,6 +43,10 @@ if [[ ! -d "$METRICS_DIR" ]]; then
   exit 1
 fi
 
+if [[ -x "scripts/metrics-token-summary.sh" ]]; then
+  scripts/metrics-token-summary.sh "$RUN_ID" >/dev/null
+fi
+
 SETTINGS_FILE="$SETTINGS_FILE" STATE_FILE="$STATE_FILE" ART_DIR="$ART_DIR" METRICS_DIR="$METRICS_DIR" RUN_ID="$RUN_ID" TIER="$TIER" MODE="$MODE" python3 - <<'PY'
 import json
 import os
@@ -112,7 +116,9 @@ required_artifacts = [
     "tier_decision.md",
     "dispatch_signals.md",
     "dispatch_resolution.md",
+    "agent_activation_matrix.md",
     "planned_agents.md",
+    "token_summary.md",
 ]
 missing_required_artifacts = [name for name in required_artifacts if not (art_dir / name).exists()]
 
