@@ -1,0 +1,4 @@
+display_name: Agentic Debug Audit
+short_description: Audit Debug/ run evidence, agent execution, and telemetry.
+default_prompt: Audit the Debug folder in the current repo (./Debug). Produce a concise diagnosis and actionable fixes, citing evidence file paths. Do not invent run data and do not modify files unless asked.
+
