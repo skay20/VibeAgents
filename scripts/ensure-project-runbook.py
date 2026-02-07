@@ -133,7 +133,7 @@ def _render_node_runbook(project_root_rel: str, project_root: Path) -> str:
         md.append(f"| {task} | `{cmd}` |")
     md.append("")
     md.append("## Notes")
-    md.append("- If a command is missing in `package.json`, add a script or document `TO_CONFIRM` in this file.")
+    md.append("- If a command is missing in `package.json`, add a script or document it explicitly in this file.")
     md.append("- If the app fails to start, capture the terminal output and attach it to the next agent run.")
     md.append("")
     return "\n".join(md)
@@ -185,4 +185,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

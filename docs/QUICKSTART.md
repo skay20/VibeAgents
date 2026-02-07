@@ -200,6 +200,17 @@ scripts/preflight.sh <run_id> <project_root>
 Output:
 - `.agentic/bus/artifacts/<run_id>/preflight_report.md`
 
+## Project Docs (Auto)
+When `settings.docs.auto_generate_project_runbook=true` and `settings.docs.auto_generate_project_readme=true`, the docs stage can auto-write:
+- `<project_root>/RUNBOOK.md` (exact install/dev/test commands)
+- `<project_root>/README.md` (managed block linking to RUNBOOK + summary)
+
+Scripts:
+```bash
+scripts/ensure-project-runbook.sh <run_id>
+scripts/ensure-project-readme.sh <run_id>
+```
+
 ## Generated Project Docs
 - Global `docs/RUNBOOK.md` is framework-level.
 - Generated project runbook target is controlled by:

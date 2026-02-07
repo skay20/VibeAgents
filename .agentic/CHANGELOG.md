@@ -8,6 +8,12 @@ Ownership: Managed
 
 # Agentic Changelog
 
+## 0.30.0 - 2026-02-07
+- Add project-docs contract keys in settings (`settings.docs.*`) for generated-project README/RUNBOOK.
+- Add scripts to write project docs: `scripts/ensure-project-readme.sh` and `scripts/ensure-project-readme.py`.
+- Extend docs-writer v2 contract to generate project README/RUNBOOK and emit evidence artifacts.
+- Extend flow enforcement to require project README/RUNBOOK in `final` when a generated project is detected and docs-writer is required.
+
 ## 0.29.0 - 2026-02-07
 - Add official orchestration entrypoint `scripts/orchestrator-first.sh` and run-state flow status initialization.
 - Add `scripts/resolve-dispatch.sh` to generate `tier_decision.md`, `dispatch_signals.md`, `dispatch_resolution.md`, and `planned_agents.md`.

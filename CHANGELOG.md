@@ -13,6 +13,11 @@ Ownership: Managed
 - Delete `scripts/metrics_compare.py` and `scripts/metrics_summarize.py`.
 - Remove benchmark schema/docs references and cleanup benchmark sample artifacts/metrics folders.
 
+## 0.1.32 - 2026-02-07
+- Add project-docs auto-generation: `<project_root>/README.md` managed block and `<project_root>/RUNBOOK.md` enforcement for generated projects.
+- Add scripts `scripts/ensure-project-readme.sh` and `scripts/ensure-project-readme.py`.
+- Extend settings/docs contract and enforcement to require README/RUNBOOK when a generated project is detected.
+
 ## 0.1.30 - 2026-02-07
 - Add official run entrypoint `scripts/orchestrator-first.sh` and dispatch resolver `scripts/resolve-dispatch.sh`.
 - Enforce complete adaptive flow artifacts (`orchestrator_entrypoint`, `tier_decision`, `dispatch_signals`, `dispatch_resolution`, `planned_agents`) before release gates.

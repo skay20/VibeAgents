@@ -145,6 +145,7 @@ missing_evidence = []
 missing_planned = []
 timestamp_issues = []
 runbook_issue = None
+readme_issue = None
 
 for agent in effective_required:
     agent_file = metrics_dir / f"{agent}.json"
@@ -324,6 +325,17 @@ if mode == "final" and "docs_writer" in effective_required:
                 reasons.append("missing_project_runbook")
                 runbook_issue = f"Missing project runbook: {runbook_rel}"
 
+    if docs_cfg.get("require_project_readme_when_project_detected", False):
+        project_root_rel = _resolve_project_root_rel()
+        if project_root_rel:
+            template = docs_cfg.get("project_readme_path", "<project_root>/README.md")
+            readme_rel = template.replace("<project_root>", project_root_rel).lstrip("./")
+            readme_path = Path(".") / readme_rel
+            if not readme_path.exists():
+                status = "FAIL"
+                reasons.append("missing_project_readme")
+                readme_issue = f"Missing project README: {readme_rel}"
+
 report = []
 report.append("# Flow Evidence")
 report.append("")
@@ -354,6 +366,8 @@ if timestamp_issues:
     report.append(f"- Timestamp Issues: {', '.join(sorted(set(timestamp_issues)))}")
 if runbook_issue:
     report.append(f"- Runbook Issue: {runbook_issue}")
+if readme_issue:
+    report.append(f"- README Issue: {readme_issue}")
 
 (art_dir / "flow_evidence.md").write_text("\n".join(report) + "\n")
 

@@ -224,6 +224,12 @@ required = [
     ("checks.preflight_timeout_sec", checks.get("preflight_timeout_sec", None)),
     ("checks.package_manager_auto", checks.get("package_manager_auto", None)),
     ("docs.project_runbook_path", docs_cfg.get("project_runbook_path", None)),
+    ("docs.project_readme_path", docs_cfg.get("project_readme_path", None)),
+    ("docs.auto_generate_project_runbook", docs_cfg.get("auto_generate_project_runbook", None)),
+    ("docs.auto_generate_project_readme", docs_cfg.get("auto_generate_project_readme", None)),
+    ("docs.require_project_runbook_when_project_detected", docs_cfg.get("require_project_runbook_when_project_detected", None)),
+    ("docs.require_project_readme_when_project_detected", docs_cfg.get("require_project_readme_when_project_detected", None)),
+    ("docs.update_readme_each_iteration", docs_cfg.get("update_readme_each_iteration", None)),
     ("project_meta.enforce_compatibility", project_meta.get("enforce_compatibility", None)),
     ("project_meta.required_files", project_meta.get("required_files", None)),
     ("project_meta.min_template_versions", project_meta.get("min_template_versions", None)),
@@ -293,7 +299,7 @@ PYCODE
 fi
 
 # 2f) Scripts check
-for s in scripts/start-run.sh scripts/orchestrator-first.sh scripts/resolve-dispatch.sh scripts/log-event.sh scripts/log-question.sh scripts/preflight.sh scripts/preflight.py scripts/render-agent-prompt.sh scripts/enforce-flow.sh scripts/check-project-meta.sh scripts/resolve-project-root.sh scripts/resolve-project-root.py scripts/ensure-project-runbook.sh scripts/ensure-project-runbook.py; do
+for s in scripts/start-run.sh scripts/orchestrator-first.sh scripts/resolve-dispatch.sh scripts/log-event.sh scripts/log-question.sh scripts/preflight.sh scripts/preflight.py scripts/render-agent-prompt.sh scripts/enforce-flow.sh scripts/check-project-meta.sh scripts/resolve-project-root.sh scripts/resolve-project-root.py scripts/ensure-project-runbook.sh scripts/ensure-project-runbook.py scripts/ensure-project-readme.sh scripts/ensure-project-readme.py; do
   if [[ ! -f "$s" ]]; then
     fail "Missing script: $s"
   fi

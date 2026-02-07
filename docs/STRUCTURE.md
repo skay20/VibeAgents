@@ -144,5 +144,11 @@ Ownership: Managed
    ├─ preflight.sh
    ├─ start-run.sh
    ├─ render-agent-prompt.sh
+   ├─ resolve-project-root.py
+   ├─ resolve-project-root.sh
+   ├─ ensure-project-runbook.py
+   ├─ ensure-project-runbook.sh
+   ├─ ensure-project-readme.py
+   ├─ ensure-project-readme.sh
    └─ verify.sh
 ```

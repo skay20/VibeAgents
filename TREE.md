@@ -146,5 +146,11 @@ This file is generated. Update it via the orchestrator and templates.
    ├─ preflight.sh
    ├─ start-run.sh
    ├─ render-agent-prompt.sh
+   ├─ resolve-project-root.py
+   ├─ resolve-project-root.sh
+   ├─ ensure-project-runbook.py
+   ├─ ensure-project-runbook.sh
+   ├─ ensure-project-readme.py
+   ├─ ensure-project-readme.sh
    └─ verify.sh
 ```

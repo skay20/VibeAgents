@@ -582,6 +582,36 @@
       "template": "templates/scripts/render-agent-prompt.sh"
     },
     {
+      "path": "scripts/resolve-project-root.py",
+      "ownership": "Managed",
+      "template": "templates/scripts/resolve-project-root.py"
+    },
+    {
+      "path": "scripts/resolve-project-root.sh",
+      "ownership": "Managed",
+      "template": "templates/scripts/resolve-project-root.sh"
+    },
+    {
+      "path": "scripts/ensure-project-runbook.py",
+      "ownership": "Managed",
+      "template": "templates/scripts/ensure-project-runbook.py"
+    },
+    {
+      "path": "scripts/ensure-project-runbook.sh",
+      "ownership": "Managed",
+      "template": "templates/scripts/ensure-project-runbook.sh"
+    },
+    {
+      "path": "scripts/ensure-project-readme.py",
+      "ownership": "Managed",
+      "template": "templates/scripts/ensure-project-readme.py"
+    },
+    {
+      "path": "scripts/ensure-project-readme.sh",
+      "ownership": "Managed",
+      "template": "templates/scripts/ensure-project-readme.sh"
+    },
+    {
       "path": "scripts/verify.sh",
       "ownership": "Managed",
       "template": "templates/scripts/verify.sh"

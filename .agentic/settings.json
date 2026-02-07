@@ -54,8 +54,12 @@
     },
     "docs": {
       "project_runbook_path": "<project_root>/RUNBOOK.md",
+      "project_readme_path": "<project_root>/README.md",
       "auto_generate_project_runbook": true,
-      "require_project_runbook_when_project_detected": true
+      "auto_generate_project_readme": true,
+      "require_project_runbook_when_project_detected": true,
+      "require_project_readme_when_project_detected": true,
+      "update_readme_each_iteration": true
     },
     "prompt_resolution": {
       "default_version": "v1",
@@ -256,9 +260,6 @@
       "preflight_run_dev": true,
       "preflight_timeout_sec": 20,
       "package_manager_auto": true
-    },
-    "docs": {
-      "project_runbook_path": "<project_root>/RUNBOOK.md"
     },
     "project_meta": {
       "enforce_compatibility": true,
