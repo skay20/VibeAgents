@@ -299,11 +299,17 @@ PYCODE
 fi
 
 # 2f) Scripts check
-for s in scripts/start-run.sh scripts/orchestrator-first.sh scripts/resolve-dispatch.sh scripts/log-event.sh scripts/log-question.sh scripts/preflight.sh scripts/preflight.py scripts/render-agent-prompt.sh scripts/enforce-flow.sh scripts/check-project-meta.sh scripts/resolve-project-root.sh scripts/resolve-project-root.py scripts/ensure-project-runbook.sh scripts/ensure-project-runbook.py scripts/ensure-project-readme.sh scripts/ensure-project-readme.py; do
+for s in scripts/start-run.sh scripts/orchestrator-first.sh scripts/resolve-dispatch.sh scripts/log-event.sh scripts/log-question.sh scripts/preflight.sh scripts/preflight.py scripts/render-agent-prompt.sh scripts/enforce-flow.sh scripts/check-project-meta.sh scripts/resolve-project-root.sh scripts/resolve-project-root.py scripts/ensure-project-runbook.sh scripts/ensure-project-runbook.py scripts/ensure-project-readme.sh scripts/ensure-project-readme.py scripts/sync-agents.sh scripts/switch-context.sh scripts/gates/verify-tech.sh; do
   if [[ ! -f "$s" ]]; then
     fail "Missing script: $s"
   fi
 done
+
+# 2j) Compiled context/adapters must be in sync with source.
+SYNC_PROFILE="${AGENTIC_CONTEXT_PROFILE:-default}"
+if ! scripts/sync-agents.sh --check --profile "$SYNC_PROFILE"; then
+  fail "sync-agents check failed for profile=$SYNC_PROFILE"
+fi
 
 # 2g) Orchestrator adaptive flow checks
 ORCH_V2=".agentic/agents/god_orchestrator.v2.md"

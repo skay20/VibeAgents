@@ -43,6 +43,10 @@ scripts/resolve-dispatch.sh <run_id>
 ```bash
 scripts/verify.sh
 ```
+8. Optional: refresh compiled adapters/context from source rules:
+```bash
+scripts/sync-agents.sh --profile default
+```
 
 If running this framework inside a generated side project with `project_meta`, run:
 ```bash
@@ -187,6 +191,11 @@ scripts/enforce-flow.sh <run_id> <tier> pre_release
 scripts/enforce-flow.sh <run_id> <tier> final
 ```
 
+Execution evidence rule:
+- `planned` metrics created by dispatch are not execution.
+- executed agents must update status to `ok|blocked|failed`.
+- enforcement reports `agents_not_executed` when planned stubs never became real execution metrics.
+
 Rollout controls:
 - `settings.rollout.enforcement_mode=report_only` for dry enforcement (Phase A).
 - `settings.rollout.enforcement_mode=blocking` for hard gates (Phase B/C).
@@ -199,6 +208,23 @@ scripts/preflight.sh <run_id> <project_root>
 
 Output:
 - `.agentic/bus/artifacts/<run_id>/preflight_report.md`
+
+## Context Profiles (Optional)
+Switch compiled adapter focus without changing runtime artifacts:
+```bash
+scripts/switch-context.sh default
+scripts/switch-context.sh architect
+scripts/switch-context.sh developer
+```
+
+## Tech Gate (Optional / Tier Driven)
+Run technical quality checks and write a report:
+```bash
+scripts/gates/verify-tech.sh <run_id>
+```
+
+Output:
+- `.agentic/bus/artifacts/<run_id>/tech_verify_report.md`
 
 ## Project Docs (Auto)
 When `settings.docs.auto_generate_project_runbook=true` and `settings.docs.auto_generate_project_readme=true`, the docs stage can auto-write:

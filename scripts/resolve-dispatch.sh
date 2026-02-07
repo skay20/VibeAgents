@@ -18,6 +18,7 @@ fi
 SETTINGS_FILE=".agentic/settings.json"
 STATE_FILE=".agentic/bus/state/${RUN_ID}.json"
 ART_DIR=".agentic/bus/artifacts/${RUN_ID}"
+METRICS_DIR=".agentic/bus/metrics/${RUN_ID}"
 PRD_FILE="docs/PRD.md"
 
 if [[ ! -f "$SETTINGS_FILE" ]]; then
@@ -30,8 +31,9 @@ if [[ ! -f "$STATE_FILE" ]]; then
 fi
 
 mkdir -p "$ART_DIR"
+mkdir -p "$METRICS_DIR"
 
-SETTINGS_FILE="$SETTINGS_FILE" STATE_FILE="$STATE_FILE" ART_DIR="$ART_DIR" PRD_FILE="$PRD_FILE" RUN_ID="$RUN_ID" TIER_OVERRIDE="$TIER_OVERRIDE" python3 - <<'PY'
+SETTINGS_FILE="$SETTINGS_FILE" STATE_FILE="$STATE_FILE" ART_DIR="$ART_DIR" METRICS_DIR="$METRICS_DIR" PRD_FILE="$PRD_FILE" RUN_ID="$RUN_ID" TIER_OVERRIDE="$TIER_OVERRIDE" python3 - <<'PY'
 import json
 import os
 import re
@@ -42,9 +44,11 @@ from pathlib import Path
 settings_file = Path(os.environ["SETTINGS_FILE"])
 state_file = Path(os.environ["STATE_FILE"])
 art_dir = Path(os.environ["ART_DIR"])
+metrics_dir = Path(os.environ["METRICS_DIR"])
 prd_file = Path(os.environ["PRD_FILE"])
 run_id = os.environ["RUN_ID"]
 tier_override = os.environ["TIER_OVERRIDE"].strip()
+tool = os.environ.get("AGENTIC_TOOL", "")
 
 data = json.loads(settings_file.read_text())
 settings = data.get("settings", {})
@@ -267,6 +271,31 @@ if planned:
 else:
     planned_lines.append("- (none)")
 (art_dir / "planned_agents.md").write_text("\n".join(planned_lines) + "\n", encoding="utf-8")
+
+# Create deterministic planning stubs so enforcement can distinguish
+# "planned but not executed" from "missing metrics entirely".
+metrics_dir.mkdir(parents=True, exist_ok=True)
+for agent in planned:
+    target = metrics_dir / f"{agent}.json"
+    if target.exists():
+        continue
+    payload = {
+        "agent_id": agent,
+        "run_id": run_id,
+        "phase": "phase1_dispatch",
+        "tool": tool,
+        "status": "planned",
+        "start_at": None,
+        "end_at": None,
+        "duration_ms": 0,
+        "block_reason": "",
+        "outputs_written": [],
+        "iterations": 0,
+        "tokens_in": None,
+        "tokens_out": None,
+        "notes": "planned_by_dispatch",
+    }
+    target.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
 
 state = json.loads(state_file.read_text(encoding="utf-8"))
 state["selected_tier"] = selected_tier

@@ -32,6 +32,12 @@ Last-Updated: 2026-02-06
 - Always record relevant decisions in `.agentic/bus/artifacts/<run_id>/decisions.md`.
 - Always keep catalog evaluation evidence in `.agentic/bus/artifacts/<run_id>/dispatch_resolution.md`.
 
+## Execution + Metrics Protocol
+- Planned agents may have dispatch stubs with `status=planned`; this is not execution evidence.
+- Every executed agent must call `scripts/log-metrics.sh` at loop end with `ok|blocked|failed`.
+- If scripts cannot run, write the equivalent metrics JSON with real status/timestamps and a note explaining fallback.
+- Enforcement treats `status=planned` as `not executed` and blocks release gates.
+
 ## Anti-Generic Policy
 - No vague language without decision and criteria.
 - Every workflow step must include a success condition.

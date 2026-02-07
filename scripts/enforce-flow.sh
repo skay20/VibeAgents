@@ -91,7 +91,20 @@ state = json.loads(state_file.read_text())
 gate_status = state.get("gate_status", "")
 
 metrics_files = list(metrics_dir.glob("*.json"))
-executed_agents = sorted([p.stem for p in metrics_files])
+metrics_by_agent = {}
+for metric_file in metrics_files:
+    try:
+        payload = json.loads(metric_file.read_text())
+    except Exception:
+        continue
+    aid = payload.get("agent_id", metric_file.stem)
+    if isinstance(aid, str) and aid:
+        metrics_by_agent[aid] = payload
+
+executed_agents = sorted([
+    aid for aid, payload in metrics_by_agent.items()
+    if str(payload.get("status", "")).lower() != "planned"
+])
 decisions_text = (art_dir / "decisions.md").read_text() if (art_dir / "decisions.md").exists() else ""
 
 required_artifacts = [
@@ -141,25 +154,27 @@ effective_required = sorted(
 )
 
 missing_metrics = []
+agents_not_executed = []
 missing_evidence = []
 missing_planned = []
 timestamp_issues = []
 runbook_issue = None
 readme_issue = None
+tech_verify_issue = None
 
 for agent in effective_required:
-    agent_file = metrics_dir / f"{agent}.json"
-    if not agent_file.exists():
+    payload = metrics_by_agent.get(agent)
+    if payload is None:
         missing_metrics.append(agent)
         continue
 
-    has_outputs = False
-    try:
-        payload = json.loads(agent_file.read_text())
-        outputs = payload.get("outputs_written", [])
-        has_outputs = isinstance(outputs, list) and len(outputs) > 0
-    except Exception:
-        pass
+    metric_status = str(payload.get("status", "")).lower()
+    if metric_status == "planned":
+        agents_not_executed.append(agent)
+        continue
+
+    outputs = payload.get("outputs_written", [])
+    has_outputs = isinstance(outputs, list) and len(outputs) > 0
 
     has_decision = bool(re.search(rf"\b{re.escape(agent)}\b", decisions_text))
     if not has_outputs and not has_decision:
@@ -232,6 +247,9 @@ if missing_required_artifacts:
 if missing_metrics:
     status = "FAIL"
     reasons.append("missing_metrics")
+if agents_not_executed:
+    status = "FAIL"
+    reasons.append("agents_not_executed")
 if missing_evidence:
     status = "FAIL"
     reasons.append("missing_evidence")
@@ -336,6 +354,19 @@ if mode == "final" and "docs_writer" in effective_required:
                 reasons.append("missing_project_readme")
                 readme_issue = f"Missing project README: {readme_rel}"
 
+if mode == "final" and tier == "strict":
+    tech_report = art_dir / "tech_verify_report.md"
+    if not tech_report.exists():
+        status = "FAIL"
+        reasons.append("missing_tech_verify_report")
+        tech_verify_issue = "Missing strict-tier tech verify report: tech_verify_report.md"
+    else:
+        tech_text = tech_report.read_text()
+        if re.search(r"- Status:\s*FAIL\b", tech_text):
+            status = "FAIL"
+            reasons.append("tech_verify_failed")
+            tech_verify_issue = "Strict-tier tech verify report contains failing checks."
+
 report = []
 report.append("# Flow Evidence")
 report.append("")
@@ -356,6 +387,8 @@ if missing_required_artifacts:
     report.append(f"- Missing Required Artifacts: {', '.join(missing_required_artifacts)}")
 if missing_metrics:
     report.append(f"- Missing Metrics: {', '.join(missing_metrics)}")
+if agents_not_executed:
+    report.append(f"- Agents Not Executed: {', '.join(agents_not_executed)}")
 if missing_evidence:
     report.append(f"- Missing Evidence: {', '.join(missing_evidence)}")
 if missing_planned:
@@ -368,6 +401,8 @@ if runbook_issue:
     report.append(f"- Runbook Issue: {runbook_issue}")
 if readme_issue:
     report.append(f"- README Issue: {readme_issue}")
+if tech_verify_issue:
+    report.append(f"- Tech Verify Issue: {tech_verify_issue}")
 
 (art_dir / "flow_evidence.md").write_text("\n".join(report) + "\n")
 

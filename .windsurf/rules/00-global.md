@@ -1,13 +1,24 @@
 <!-- Managed-By: AgenticRepoBuilder -->
 <!-- Template-Source: templates/.windsurf/rules/00-global.md -->
-<!-- Template-Version: 2.1.0 -->
-<!-- Last-Generated: 2026-02-05T15:33:50Z -->
+<!-- Template-Version: 2.3.0 -->
+<!-- Last-Generated: AUTO -->
 <!-- Ownership: Managed -->
 
 # Global Rules
 
-Use `.agentic/adapters/UNIVERSAL.md` for shared rules.
-Bootstrap context: `.ai/context/BOOTSTRAP.md`, `.ai/context/PROJECT.md`.
+Use .agentic/adapters/UNIVERSAL.md as canonical source.
+Bootstrap context:
+- `.ai/context/RUNTIME_MIN.md`
+- `.ai/context/BOOTSTRAP.md`
+- `.ai/context/PROJECT.md`
+
+## Compiled Universal Rules (Inline)
+- Startup handshake must run in this order: bootstrap context -> orchestrator entrypoint -> PRD ingest -> single calibration -> dispatch -> execution.
+- PRD intake is structure-based (not keyword-only) and updates `docs/PRD.md` managed block.
+- Always resolve dispatch and write: `tier_decision.md`, `dispatch_signals.md`, `dispatch_resolution.md`, `planned_agents.md`.
+- In implementation runs, do not omit `architect`, `qa_reviewer`, or `docs_writer`.
+- Planned agents are not execution evidence; executed agents must emit metrics with `ok|blocked|failed`.
+- Enforce flow gates with `scripts/enforce-flow.sh <run_id> <tier> pre_release|final`.
 
 Windsurf-specific:
 - Tool identifier: set `AGENTIC_TOOL=windsurf`.
