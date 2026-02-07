@@ -59,7 +59,12 @@
       "auto_generate_project_readme": true,
       "require_project_runbook_when_project_detected": true,
       "require_project_readme_when_project_detected": true,
-      "update_readme_each_iteration": true
+      "update_readme_each_iteration": true,
+      "enforce_parent_docs_each_iteration": true,
+      "parent_docs_required_paths": [
+        "README.md",
+        "docs/QUICKSTART.md"
+      ]
     },
     "prompt_resolution": {
       "default_version": "v1",

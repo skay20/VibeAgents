@@ -257,5 +257,11 @@ scripts/ensure-project-readme.sh <run_id>
 - scripts used during startup, logging, or verification
 - required artifact paths or schemas
 
+`README.md` is also mandatory per iteration in this parent repo. When
+`settings.docs.enforce_parent_docs_each_iteration=true`, `verify.sh` requires both:
+- `README.md`
+- `docs/QUICKSTART.md`
+to appear in `.agentic/bus/artifacts/<run_id>/diff_summary.md` for approved runs.
+
 If an iteration has no Quickstart-impacting changes, docs writer must record `No Quickstart delta` in:
 - `.agentic/bus/artifacts/<run_id>/docs_report.md`

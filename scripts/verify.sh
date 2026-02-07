@@ -230,6 +230,8 @@ required = [
     ("docs.require_project_runbook_when_project_detected", docs_cfg.get("require_project_runbook_when_project_detected", None)),
     ("docs.require_project_readme_when_project_detected", docs_cfg.get("require_project_readme_when_project_detected", None)),
     ("docs.update_readme_each_iteration", docs_cfg.get("update_readme_each_iteration", None)),
+    ("docs.enforce_parent_docs_each_iteration", docs_cfg.get("enforce_parent_docs_each_iteration", None)),
+    ("docs.parent_docs_required_paths", docs_cfg.get("parent_docs_required_paths", None)),
     ("project_meta.enforce_compatibility", project_meta.get("enforce_compatibility", None)),
     ("project_meta.required_files", project_meta.get("required_files", None)),
     ("project_meta.min_template_versions", project_meta.get("min_template_versions", None)),
@@ -291,6 +293,13 @@ if not isinstance(project_meta.get("min_template_versions", {}), dict) or not pr
 rollout = settings.get("rollout", {})
 if rollout.get("enforcement_mode") not in {"blocking", "report_only"}:
     print("[FAIL] rollout.enforcement_mode must be blocking|report_only")
+    sys.exit(1)
+if not isinstance(docs_cfg.get("parent_docs_required_paths", []), list) or len(docs_cfg.get("parent_docs_required_paths", [])) < 2:
+    print("[FAIL] docs.parent_docs_required_paths must be a list with README.md and docs/QUICKSTART.md")
+    sys.exit(1)
+required_parent_docs = {"README.md", "docs/QUICKSTART.md"}
+if not required_parent_docs.issubset(set(docs_cfg.get("parent_docs_required_paths", []))):
+    print("[FAIL] docs.parent_docs_required_paths must include README.md and docs/QUICKSTART.md")
     sys.exit(1)
 
 # Ensure every catalog agent is reachable via tier requirement, always_required,
@@ -403,6 +412,70 @@ for state_file in sorted(state_dir.glob("*.json")):
                 failures.append(
                     f"Invalid {key}=0 without measured status in {run_id}:{agent_id}"
                 )
+
+if failures:
+    for item in failures:
+        print("[FAIL] " + item)
+    sys.exit(1)
+PYCODE
+if [[ $? -ne 0 ]]; then
+  FAIL=1
+fi
+
+# 2l) Parent repo docs must be updated each approved iteration when enabled
+python3 - <<'PYCODE'
+import json
+import sys
+from pathlib import Path
+
+settings_path = Path(".agentic/settings.json")
+if not settings_path.exists():
+    sys.exit(0)
+
+try:
+    settings = json.loads(settings_path.read_text()).get("settings", {})
+except Exception:
+    print("[FAIL] Unable to parse settings for docs freshness checks")
+    sys.exit(1)
+
+docs_cfg = settings.get("docs", {})
+if not bool(docs_cfg.get("enforce_parent_docs_each_iteration", False)):
+    sys.exit(0)
+
+required_paths = docs_cfg.get("parent_docs_required_paths", [])
+if not isinstance(required_paths, list) or not required_paths:
+    print("[FAIL] docs.parent_docs_required_paths must be configured when docs enforcement is enabled")
+    sys.exit(1)
+
+state_dir = Path(".agentic/bus/state")
+if not state_dir.exists():
+    sys.exit(0)
+
+failures = []
+for state_file in sorted(state_dir.glob("*.json")):
+    try:
+        state = json.loads(state_file.read_text())
+    except Exception:
+        failures.append(f"Invalid state JSON: {state_file}")
+        continue
+
+    if str(state.get("gate_status", "")) != "approved":
+        continue
+    if "selected_tier" not in state and "planned_agents" not in state:
+        continue
+
+    run_id = str(state.get("run_id", state_file.stem))
+    diff_summary = Path(".agentic/bus/artifacts") / run_id / "diff_summary.md"
+    if not diff_summary.exists():
+        failures.append(f"Missing diff_summary.md for approved run: {run_id}")
+        continue
+
+    text = diff_summary.read_text(encoding="utf-8", errors="ignore")
+    for path in required_paths:
+        if path not in text:
+            failures.append(
+                f"Approved run {run_id} missing required docs update in diff_summary.md: {path}"
+            )
 
 if failures:
     for item in failures:
