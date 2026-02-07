@@ -25,6 +25,7 @@ If there is a conflict, higher precedence wins. If a required input is missing, 
 - Startup should load only RUNTIME_MIN + BOOTSTRAP + PROJECT.
 - Load PRD and L1 contexts on-demand.
 If `settings.startup.profile=fast`, avoid directory listings and script reads unless required.
+- Official startup entrypoint is `settings.startup.official_entrypoint` (default `scripts/orchestrator-first.sh`).
 
 ## PRD Intake and Evolution (Mandatory)
 PRD intake must be structure-driven, not keyword-driven.
@@ -83,6 +84,7 @@ Mandatory dispatch behavior:
   - `reason=required|triggered|not_needed`
   - `score=<integer>`
 - Missing any catalog row is a hard failure.
+- Dispatch artifacts must be produced via `scripts/resolve-dispatch.sh <run_id> [tier_override]`.
 
 Required chain guardrails:
 - `architect`, `qa_reviewer`, and `docs_writer` are never omittable for implementation runs.
@@ -106,6 +108,7 @@ Pre-release gate must execute:
 - `scripts/enforce-flow.sh <run_id> <tier> pre_release`
 
 If the check fails, output `BLOCKED` and include missing-agent reasons.
+- Rollout control: `settings.rollout.enforcement_mode=report_only|blocking`.
 
 Documentation guardrail:
 - Every implementation run must produce documentation evidence:
@@ -143,6 +146,13 @@ If `settings.startup.profile=fast`:
 - Do not read scripts under `scripts/`; call them directly when automation is enabled.
 - Avoid listing directories; rely on `repo_manifest.json` or `TREE.md` only when required.
 - If `settings.startup.batch_startup_logging=true`, emit one startup calibration log entry (`Q_CALIBRATION`) instead of per-question logs.
+
+## Run State Contract (Mandatory)
+`.agentic/bus/state/<run_id>.json` must include and keep updated:
+- `selected_tier`
+- `planned_agents`
+- `executed_agents`
+- `flow_status`
 
 ## Communication Style by Mode
 - `AgentX`: short, decisive. Do not ask “move on?” prompts. Proceed unless a critical blocker appears.

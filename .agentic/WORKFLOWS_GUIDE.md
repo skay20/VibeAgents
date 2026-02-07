@@ -26,11 +26,13 @@ Tier selection:
 - Triggers come from `settings.flow_control.strict_triggers`.
 - Dispatch strategy uses `settings.agent_dispatch.mode`.
 - Full catalog must be evaluated every run and recorded in `dispatch_resolution.md`.
+- Resolve tier + dispatch with `scripts/resolve-dispatch.sh <run_id> [tier_override]`.
 - If running against side-project `project_meta`, run compatibility check first:
   - `scripts/check-project-meta.sh <project_meta_dir>`
 
 Release guard:
 - A tier is complete only if every required agent has metrics and artifact/decision evidence.
+- Run must start from official entrypoint: `scripts/orchestrator-first.sh`.
 - Pre-release gate must run: `scripts/enforce-flow.sh <run_id> <tier> pre_release`.
 - Finalization gate must run: `scripts/enforce-flow.sh <run_id> <tier> final`.
 
@@ -45,6 +47,7 @@ Release guard:
 - PRD changes trigger decision records, file updates, version bumps, and migrations.
 - Use `.agentic/bus/artifacts/<run_id>/` for traceability.
 - Required flow artifacts:
+  - `.agentic/bus/artifacts/<run_id>/orchestrator_entrypoint.md`
   - `.agentic/bus/artifacts/<run_id>/tier_decision.md`
   - `.agentic/bus/artifacts/<run_id>/dispatch_signals.md`
   - `.agentic/bus/artifacts/<run_id>/dispatch_resolution.md`

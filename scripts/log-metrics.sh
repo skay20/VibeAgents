@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/log-metrics.sh
-# Template-Version: 1.12.0
+# Template-Version: 1.13.0
 # Last-Generated: 2026-02-04T14:22:29Z
 # Ownership: Managed
 
@@ -159,5 +159,43 @@ cat > "$METRICS_DIR/$AGENT_ID.json" <<EOF
   "notes": "$NOTES"
 }
 EOF
+
+STATE_FILE=".agentic/bus/state/$RUN_ID.json"
+ART_DIR=".agentic/bus/artifacts/$RUN_ID"
+if [[ -f "$STATE_FILE" ]]; then
+  STATE_FILE="$STATE_FILE" ART_DIR="$ART_DIR" AGENT_ID="$AGENT_ID" STATUS="$STATUS" python3 - <<'PY'
+import json
+import os
+from datetime import datetime, timezone
+from pathlib import Path
+
+state_path = Path(os.environ["STATE_FILE"])
+art_dir = Path(os.environ["ART_DIR"])
+agent_id = os.environ["AGENT_ID"]
+status = os.environ["STATUS"]
+
+state = json.loads(state_path.read_text(encoding="utf-8"))
+executed = state.get("executed_agents", [])
+if not isinstance(executed, list):
+    executed = []
+if agent_id not in executed:
+    executed.append(agent_id)
+state["executed_agents"] = executed
+
+dispatch_ready = (art_dir / "dispatch_resolution.md").exists() and (art_dir / "planned_agents.md").exists()
+flow_status = state.get("flow_status", "started")
+
+if agent_id == "implementer" and not dispatch_ready:
+    state["flow_status"] = "invalid_path"
+elif status == "ok":
+    if flow_status in {"started", "orchestrator_entrypoint_ok", "dispatch_resolved"}:
+        state["flow_status"] = "execution_in_progress"
+elif status in {"blocked", "failed"}:
+    state["flow_status"] = "blocked_flow"
+
+state["updated_at"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+state_path.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
+PY
+fi
 
 echo "Metrics written: $METRICS_DIR/$AGENT_ID.json"

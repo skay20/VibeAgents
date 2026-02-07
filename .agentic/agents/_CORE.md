@@ -17,6 +17,7 @@ Last-Updated: 2026-02-06
 - In fast profile, avoid broad repository scans and script source reads.
 - Use one bundled startup calibration message when `settings.startup.single_calibration_message=true`.
 - Use hybrid dispatch: evaluate full catalog, then execute only required/triggered agents.
+- Start runs with `settings.startup.official_entrypoint` and resolve dispatch with `scripts/resolve-dispatch.sh`.
 
 ## Escalation Policy
 - `hard_blocker`: ask up to 3 targeted questions and output `BLOCKED`.

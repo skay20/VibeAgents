@@ -32,10 +32,14 @@ export AGENTIC_RUN_MODE=AgentX
 ```
 4. Start run:
 ```bash
-AGENTIC_TOOL=codex scripts/start-run.sh
+AGENTIC_TOOL=codex scripts/orchestrator-first.sh
 ```
 5. Provide PRD to the assistant and answer startup calibration.
-6. Verify repository contracts:
+6. Resolve tier + dispatch before implementation:
+```bash
+scripts/resolve-dispatch.sh <run_id>
+```
+7. Verify repository contracts:
 ```bash
 scripts/verify.sh
 ```
@@ -202,6 +206,10 @@ Runtime enforcement:
 scripts/enforce-flow.sh <run_id> <tier> pre_release
 scripts/enforce-flow.sh <run_id> <tier> final
 ```
+
+Rollout controls:
+- `settings.rollout.enforcement_mode=report_only` for dry enforcement (Phase A).
+- `settings.rollout.enforcement_mode=blocking` for hard gates (Phase B/C).
 
 ## Preflight for Web Projects
 Run preflight before release decisions:

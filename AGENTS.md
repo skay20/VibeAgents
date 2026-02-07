@@ -16,7 +16,7 @@ Bootstrap context:
 - `.ai/context/PROJECT.md`
 
 Startup handshake (must happen even on fast runs):
-- Create `run_id` via `scripts/start-run.sh` (when automation enabled).
+- Create `run_id` via `scripts/orchestrator-first.sh` (when automation enabled).
 - Detect PRD by structure (not only keyword) and ingest/update `docs/PRD.md` (managed block) before calibration.
 - Ask calibration once, including run mode if `AGENTIC_RUN_MODE` is unset.
 

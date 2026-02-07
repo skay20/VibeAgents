@@ -8,6 +8,13 @@ Ownership: Managed
 
 # Agentic Changelog
 
+## 0.29.0 - 2026-02-07
+- Add official orchestration entrypoint `scripts/orchestrator-first.sh` and run-state flow status initialization.
+- Add `scripts/resolve-dispatch.sh` to generate `tier_decision.md`, `dispatch_signals.md`, `dispatch_resolution.md`, and `planned_agents.md`.
+- Extend `scripts/enforce-flow.sh` with catalog-row enforcement, timestamp consistency checks, state synchronization, and rollout `report_only|blocking` mode.
+- Update logging quality: structured question events (`question_id/question_text/answer_text`) and duplicate calibration suppression.
+- Extend runtime contracts/docs/verify for mandatory run-state fields and dispatch artifacts.
+
 ## 0.28.0 - 2026-02-06
 - Add hybrid adaptive dispatch contract with full catalog evaluation (`settings.agent_dispatch.*`) and always-required agents.
 - Make `architect`, `qa_reviewer`, and `docs_writer` non-omittable in implementation runs.

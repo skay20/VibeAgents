@@ -183,6 +183,7 @@ required = [
     ("run_mode.preferred", run_mode.get("preferred", None)),
     ("run_mode.default_if_unanswered", run_mode.get("default_if_unanswered", None)),
     ("startup.profile", startup.get("profile", None)),
+    ("startup.official_entrypoint", startup.get("official_entrypoint", None)),
     ("startup.max_initial_questions", startup.get("max_initial_questions", None)),
     ("startup.ask_only_missing", startup.get("ask_only_missing", None)),
     ("startup.avoid_script_reads", startup.get("avoid_script_reads", None)),
@@ -212,6 +213,11 @@ required = [
     ("agent_dispatch.signal_weights", agent_dispatch.get("signal_weights", None)),
     ("agent_dispatch.trigger_detection", agent_dispatch.get("trigger_detection", None)),
     ("agent_dispatch.conditional_agents", agent_dispatch.get("conditional_agents", None)),
+    ("rollout.phase", settings.get("rollout", {}).get("phase", None)),
+    ("rollout.enforcement_mode", settings.get("rollout", {}).get("enforcement_mode", None)),
+    ("rollout.report_only_runs_remaining", settings.get("rollout", {}).get("report_only_runs_remaining", None)),
+    ("rollout.fallback_mode", settings.get("rollout", {}).get("fallback_mode", None)),
+    ("rollout.fallback_active", settings.get("rollout", {}).get("fallback_active", None)),
     ("checks.preflight_enabled", checks.get("preflight_enabled", None)),
     ("checks.preflight_run_install", checks.get("preflight_run_install", None)),
     ("checks.preflight_run_dev", checks.get("preflight_run_dev", None)),
@@ -241,6 +247,9 @@ if not isinstance(strict_triggers, list):
     sys.exit(1)
 if agent_dispatch.get("mode") not in {"hybrid", "tier_only", "conditional_only"}:
     print("[FAIL] agent_dispatch.mode must be one of hybrid|tier_only|conditional_only")
+    sys.exit(1)
+if startup.get("official_entrypoint") != "scripts/orchestrator-first.sh":
+    print("[FAIL] startup.official_entrypoint must be scripts/orchestrator-first.sh")
     sys.exit(1)
 if not isinstance(dispatch_catalog, list) or len(dispatch_catalog) < 14:
     print("[FAIL] agent_dispatch.catalog must contain all agent ids")
@@ -273,6 +282,10 @@ if not isinstance(project_meta.get("required_files", []), list) or len(project_m
 if not isinstance(project_meta.get("min_template_versions", {}), dict) or not project_meta.get("min_template_versions"):
     print("[FAIL] project_meta.min_template_versions must be a non-empty object")
     sys.exit(1)
+rollout = settings.get("rollout", {})
+if rollout.get("enforcement_mode") not in {"blocking", "report_only"}:
+    print("[FAIL] rollout.enforcement_mode must be blocking|report_only")
+    sys.exit(1)
 PYCODE
   if [[ $? -ne 0 ]]; then
     FAIL=1
@@ -280,7 +293,7 @@ PYCODE
 fi
 
 # 2f) Scripts check
-for s in scripts/start-run.sh scripts/log-event.sh scripts/log-question.sh scripts/preflight.sh scripts/preflight.py scripts/render-agent-prompt.sh scripts/enforce-flow.sh scripts/check-project-meta.sh; do
+for s in scripts/start-run.sh scripts/orchestrator-first.sh scripts/resolve-dispatch.sh scripts/log-event.sh scripts/log-question.sh scripts/preflight.sh scripts/preflight.py scripts/render-agent-prompt.sh scripts/enforce-flow.sh scripts/check-project-meta.sh; do
   if [[ ! -f "$s" ]]; then
     fail "Missing script: $s"
   fi
@@ -289,7 +302,7 @@ done
 # 2g) Orchestrator adaptive flow checks
 ORCH_V2=".agentic/agents/god_orchestrator.v2.md"
 if [[ -f "$ORCH_V2" ]]; then
-  for text in "Flow tier:" "Classify change risk and select flow tier" "Missing metrics/artifact evidence for any required agent" "structured PRD" "tier_decision.md" "dispatch_signals.md" "dispatch_resolution.md" "planned_agents.md" "flow_evidence.md" "enforce-flow.sh" "check-project-meta.sh" "never omit"; do
+  for text in "Flow tier:" "Classify change risk and select flow tier" "Missing metrics/artifact evidence for any required agent" "structured PRD" "tier_decision.md" "dispatch_signals.md" "dispatch_resolution.md" "planned_agents.md" "flow_evidence.md" "orchestrator-first.sh" "resolve-dispatch.sh" "enforce-flow.sh" "check-project-meta.sh" "never omit"; do
     if ! grep -q "$text" "$ORCH_V2"; then
       fail "Orchestrator v2 missing adaptive flow requirement: $text"
     fi
@@ -307,7 +320,7 @@ fi
 
 RELEASE_V2=".agentic/agents/release_manager.v2.md"
 if [[ -f "$RELEASE_V2" ]]; then
-  for text in "enforce-flow.sh" "tier_decision.md" "planned_agents.md"; do
+  for text in "enforce-flow.sh" "tier_decision.md" "dispatch_resolution.md" "planned_agents.md"; do
     if ! grep -q "$text" "$RELEASE_V2"; then
       fail "Release manager v2 missing flow enforcement requirement: $text"
     fi

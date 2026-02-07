@@ -17,12 +17,12 @@ Ownership: Managed
 
 ## Startup Handshake (Must Happen, In This Order)
 1. Load bootstrap context (list above).
-2. If automation is enabled and no run exists yet, create `run_id` by calling `scripts/start-run.sh`.
+2. If automation is enabled and no run exists yet, create `run_id` by calling `scripts/orchestrator-first.sh`.
 3. If a `project_meta` directory is present, run compatibility check (`scripts/check-project-meta.sh <project_meta_dir>`).
 4. Detect PRD from chat by structure (not only by keyword). If it matches configured PRD signals, ingest into `docs/PRD.md` by editing only `BEGIN_MANAGED` / `END_MANAGED` (preserve header/markers).
 5. Ask calibration once (single bundled message when configured), including run mode if `AGENTIC_RUN_MODE` is not set. Default per `.agentic/settings.json` if unanswered.
 6. Only then proceed to planning/implementation agents per flow tier.
-7. Build dispatch artifacts before implementation:
+7. Build dispatch artifacts before implementation using `scripts/resolve-dispatch.sh <run_id> [tier_override]`:
    - `dispatch_signals.md` with trigger signals and scores.
    - `dispatch_resolution.md` listing all catalog agents and whether each is selected.
 

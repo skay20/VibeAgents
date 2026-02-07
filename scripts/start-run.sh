@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/start-run.sh
-# Template-Version: 1.4.0
+# Template-Version: 1.5.0
 # Last-Generated: 2026-02-04T16:33:06Z
 # Ownership: Managed
 
@@ -122,6 +122,10 @@ cat > "$STATE_DIR/$RUN_ID.json" <<EOF
   "run_mode": "$RUN_MODE",
   "approval_mode": "$APPROVAL_MODE",
   "toolchain": "$TOOLCHAIN",
+  "selected_tier": "",
+  "planned_agents": [],
+  "executed_agents": [],
+  "flow_status": "started",
   "checkpoints": [
     "run_start"
   ]

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/metrics_compare.py
-# Template-Version: 1.0.0
+# Template-Version: 1.1.0
 # Last-Generated: 2026-02-06T16:25:00Z
 # Ownership: Managed
 
@@ -72,8 +72,8 @@ def summarize_run(run_id: str) -> dict:
     tokens_out_list = [num(r.get("tokens_out")) for r in rows]
     tokens_in_list = [t for t in tokens_in_list if t is not None]
     tokens_out_list = [t for t in tokens_out_list if t is not None]
-    total_tokens_in = sum(tokens_in_list) if tokens_in_list else 0
-    total_tokens_out = sum(tokens_out_list) if tokens_out_list else 0
+    total_tokens_in = sum(tokens_in_list) if tokens_in_list else None
+    total_tokens_out = sum(tokens_out_list) if tokens_out_list else None
 
     per_agent = {}
     for row in rows:
@@ -106,6 +106,16 @@ def delta(exp: int, base: int) -> int:
     return exp - base
 
 
+def fmt_num(value):
+    return "n/a" if value is None else value
+
+
+def fmt_delta(exp, base):
+    if exp is None or base is None:
+        return "n/a"
+    return delta(exp, base)
+
+
 def maybe_copy_report(run_id: str, destination: Path) -> None:
     source = Path(f".agentic/bus/artifacts/{run_id}/agent_performance_report.md")
     if source.exists():
@@ -135,8 +145,8 @@ def write_comparison(benchmark_dir: Path, baseline: dict, experiment: dict) -> P
         f"| Blocked | {baseline['blocked']} | {experiment['blocked']} | {delta(experiment['blocked'], baseline['blocked'])} |",
         f"| Failed | {baseline['failed']} | {experiment['failed']} | {delta(experiment['failed'], baseline['failed'])} |",
         f"| Avg duration (ms) | {baseline['avg_duration_ms']} | {experiment['avg_duration_ms']} | {delta(experiment['avg_duration_ms'], baseline['avg_duration_ms'])} |",
-        f"| Tokens in | {baseline['total_tokens_in']} | {experiment['total_tokens_in']} | {delta(experiment['total_tokens_in'], baseline['total_tokens_in'])} |",
-        f"| Tokens out | {baseline['total_tokens_out']} | {experiment['total_tokens_out']} | {delta(experiment['total_tokens_out'], baseline['total_tokens_out'])} |",
+        f"| Tokens in | {fmt_num(baseline['total_tokens_in'])} | {fmt_num(experiment['total_tokens_in'])} | {fmt_delta(experiment['total_tokens_in'], baseline['total_tokens_in'])} |",
+        f"| Tokens out | {fmt_num(baseline['total_tokens_out'])} | {fmt_num(experiment['total_tokens_out'])} | {fmt_delta(experiment['total_tokens_out'], baseline['total_tokens_out'])} |",
         f"| Questions asked | {baseline['questions_asked']} | {experiment['questions_asked']} | {delta(experiment['questions_asked'], baseline['questions_asked'])} |",
         f"| Answers received | {baseline['answers_received']} | {experiment['answers_received']} | {delta(experiment['answers_received'], baseline['answers_received'])} |",
         "",

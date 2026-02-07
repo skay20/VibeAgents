@@ -13,7 +13,7 @@ Format: YYYYMMDD-HHMMSSZ-<slug>
 
 ## Artifacts
 - Path: `.agentic/bus/artifacts/<run_id>/`
-- Required files: plan.md, decisions.md, diff_summary.md, qa_report.md, release_notes.md
+- Required files: orchestrator_entrypoint.md, tier_decision.md, dispatch_signals.md, dispatch_resolution.md, planned_agents.md, plan.md, decisions.md, diff_summary.md, qa_report.md, release_notes.md
 - Optional files: calibration_questions.md, intent.md, upgrade_plan.md
 - Optional files: run_meta.md
 - Optional files: questions_log.md
@@ -28,6 +28,7 @@ Format: YYYYMMDD-HHMMSSZ-<slug>
 ## State
 - Path: `.agentic/bus/state/<run_id>.json`
 - Tracks phase, gate status, timestamps, run_mode, approval_mode, toolchain
+- Required runtime fields: `selected_tier`, `planned_agents`, `executed_agents`, `flow_status`
 
 
 ## Concurrency Policy

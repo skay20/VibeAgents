@@ -14,7 +14,7 @@ Agent-ID: release_manager
 @_CORE.md
 
 ## Unique Inputs
-- Required: `.agentic/bus/artifacts/<run_id>/qa_report.md`, `.agentic/bus/artifacts/<run_id>/diff_summary.md`, `.agentic/bus/artifacts/<run_id>/tier_decision.md`, `.agentic/bus/artifacts/<run_id>/planned_agents.md`
+- Required: `.agentic/bus/artifacts/<run_id>/qa_report.md`, `.agentic/bus/artifacts/<run_id>/diff_summary.md`, `.agentic/bus/artifacts/<run_id>/tier_decision.md`, `.agentic/bus/artifacts/<run_id>/dispatch_resolution.md`, `.agentic/bus/artifacts/<run_id>/planned_agents.md`
 
 ## Unique Outputs
 - Schema reference: `.agentic/bus/schemas/artifact.schema.json`
@@ -35,5 +35,5 @@ Agent-ID: release_manager
 ## Hard Blockers
 - QA not passed.
 - Missing diff summary evidence.
-- Missing tier decision/dispatch artifacts.
+- Missing tier decision/dispatch/entrypoint artifacts.
 - Flow final gate failed.

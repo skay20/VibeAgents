@@ -8,6 +8,13 @@ Ownership: Managed
 
 # Changelog
 
+## 0.1.30 - 2026-02-07
+- Add official run entrypoint `scripts/orchestrator-first.sh` and dispatch resolver `scripts/resolve-dispatch.sh`.
+- Enforce complete adaptive flow artifacts (`orchestrator_entrypoint`, `tier_decision`, `dispatch_signals`, `dispatch_resolution`, `planned_agents`) before release gates.
+- Extend run-state contract with `selected_tier`, `planned_agents`, `executed_agents`, and `flow_status`.
+- Harden `scripts/enforce-flow.sh` with deterministic missing-agent checks, catalog coverage checks, timestamp consistency checks, and rollout enforcement mode.
+- Improve telemetry quality by logging structured question events and avoiding duplicate calibration records.
+
 ## 0.1.29 - 2026-02-06
 - Add hybrid agent-dispatch settings to enforce full catalog evaluation with conditional execution.
 - Make `architect`, `qa_reviewer`, and `docs_writer` required baseline coverage for implementation runs.

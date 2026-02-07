@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/metrics_summarize.py
-# Template-Version: 1.11.0
+# Template-Version: 1.12.0
 # Last-Generated: 2026-02-04T17:55:11Z
 # Ownership: Managed
 
@@ -78,8 +78,10 @@ tokens_out = [_num(r.get("tokens_out")) for r in rows]
 tokens_in = [t for t in tokens_in if t is not None]
 tokens_out = [t for t in tokens_out if t is not None]
 avg_duration = int(sum(durations) / len(durations)) if durations else 0
-total_tokens_in = sum(tokens_in) if tokens_in else 0
-total_tokens_out = sum(tokens_out) if tokens_out else 0
+has_tokens_in = len(tokens_in) > 0
+has_tokens_out = len(tokens_out) > 0
+total_tokens_in = sum(tokens_in) if has_tokens_in else None
+total_tokens_out = sum(tokens_out) if has_tokens_out else None
 
 lines = [
     "# Agent Performance Report",
@@ -90,8 +92,8 @@ lines = [
     f"Blocked: {blocked}",
     f"Failed: {failed}",
     f"Average duration (ms): {avg_duration}",
-    f"Total tokens in: {total_tokens_in}",
-    f"Total tokens out: {total_tokens_out}",
+    f"Total tokens in: {total_tokens_in if has_tokens_in else 'n/a'}",
+    f"Total tokens out: {total_tokens_out if has_tokens_out else 'n/a'}",
     "",
     "## Event Summary",
     f"- run_start: {event_counts.get('run_start', 0)}",

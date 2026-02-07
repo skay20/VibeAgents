@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/enforce-flow.sh
-# Template-Version: 1.0.0
-# Last-Generated: 2026-02-06T16:42:21Z
+# Template-Version: 1.1.0
+# Last-Generated: 2026-02-07T00:00:00Z
 # Ownership: Managed
 
 set -euo pipefail
@@ -48,6 +48,7 @@ import json
 import os
 import re
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 settings_file = Path(os.environ["SETTINGS_FILE"])
@@ -59,12 +60,15 @@ requested_tier = os.environ["TIER"].strip()
 mode = os.environ["MODE"]
 
 settings = json.loads(settings_file.read_text())
-flow = settings.get("settings", {}).get("flow_control", {})
-dispatch = settings.get("settings", {}).get("agent_dispatch", {})
+cfg = settings.get("settings", {})
+flow = cfg.get("flow_control", {})
+dispatch = cfg.get("agent_dispatch", {})
+rollout = cfg.get("rollout", {})
 required_by_tier = flow.get("required_agents", {})
 default_tier = flow.get("default_tier", "standard")
 catalog = dispatch.get("catalog", [])
 always_required_agents = dispatch.get("always_required_agents", [])
+enforcement_mode = rollout.get("enforcement_mode", "blocking")
 
 tier = requested_tier or default_tier
 if tier not in {"lean", "standard", "strict"}:
@@ -90,11 +94,11 @@ executed_agents = sorted([p.stem for p in metrics_files])
 decisions_text = (art_dir / "decisions.md").read_text() if (art_dir / "decisions.md").exists() else ""
 
 required_artifacts = [
+    "orchestrator_entrypoint.md",
     "tier_decision.md",
     "dispatch_signals.md",
     "dispatch_resolution.md",
     "planned_agents.md",
-    "flow_evidence.md",
 ]
 missing_required_artifacts = [name for name in required_artifacts if not (art_dir / name).exists()]
 
@@ -138,6 +142,7 @@ effective_required = sorted(
 missing_metrics = []
 missing_evidence = []
 missing_planned = []
+timestamp_issues = []
 
 for agent in effective_required:
     agent_file = metrics_dir / f"{agent}.json"
@@ -160,6 +165,61 @@ for agent in effective_required:
     if planned_agents and agent not in planned_agents:
         missing_planned.append(agent)
 
+events_path = metrics_dir / "events.jsonl"
+run_start_ts = None
+agent_starts = {}
+agent_ends = {}
+
+def parse_ts(value):
+    if not value:
+        return None
+    value = value.replace("Z", "+00:00")
+    try:
+        return datetime.fromisoformat(value)
+    except Exception:
+        return None
+
+if events_path.exists():
+    for line in events_path.read_text().splitlines():
+        if not line.strip():
+            continue
+        try:
+            evt = json.loads(line)
+        except Exception:
+            continue
+        et = evt.get("event_type")
+        aid = evt.get("agent_id", "")
+        ts = parse_ts(evt.get("timestamp"))
+        if ts is None:
+            continue
+        if et == "run_start" and aid == "god_orchestrator":
+            if run_start_ts is None or ts < run_start_ts:
+                run_start_ts = ts
+        if et == "agent_start":
+            if aid not in agent_starts or ts < agent_starts[aid]:
+                agent_starts[aid] = ts
+        if et == "agent_end":
+            if aid not in agent_ends or ts > agent_ends[aid]:
+                agent_ends[aid] = ts
+
+for metric_file in metrics_files:
+    try:
+        payload = json.loads(metric_file.read_text())
+    except Exception:
+        continue
+    aid = payload.get("agent_id", metric_file.stem)
+    s = parse_ts(payload.get("start_at"))
+    e = parse_ts(payload.get("end_at"))
+    if s and e and e < s:
+        timestamp_issues.append(f"{aid}:metrics_end_before_start")
+    if run_start_ts and s and s < run_start_ts:
+        timestamp_issues.append(f"{aid}:metrics_start_before_run_start")
+
+for aid, s in agent_starts.items():
+    e = agent_ends.get(aid)
+    if s and e and e < s:
+        timestamp_issues.append(f"{aid}:event_end_before_start")
+
 status = "PASS"
 reasons = []
 
@@ -178,6 +238,12 @@ if missing_planned:
 if missing_catalog_rows:
     status = "FAIL"
     reasons.append("missing_catalog_rows")
+if mode == "final" and gate_status != "approved":
+    status = "FAIL"
+    reasons.append("gate_status_not_approved")
+if timestamp_issues:
+    status = "FAIL"
+    reasons.append("timestamp_inconsistency")
 
 report = []
 report.append("# Flow Evidence")
@@ -191,6 +257,7 @@ report.append(f"- Always Required Agents: {', '.join(sorted(set(always_required_
 report.append(f"- Effective Required Agents: {', '.join(effective_required)}")
 report.append(f"- Executed Agents: {', '.join(executed_agents) if executed_agents else '(none)'}")
 report.append(f"- Planned Agents: {', '.join(planned_agents) if planned_agents else '(none)'}")
+report.append(f"- Enforcement Mode: {enforcement_mode}")
 report.append(f"- Status: {status}")
 if reasons:
     report.append(f"- Reasons: {', '.join(reasons)}")
@@ -204,11 +271,31 @@ if missing_planned:
     report.append(f"- Missing Planned Dispatch: {', '.join(missing_planned)}")
 if missing_catalog_rows:
     report.append(f"- Missing Catalog Rows: {', '.join(missing_catalog_rows)}")
+if timestamp_issues:
+    report.append(f"- Timestamp Issues: {', '.join(sorted(set(timestamp_issues)))}")
 
 (art_dir / "flow_evidence.md").write_text("\n".join(report) + "\n")
 
-print("\n".join(report))
+flow_status = "flow_ok"
 if status != "PASS":
+    if any(r in reasons for r in ("missing_required_artifacts", "missing_catalog_rows", "missing_planned_dispatch")):
+        flow_status = "invalid_path"
+    else:
+        flow_status = "blocked_flow"
+elif mode == "pre_release":
+    flow_status = "pre_release_passed"
+elif mode == "final":
+    flow_status = "approved"
+
+state["selected_tier"] = tier
+state["planned_agents"] = planned_agents
+state["executed_agents"] = executed_agents
+state["flow_status"] = flow_status
+state["updated_at"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+state_file.write_text(json.dumps(state, indent=2) + "\n")
+
+print("\n".join(report))
+if status != "PASS" and enforcement_mode != "report_only":
     sys.exit(2)
 PY
 

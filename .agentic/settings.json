@@ -28,6 +28,7 @@
     },
     "startup": {
       "profile": "fast",
+      "official_entrypoint": "scripts/orchestrator-first.sh",
       "max_initial_questions": 3,
       "ask_only_missing": true,
       "avoid_script_reads": true,
@@ -136,29 +137,113 @@
       "conditional_agents": {
         "stack_advisor": {
           "tier_min": "standard",
-          "min_score": 2
+          "min_score": 2,
+          "file_patterns": [
+            "package.json",
+            "package-lock.json",
+            "pnpm-lock.yaml",
+            "yarn.lock",
+            "requirements.txt",
+            "poetry.lock",
+            "Cargo.toml",
+            "Cargo.lock"
+          ],
+          "prd_keywords": [
+            "dependency",
+            "library",
+            "framework",
+            "upgrade",
+            "version",
+            "package"
+          ]
         },
         "architect": {
           "tier_min": "lean",
-          "min_score": 1
+          "min_score": 1,
+          "file_patterns": [
+            "docs/ARCHITECTURE.md",
+            "docs/ADR/"
+          ],
+          "prd_keywords": [
+            "architecture",
+            "design",
+            "new module",
+            "pattern",
+            "refactor structure"
+          ]
         },
         "security_reviewer": {
           "tier_min": "standard",
-          "min_score": 2
+          "min_score": 2,
+          "file_patterns": [
+            "auth",
+            "security",
+            "permission",
+            "token",
+            "password"
+          ],
+          "prd_keywords": [
+            "auth",
+            "security",
+            "permission",
+            "token",
+            "password",
+            "encryption"
+          ]
         },
         "migration_manager": {
           "tier_min": "standard",
-          "min_score": 2
+          "min_score": 2,
+          "file_patterns": [
+            ".agentic/migrations/"
+          ],
+          "prd_keywords": [
+            "breaking change",
+            "migration",
+            "deprecated",
+            "upgrade to"
+          ]
         },
         "repo_maintainer": {
           "tier_min": "lean",
-          "min_score": 2
+          "min_score": 2,
+          "file_patterns": [
+            "rename",
+            "move",
+            "cleanup",
+            "structure"
+          ],
+          "prd_keywords": [
+            "cleanup",
+            "rename",
+            "move",
+            "debt",
+            "restructure"
+          ]
         },
         "template_librarian": {
           "tier_min": "standard",
-          "min_score": 2
+          "min_score": 2,
+          "file_patterns": [
+            "templates/",
+            "scaffold",
+            "generator"
+          ],
+          "prd_keywords": [
+            "template",
+            "boilerplate",
+            "generator",
+            "scaffold"
+          ]
         }
       }
+    },
+    "rollout": {
+      "phase": "C",
+      "enforcement_mode": "blocking",
+      "report_only_runs_remaining": 0,
+      "fallback_mode": "tier_only",
+      "fallback_active": false
     },
     "checks": {
       "preflight_enabled": true,

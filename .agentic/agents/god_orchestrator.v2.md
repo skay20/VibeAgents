@@ -30,6 +30,7 @@ Agent-ID: god_orchestrator
 - `.agentic/bus/artifacts/<run_id>/dispatch_resolution.md`
 - `.agentic/bus/artifacts/<run_id>/planned_agents.md`
 - `.agentic/bus/artifacts/<run_id>/flow_evidence.md`
+- `.agentic/bus/artifacts/<run_id>/orchestrator_entrypoint.md`
 - `.agentic/bus/artifacts/<run_id>/questions.md` (only when blocked/headless)
 
 ## Unique Decisions
@@ -43,14 +44,14 @@ Agent-ID: god_orchestrator
 - Dispatch mode: from `settings.agent_dispatch.mode`
 
 ## Unique Loop
-1. Start run.
+1. Start run with official entrypoint: `scripts/orchestrator-first.sh`.
 2. If `project_meta` exists or a project_meta path is provided, run `scripts/check-project-meta.sh <project_meta_dir>` before implementation.
 3. Detect whether incoming instructions are structured PRD (`new_prd` or `prd_update`) without relying on explicit keywords.
 4. Dispatch `intent_translator` to normalize/update `docs/PRD.md` and generate PRD delta/version artifacts when configured.
 5. Ask calibration (bundled when configured) including run mode if not set.
 6. Classify change risk and select flow tier (`lean|standard|strict`) from settings and triggers, then write `tier_decision.md`.
-7. Evaluate all agents from `settings.agent_dispatch.catalog`; write signals to `dispatch_signals.md`.
-8. Resolve selected/not-needed agents and write full catalog resolution to `dispatch_resolution.md` (one row per agent).
+7. Resolve tier + dispatch via `scripts/resolve-dispatch.sh <run_id> [tier_override]`.
+8. Ensure `dispatch_signals.md` and `dispatch_resolution.md` exist with one row per catalog agent.
 9. Build and write dispatch plan to `planned_agents.md` using: required-by-tier + always-required + triggered conditionals.
 10. Dispatch selected agents only, but never omit `architect`, `qa_reviewer`, or `docs_writer`.
 11. Run pre-release flow checker: `scripts/enforce-flow.sh <run_id> <tier> pre_release`.
@@ -67,4 +68,5 @@ Agent-ID: god_orchestrator
 - Missing metrics/artifact evidence for any required agent in the selected tier.
 - Missing `dispatch_signals.md` or `dispatch_resolution.md`.
 - Any catalog agent missing from `dispatch_resolution.md`.
+- Missing orchestrator entrypoint artifact.
 - `scripts/enforce-flow.sh` failure at pre-release or final gate.
