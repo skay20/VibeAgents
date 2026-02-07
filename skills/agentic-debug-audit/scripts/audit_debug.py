@@ -61,6 +61,13 @@ def _find_run_id(debug_dir: Path) -> str | None:
     return None
 
 
+def _safe_read_lines(path: Path) -> list[str]:
+    try:
+        return path.read_text(encoding="utf-8").splitlines()
+    except Exception:
+        return []
+
+
 def _parse_planned_agents(planned_agents_md: str) -> list[str]:
     agents = []
     for line in planned_agents_md.splitlines():
@@ -226,6 +233,10 @@ def main() -> int:
     executed_agents = sorted([p.stem for p in metrics_files])
     events_summary = _parse_events(paths.events_file)
 
+    checks_txt = _safe_read_text(debug_dir / "checks.txt")
+    errors_txt = _safe_read_text(debug_dir / "errors.txt")
+    missing_txt = _safe_read_text(debug_dir / "missing.txt")
+
     tier = state.get("selected_tier") or ""
     gate_status = state.get("gate_status") or ""
     flow_status = state.get("flow_status") or ""
@@ -240,6 +251,10 @@ def main() -> int:
         shapes.append("dispatch_catalog_incomplete")
     if gate_status != "approved" and "final" in flow_evidence_md.lower():
         shapes.append("final_gate_not_approved")
+    if "CMD FAILED" in errors_txt:
+        shapes.append("debug_sweep_command_failures")
+    if "MISSING:" in missing_txt:
+        shapes.append("debug_sweep_missing_files")
 
     # Actionable suggestions
     suggestions: list[str] = []
@@ -258,6 +273,10 @@ def main() -> int:
         suggestions.append("Missing dispatch_resolution.md; ensure resolve-dispatch.sh was executed for this run before implementation.")
     if not flow_evidence_md:
         suggestions.append("Missing flow_evidence.md; enforce-flow.sh was not run or artifacts were not copied into Debug.")
+    if "debug_sweep_command_failures" in shapes:
+        suggestions.append("Some debug sweep commands failed. Check Debug/errors.txt to see which commands failed and why.")
+    if "debug_sweep_missing_files" in shapes:
+        suggestions.append("Some expected evidence files were missing from the Debug package. Check Debug/missing.txt and ensure the target repo actually produced those artifacts for this run.")
 
     audit = {
         "run_id": run_id,
@@ -271,6 +290,11 @@ def main() -> int:
         "events": events_summary,
         "shapes": shapes,
         "suggestions": suggestions,
+        "debug_sweep": {
+            "has_checks_txt": bool(checks_txt.strip()),
+            "has_errors_txt": bool(errors_txt.strip()),
+            "has_missing_txt": bool(missing_txt.strip()),
+        },
         "paths": {
             "state_file": str(paths.state_file),
             "artifacts_dir": str(paths.artifacts_dir),
@@ -324,6 +348,11 @@ def main() -> int:
     md_lines.append(f"- Metrics: `{paths.metrics_dir}`")
     md_lines.append(f"- Events: `{paths.events_file}`")
     md_lines.append("")
+    md_lines.append("## Debug Sweep Files")
+    md_lines.append(f"- checks.txt: `{(debug_dir / 'checks.txt')}`")
+    md_lines.append(f"- errors.txt: `{(debug_dir / 'errors.txt')}`")
+    md_lines.append(f"- missing.txt: `{(debug_dir / 'missing.txt')}`")
+    md_lines.append("")
 
     out_md.write_text("\n".join(md_lines), encoding="utf-8")
     print(str(out_md))
@@ -332,4 +361,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

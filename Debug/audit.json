@@ -1,0 +1,42 @@
+{
+  "run_id": "20260203-182331Z-vibeagents",
+  "debug_dir": "/Users/matiassouza/Desktop/Projects/VibeAgents/Debug",
+  "tier": "",
+  "gate_status": "approved",
+  "flow_status": "",
+  "planned_agents": [],
+  "executed_agents": [],
+  "dispatch_catalog_rows": [],
+  "events": {
+    "event_count": 0,
+    "run_start_count": 0,
+    "agent_start_count": 0,
+    "agent_end_count": 0,
+    "question_asked_count": 0,
+    "answer_received_count": 0,
+    "agents_seen": [],
+    "first_ts": null,
+    "last_ts": null
+  },
+  "shapes": [
+    "debug_sweep_command_failures",
+    "debug_sweep_missing_files"
+  ],
+  "suggestions": [
+    "Missing dispatch_resolution.md; ensure resolve-dispatch.sh was executed for this run before implementation.",
+    "Missing flow_evidence.md; enforce-flow.sh was not run or artifacts were not copied into Debug.",
+    "Some debug sweep commands failed. Check Debug/errors.txt to see which commands failed and why.",
+    "Some expected evidence files were missing from the Debug package. Check Debug/missing.txt and ensure the target repo actually produced those artifacts for this run."
+  ],
+  "debug_sweep": {
+    "has_checks_txt": true,
+    "has_errors_txt": true,
+    "has_missing_txt": true
+  },
+  "paths": {
+    "state_file": "/Users/matiassouza/Desktop/Projects/VibeAgents/Debug/.agentic/bus/state/20260203-182331Z-vibeagents.json",
+    "artifacts_dir": "/Users/matiassouza/Desktop/Projects/VibeAgents/Debug/.agentic/bus/artifacts/20260203-182331Z-vibeagents",
+    "metrics_dir": "/Users/matiassouza/Desktop/Projects/VibeAgents/Debug/.agentic/bus/metrics/20260203-182331Z-vibeagents",
+    "events_file": "/Users/matiassouza/Desktop/Projects/VibeAgents/Debug/.agentic/bus/metrics/20260203-182331Z-vibeagents/events.jsonl"
+  }
+}
