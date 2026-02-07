@@ -1,26 +1,62 @@
 #!/usr/bin/env bash
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/log-question.sh
-# Template-Version: 1.2.0
+# Template-Version: 1.3.0
 # Last-Generated: 2026-02-04T16:33:06Z
 # Ownership: Managed
 
 set -euo pipefail
 
 RUN_ID="${1:-}"
-AGENT_ID="${2:-}"
-QUESTION_ID="${3:-}"
-QUESTION_TEXT="${4:-}"
-ANSWER_TEXT="${5:-}"
-PHASE="${6:-}"
-TOOL="${7:-${AGENTIC_TOOL:-}}"
+ARG2="${2:-}"
+ARG3="${3:-}"
+ARG4="${4:-}"
+ARG5="${5:-}"
+ARG6="${6:-}"
+ARG7="${7:-}"
+
+SETTINGS_FILE=".agentic/settings.json"
+
+allowed_agent_ids() {
+  if [[ -d ".agentic/agents" ]]; then
+    ls .agentic/agents/*.md 2>/dev/null | xargs -n1 basename | sed 's/\.md$//'
+  fi
+}
+
+is_allowed_agent_id() {
+  local cand="$1"
+  [[ -z "$cand" ]] && return 1
+  allowed_agent_ids | grep -qx "$cand"
+}
+
+# Two supported signatures:
+# 1) scripts/log-question.sh <run_id> <agent_id> <question_id> <question_text> [answer_text] [phase] [tool]
+# 2) scripts/log-question.sh <run_id> <question_id> <question_text> [answer_text] [phase] [tool]
+#
+# Detect by checking whether ARG2 looks like a valid agent id.
+if is_allowed_agent_id "$ARG2"; then
+  AGENT_ID="$ARG2"
+  QUESTION_ID="$ARG3"
+  QUESTION_TEXT="$ARG4"
+  ANSWER_TEXT="$ARG5"
+  PHASE="$ARG6"
+  TOOL="${ARG7:-${AGENTIC_TOOL:-}}"
+else
+  AGENT_ID="${AGENTIC_AGENT_ID:-god_orchestrator}"
+  QUESTION_ID="$ARG2"
+  QUESTION_TEXT="$ARG3"
+  ANSWER_TEXT="$ARG4"
+  PHASE="$ARG5"
+  TOOL="${ARG6:-${AGENTIC_TOOL:-}}"
+fi
 
 if [[ -z "$RUN_ID" || -z "$QUESTION_ID" || -z "$QUESTION_TEXT" ]]; then
-  echo "Usage: scripts/log-question.sh <run_id> <agent_id> <question_id> <question_text> [answer_text] [phase] [tool]"
+  echo "Usage:"
+  echo "  scripts/log-question.sh <run_id> <agent_id> <question_id> <question_text> [answer_text] [phase] [tool]"
+  echo "  scripts/log-question.sh <run_id> <question_id> <question_text> [answer_text] [phase] [tool]"
   exit 1
 fi
 
-SETTINGS_FILE=".agentic/settings.json"
 telemetry_enabled="true"
 telemetry_events="true"
 telemetry_questions="true"
@@ -115,11 +151,78 @@ if [[ "$telemetry_questions_log" == "true" ]]; then
   } >> "$ART_DIR/questions_log.md"
 fi
 
-if [[ "$telemetry_events" == "true" && -x scripts/log-event.sh ]]; then
-  scripts/log-event.sh "$RUN_ID" "question_asked" "$AGENT_ID" "$QUESTION_TEXT" "$PHASE" "$TOOL"
-  if [[ -n "$ANSWER_TEXT" ]]; then
-    scripts/log-event.sh "$RUN_ID" "answer_received" "$AGENT_ID" "$ANSWER_TEXT" "$PHASE" "$TOOL"
-  fi
+if [[ "$telemetry_events" == "true" ]]; then
+  EVENTS_FILE="$METRICS_DIR/events.jsonl"
+  TS="$TS" EVENTS_FILE="$EVENTS_FILE" RUN_ID="$RUN_ID" AGENT_ID="$AGENT_ID" QUESTION_ID="$QUESTION_ID" QUESTION_TEXT="$QUESTION_TEXT" ANSWER_TEXT="$ANSWER_TEXT" PHASE="$PHASE" TOOL="$TOOL" python3 - <<'PY'
+import json
+import os
+from pathlib import Path
+
+events_file = Path(os.environ["EVENTS_FILE"])
+run_id = os.environ["RUN_ID"]
+agent_id = os.environ["AGENT_ID"]
+question_id = os.environ["QUESTION_ID"]
+question_text = os.environ["QUESTION_TEXT"]
+answer_text = os.environ["ANSWER_TEXT"]
+phase = os.environ["PHASE"]
+tool = os.environ["TOOL"]
+ts = os.environ["TS"]
+
+existing = []
+if events_file.exists():
+    for line in events_file.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        try:
+            existing.append(json.loads(line))
+        except Exception:
+            continue
+
+def already_logged(event_type: str, qid: str, qtext: str, atext: str) -> bool:
+    for evt in existing:
+        if evt.get("event_type") != event_type:
+            continue
+        if evt.get("run_id") != run_id or evt.get("agent_id") != agent_id:
+            continue
+        if evt.get("question_id") != qid:
+            continue
+        if event_type == "question_asked" and evt.get("question_text") == qtext:
+            return True
+        if event_type == "answer_received" and evt.get("answer_text") == atext:
+            return True
+    return False
+
+payloads = []
+if not already_logged("question_asked", question_id, question_text, answer_text):
+    payloads.append({
+        "timestamp": ts,
+        "event_type": "question_asked",
+        "run_id": run_id,
+        "agent_id": agent_id,
+        "phase": phase,
+        "tool": tool,
+        "message": question_id,
+        "question_id": question_id,
+        "question_text": question_text
+    })
+if answer_text and not already_logged("answer_received", question_id, question_text, answer_text):
+    payloads.append({
+        "timestamp": ts,
+        "event_type": "answer_received",
+        "run_id": run_id,
+        "agent_id": agent_id,
+        "phase": phase,
+        "tool": tool,
+        "message": question_id,
+        "question_id": question_id,
+        "answer_text": answer_text
+    })
+
+if payloads:
+    with events_file.open("a", encoding="utf-8") as fh:
+        for payload in payloads:
+            fh.write(json.dumps(payload, ensure_ascii=False) + "\n")
+PY
 fi
 
 echo "Question logged: $QUESTION_ID"

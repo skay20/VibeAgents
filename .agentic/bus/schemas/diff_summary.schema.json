@@ -1,0 +1,18 @@
+{
+  "Managed-By": "AgenticRepoBuilder",
+  "Template-Source": "templates/.agentic/bus/schemas/diff_summary.schema.json",
+  "Template-Version": "1.0.0",
+  "Last-Generated": "2026-02-05T23:51:57Z",
+  "Ownership": "Managed",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DiffSummaryArtifact",
+  "type": "object",
+  "required": ["run_id", "files_changed", "commands_run"],
+  "properties": {
+    "run_id": { "type": "string" },
+    "files_changed": { "type": "array", "items": { "type": "string" } },
+    "commands_run": { "type": "array", "items": { "type": "string" } },
+    "notes": { "type": "string" }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,6 @@
+No audit-able RUN_ID detected.
+This sweep requires a run with per-agent metrics JSON files under:
+  .agentic/bus/metrics/<run_id>/*.json
+Fix:
+- Run a real PRD iteration that calls log-metrics.sh for agents.
+- Or re-run with an explicit run id: --run-id <RUN_ID>

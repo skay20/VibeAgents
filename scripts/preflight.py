@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/preflight.py
-# Template-Version: 1.1.0
-# Last-Generated: 2026-02-04T17:55:11Z
+# Template-Version: 1.2.0
+# Last-Generated: 2026-02-05T15:33:50Z
 # Ownership: Managed
 
 import json
@@ -33,6 +33,32 @@ def pick_package_manager(root: Path, settings: dict) -> str:
     if (root / "yarn.lock").exists():
         return "yarn"
     return "npm"
+
+
+NETWORK_PATTERNS = [
+    "ENOTFOUND",
+    "EAI_AGAIN",
+    "ECONNRESET",
+    "ECONNREFUSED",
+    "ETIMEDOUT",
+    "ERR_SOCKET",
+    "fetch failed",
+    "network timeout",
+    "network error",
+    "getaddrinfo",
+    "certificate",
+    "SSL",
+]
+
+
+def is_network_error(text: str) -> bool:
+    if not text:
+        return False
+    upper = text.upper()
+    for pat in NETWORK_PATTERNS:
+        if pat.upper() in upper:
+            return True
+    return False
 
 
 def run_cmd(cmd, cwd, timeout_sec=None):
@@ -73,6 +99,66 @@ def run_cmd(cmd, cwd, timeout_sec=None):
         }
 
 
+def skipped_result(cmd, reason):
+    return {
+        "cmd": cmd,
+        "exit_code": None,
+        "stdout": "",
+        "stderr": "",
+        "duration_ms": 0,
+        "timed_out": False,
+        "skipped": True,
+        "skip_reason": reason,
+    }
+
+
+def write_report(run_id, root, pkg_manager, status, results, notes, actions):
+    art_dir = Path(f".agentic/bus/artifacts/{run_id}")
+    art_dir.mkdir(parents=True, exist_ok=True)
+    report_path = art_dir / "preflight_report.md"
+
+    lines = [
+        "# Preflight Report",
+        "",
+        f"Run ID: {run_id}",
+        f"Project Root: {root}",
+        f"Package Manager: {pkg_manager}",
+        f"Status: {status}",
+        "",
+        "## Steps",
+    ]
+
+    for r in results:
+        cmd = " ".join(r["cmd"])
+        lines.append(f"### {cmd}")
+        if r.get("skipped"):
+            lines += [f"- Skipped: {r.get('skip_reason', 'unknown')}", ""]
+            continue
+        lines += [
+            f"- Exit Code: {r['exit_code']}",
+            f"- Duration (ms): {r['duration_ms']}",
+            f"- Timed Out: {r['timed_out']}",
+            "",
+            "```",
+            (r["stdout"] or "").strip(),
+            "```",
+            "",
+            "```",
+            (r["stderr"] or "").strip(),
+            "```",
+            "",
+        ]
+
+    if notes:
+        lines += ["## Notes"] + [f"- {n}" for n in notes]
+
+    if actions:
+        lines += ["", "## Recommended Actions"] + [f"- {a}" for a in actions]
+
+    report_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print(f"Preflight report written: {report_path}")
+
+
 def main():
     if len(sys.argv) < 2:
         print("Usage: scripts/preflight.py <run_id> [project_root]")
@@ -91,12 +177,28 @@ def main():
         sys.exit(0)
 
     if not (root / "package.json").exists():
-        print("No package.json found; skipping npm preflight.")
+        write_report(
+            run_id,
+            root,
+            "none",
+            "skipped",
+            [],
+            ["No package.json found; npm preflight skipped."],
+            [],
+        )
         sys.exit(0)
 
     pkg_manager = pick_package_manager(root, settings)
     if shutil.which(pkg_manager) is None:
-        print(f"Package manager not found: {pkg_manager}")
+        write_report(
+            run_id,
+            root,
+            pkg_manager,
+            "skipped",
+            [],
+            [f"Package manager not found: {pkg_manager}."],
+            ["Install the package manager and re-run preflight."],
+        )
         sys.exit(1)
 
     if automation.get("run_scripts", True) and automation.get("auto_log_agents", True):
@@ -118,60 +220,44 @@ def main():
 
     if checks.get("preflight_run_install", True):
         results.append(run_cmd(install_cmd, root, timeout_sec=None))
+    else:
+        results.append(skipped_result(install_cmd, "Disabled by settings.checks.preflight_run_install=false"))
 
     if checks.get("preflight_run_dev", True):
         results.append(run_cmd(dev_cmd, root, timeout_sec=timeout_sec))
+    else:
+        results.append(skipped_result(dev_cmd, "Disabled by settings.checks.preflight_run_dev=false"))
 
     status = "pass"
     notes = []
+    actions = []
+    network_failed = False
     for r in results:
+        if r.get("skipped"):
+            status = "skipped"
+            continue
         if r["cmd"] == dev_cmd and r["timed_out"]:
             notes.append("Dev server started (timeout reached).")
             continue
         if r["exit_code"] != 0:
             status = "fail"
-            if "ETARGET" in (r["stderr"] or ""):
+            stderr = r["stderr"] or ""
+            stdout = r["stdout"] or ""
+            if "ETARGET" in stderr or "notarget" in stderr:
                 notes.append("ETARGET: dependency version not found.")
-            if "command not found" in (r["stderr"] or ""):
+            if "command not found" in stderr:
                 notes.append("Missing binary (check devDependencies).")
+            if is_network_error(stderr) or is_network_error(stdout):
+                network_failed = True
+                notes.append("Network/registry access failed (likely restricted environment).")
 
-    art_dir = Path(f".agentic/bus/artifacts/{run_id}")
-    art_dir.mkdir(parents=True, exist_ok=True)
-    report_path = art_dir / "preflight_report.md"
+    if network_failed:
+        actions.append("Run preflight locally where network access is available.")
+        actions.append("Paste the full install/dev output into the run artifacts if it fails.")
+    if status == "fail" and not actions:
+        actions.append("Fix the failing step and re-run preflight.")
 
-    lines = [
-        "# Preflight Report",
-        "",
-        f"Run ID: {run_id}",
-        f"Project Root: {root}",
-        f"Package Manager: {pkg_manager}",
-        f"Status: {status}",
-        "",
-        "## Steps",
-    ]
-
-    for r in results:
-        lines += [
-            f"### {' '.join(r['cmd'])}",
-            f"- Exit Code: {r['exit_code']}",
-            f"- Duration (ms): {r['duration_ms']}",
-            f"- Timed Out: {r['timed_out']}",
-            "",
-            "```",
-            (r["stdout"] or "").strip(),
-            "```",
-            "",
-            "```",
-            (r["stderr"] or "").strip(),
-            "```",
-            "",
-        ]
-
-    if notes:
-        lines += ["## Notes"] + [f"- {n}" for n in notes]
-
-    report_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    print(f"Preflight report written: {report_path}")
+    write_report(run_id, root, pkg_manager, status, results, notes, actions)
 
     if automation.get("run_scripts", True) and automation.get("auto_log_agents", True):
         if telemetry.get("events", True) and Path("scripts/log-event.sh").exists():

@@ -1,0 +1,30 @@
+{
+  "Managed-By": "AgenticRepoBuilder",
+  "Template-Source": "templates/.agentic/bus/schemas/qa_report.schema.json",
+  "Template-Version": "1.0.0",
+  "Last-Generated": "2026-02-05T23:51:57Z",
+  "Ownership": "Managed",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "QAReportArtifact",
+  "type": "object",
+  "required": ["run_id", "status", "checks"],
+  "properties": {
+    "run_id": { "type": "string" },
+    "status": { "type": "string", "enum": ["pass", "fail", "blocked"] },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "status"],
+        "properties": {
+          "name": { "type": "string" },
+          "status": { "type": "string", "enum": ["pass", "fail", "skipped"] },
+          "details": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "preflight": { "type": "string" }
+  },
+  "additionalProperties": false
+}

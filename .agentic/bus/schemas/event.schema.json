@@ -1,7 +1,7 @@
 {
   "Managed-By": "AgenticRepoBuilder",
   "Template-Source": "templates/.agentic/bus/schemas/event.schema.json",
-  "Template-Version": "1.3.0",
+  "Template-Version": "1.4.0",
   "Last-Generated": "2026-02-04T17:55:11Z",
   "Ownership": "Managed",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -44,6 +44,15 @@
       "type": "string"
     },
     "message": {
+      "type": "string"
+    },
+    "question_id": {
+      "type": "string"
+    },
+    "question_text": {
+      "type": "string"
+    },
+    "answer_text": {
       "type": "string"
     }
   },

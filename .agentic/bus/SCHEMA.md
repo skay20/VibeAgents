@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/bus/SCHEMA.md
-Template-Version: 1.13.0
-Last-Generated: 2026-02-04T17:55:11Z
+Template-Version: 1.16.0
+Last-Generated: 2026-02-06T16:25:00Z
 Ownership: Managed
 ---
 
@@ -13,15 +13,22 @@ Format: YYYYMMDD-HHMMSSZ-<slug>
 
 ## Artifacts
 - Path: `.agentic/bus/artifacts/<run_id>/`
-- Required files: plan.md, decisions.md, diff_summary.md, qa_report.md, release_notes.md
+- Required files: orchestrator_entrypoint.md, tier_decision.md, dispatch_signals.md, dispatch_resolution.md, planned_agents.md, plan.md, decisions.md, diff_summary.md, qa_report.md, release_notes.md
 - Optional files: calibration_questions.md, intent.md, upgrade_plan.md
 - Optional files: run_meta.md
 - Optional files: questions_log.md
 - Optional files: preflight_report.md
+- Optional directory: compiled_prompts/
+- Optional compiled prompt file: `.agentic/bus/artifacts/<run_id>/compiled_prompts/<agent_id>.md`
+- Schema references:
+  - plan: `.agentic/bus/schemas/plan.schema.json`
+  - diff summary: `.agentic/bus/schemas/diff_summary.schema.json`
+  - qa report: `.agentic/bus/schemas/qa_report.schema.json`
 
 ## State
 - Path: `.agentic/bus/state/<run_id>.json`
 - Tracks phase, gate status, timestamps, run_mode, approval_mode, toolchain
+- Required runtime fields: `selected_tier`, `planned_agents`, `executed_agents`, `flow_status`
 
 
 ## Concurrency Policy

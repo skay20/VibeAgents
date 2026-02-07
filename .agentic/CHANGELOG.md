@@ -1,12 +1,74 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CHANGELOG.md
-Template-Version: 1.18.0
-Last-Generated: 2026-02-04T17:55:11Z
+Template-Version: 1.26.0
+Last-Generated: 2026-02-06T16:43:23Z
 Ownership: Managed
 ---
 
 # Agentic Changelog
+
+## 0.30.0 - 2026-02-07
+- Add project-docs contract keys in settings (`settings.docs.*`) for generated-project README/RUNBOOK.
+- Add scripts to write project docs: `scripts/ensure-project-readme.sh` and `scripts/ensure-project-readme.py`.
+- Extend docs-writer v2 contract to generate project README/RUNBOOK and emit evidence artifacts.
+- Extend flow enforcement to require project README/RUNBOOK in `final` when a generated project is detected and docs-writer is required.
+
+## 0.29.0 - 2026-02-07
+- Add official orchestration entrypoint `scripts/orchestrator-first.sh` and run-state flow status initialization.
+- Add `scripts/resolve-dispatch.sh` to generate `tier_decision.md`, `dispatch_signals.md`, `dispatch_resolution.md`, and `planned_agents.md`.
+- Extend `scripts/enforce-flow.sh` with catalog-row enforcement, timestamp consistency checks, state synchronization, and rollout `report_only|blocking` mode.
+- Update logging quality: structured question events (`question_id/question_text/answer_text`) and duplicate calibration suppression.
+- Extend runtime contracts/docs/verify for mandatory run-state fields and dispatch artifacts.
+
+## 0.28.0 - 2026-02-06
+- Add hybrid adaptive dispatch contract with full catalog evaluation (`settings.agent_dispatch.*`) and always-required agents.
+- Make `architect`, `qa_reviewer`, and `docs_writer` non-omittable in implementation runs.
+- Extend flow artifacts with `dispatch_signals.md` and `dispatch_resolution.md`.
+- Harden `scripts/enforce-flow.sh` to validate full catalog resolution rows and effective required-agent evidence.
+- Extend verification and workflow docs for hybrid dispatch rules.
+
+## 0.27.0 - 2026-02-06
+- Add hard runtime flow checker script `scripts/enforce-flow.sh` with `pre_release|final` modes and deterministic pass/fail reasons.
+- Add project-meta compatibility checker `scripts/check-project-meta.sh` with minimum template-version and required-key validation.
+- Harden orchestrator/release/docs-writer v2 contracts with tier decision artifacts, planned dispatch evidence, final flow enforcement, and project runbook target handling.
+- Extend settings contract with `docs.project_runbook_path` and `project_meta.*` compatibility controls.
+- Extend verification checks to require new scripts, settings keys, and flow-enforcement contract strings.
+
+## 0.26.0 - 2026-02-06
+- Add mandatory structure-driven PRD intake policy (no keyword dependency) in Constitution and adapters.
+- Add incremental PRD evolution/versioning contract for feature additions (`prd_delta` + `prd_versions` artifacts).
+- Update intent translator v2 and orchestrator v2 to classify `new_prd|prd_update|not_prd` and route PRD updates before calibration.
+- Extend verification with `settings.prd_intake` contract checks and PRD intake/versioning prompt checks.
+
+## 0.25.0 - 2026-02-06
+- Add adaptive flow policy (`lean|standard|strict`) with required-agent evidence rules in Constitution.
+- Extend orchestrator v2 contract with risk classification, tier dispatch, and missing-evidence blockers.
+- Add flow-control settings contract and strict key validation in `scripts/verify.sh`.
+- Document adaptive tier routing in workflows and quickstart.
+
+## 0.24.0 - 2026-02-06
+- Add dual-track prompt system with shared core (`_CORE.md`) and thin `*.v2.md` prompts for all agents.
+- Add `scripts/render-agent-prompt.sh` to resolve `v1|v2|auto` and write compiled prompts into run artifacts.
+- Update verification to enforce v1 + core + v2 prompt contracts and prompt resolution settings keys.
+
+## 0.23.0 - 2026-02-05
+- Revamp all agent prompt contracts with startup behavior and hard/soft blocker escalation.
+- Require output schema references in all agent contracts.
+- Add plan, diff_summary, and qa_report bus schemas.
+
+## 0.22.0 - 2026-02-05
+- Add `RUNTIME_MIN.md` ultra-short startup context.
+- Add single-message startup calibration and startup batch logging policy.
+- Update orchestrator and intent translator contracts for reduced startup overhead.
+
+## 0.21.0 - 2026-02-05
+- Add fast-start profile settings to reduce startup questions and script reads.
+
+## 0.20.0 - 2026-02-05
+- Add universal adapter references to reduce tool adapter duplication.
+- Add Node CI workflow with conditional package manager detection.
+- Improve preflight reporting for network-restricted installs.
 
 ## 0.19.0 - 2026-02-04
 - Add preflight scripts and automation flags for auto-run checks.

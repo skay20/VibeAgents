@@ -1,0 +1,3 @@
+display_name: Agentic Debug Audit
+short_description: Audit Debug/ run evidence, agent execution, and telemetry.
+default_prompt: Run the one-command debug sweep in the current repo root (`python3 skills/agentic-debug-audit/scripts/debug_sweep.py`). Then read `Debug/audit_summary.md` and `Debug/checks.txt` and produce a concise diagnosis + minimal fix plan, citing evidence file paths. Do not invent run data. Do not modify files unless asked.

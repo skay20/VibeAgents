@@ -1,8 +1,8 @@
 ---
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/AGENTS_CATALOG.md
-Template-Version: 1.5.0
-Last-Generated: 2026-02-04T17:55:11Z
+Template-Version: 1.7.0
+Last-Generated: 2026-02-06T14:05:00Z
 Ownership: Managed
 ---
 
@@ -10,6 +10,19 @@ Ownership: Managed
 
 Each agent follows Agent Prompt Spec v2 and must BLOCK if required inputs are missing.
 Run mode is selected at the start of a run (`AgentX`, `AgentL`, `AgentM`); if unanswered, default to `AgentL`.
+All agents now include startup behavior and escalation severity:
+- hard_blocker: ask up to 3 targeted questions and BLOCK.
+- soft_blocker: record in questions artifact and continue.
+- startup: one bundled calibration prompt when enabled.
+All agents must include an explicit `Schema reference` under outputs.
+
+## Prompt Resolution (Dual-Track)
+- Canonical shared core: `.agentic/agents/_CORE.md`.
+- V1 prompts (stable): `.agentic/agents/<agent_id>.md`.
+- V2 thin prompts (pilot/cutover): `.agentic/agents/<agent_id>.v2.md`.
+- Effective prompt rendering: `scripts/render-agent-prompt.sh <agent_id> <v1|v2|auto> [run_id]`.
+- Pilot defaults are controlled by `.agentic/settings.json` under `settings.prompt_resolution`.
+- Compiled prompt artifacts (when enabled): `.agentic/bus/artifacts/<run_id>/compiled_prompts/<agent_id>.md`.
 
 ## God Orchestrator
 - Purpose: system-wide orchestration, gates, and run state
