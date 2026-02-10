@@ -2,7 +2,7 @@
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/log-event.sh
 # Template-Version: 1.2.0
-# Last-Generated: 2026-02-04T12:40:34Z
+# Last-Generated: 2026-02-10T20:25:14Z
 # Ownership: Managed
 
 set -euo pipefail
@@ -14,9 +14,22 @@ ARG4="${4:-}"
 ARG5="${5:-}"
 ARG6="${6:-}"
 
+AGENTIC_HOME="${AGENTIC_HOME:-$(python3 - <<'PY'
+import json
+from pathlib import Path
+p = Path(".agentic/settings.json")
+default = ".agentic"
+try:
+    data = json.loads(p.read_text())
+    print(data.get("settings", {}).get("paths", {}).get("agentic_home", default))
+except Exception:
+    print(default)
+PY
+)}"
+
 allowed_agent_ids() {
-  if [[ -d ".agentic/agents" ]]; then
-    ls .agentic/agents/*.md 2>/dev/null | xargs -n1 basename | sed 's/\.md$//'
+  if [[ -d "$AGENTIC_HOME/agents" ]]; then
+    ls "$AGENTIC_HOME"/agents/*.md 2>/dev/null | xargs -n1 basename | sed 's/\.md$//'
   fi
 }
 
@@ -48,15 +61,16 @@ if [[ -z "$RUN_ID" || -z "$EVENT_TYPE" ]]; then
   exit 1
 fi
 
-SETTINGS_FILE=".agentic/settings.json"
+SETTINGS_FILE="$AGENTIC_HOME/settings.json"
 telemetry_enabled="true"
 telemetry_events="true"
 
 if [[ -f "$SETTINGS_FILE" ]]; then
-  read -r telemetry_enabled telemetry_events < <(python3 - <<'PY'
+  read -r telemetry_enabled telemetry_events < <(SETTINGS_FILE="$SETTINGS_FILE" python3 - <<'PY'
 import json
+import os
 from pathlib import Path
-p = Path(".agentic/settings.json")
+p = Path(os.environ["SETTINGS_FILE"])
 try:
     data = json.loads(p.read_text())
 except Exception:
@@ -90,7 +104,25 @@ if [[ "$telemetry_enabled" != "true" || "$telemetry_events" != "true" ]]; then
   exit 0
 fi
 
-EVENTS_DIR=".agentic/bus/metrics/$RUN_ID"
+if [[ -z "${TOOL:-}" ]]; then
+  STATE_FILE="$AGENTIC_HOME/bus/state/$RUN_ID.json"
+  if [[ -f "$STATE_FILE" ]]; then
+    TOOL="$(STATE_FILE="$STATE_FILE" python3 - <<'PY'
+import json
+import os
+from pathlib import Path
+p = Path(os.environ["STATE_FILE"])
+try:
+    data = json.loads(p.read_text())
+except Exception:
+    data = {}
+print(data.get("toolchain", ""))
+PY
+)"
+  fi
+fi
+
+EVENTS_DIR="$AGENTIC_HOME/bus/metrics/$RUN_ID"
 mkdir -p "$EVENTS_DIR"
 
 TS="$(date -u +%Y-%m-%dT%H:%M:%SZ)"

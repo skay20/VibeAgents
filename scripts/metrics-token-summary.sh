@@ -13,8 +13,20 @@ if [[ -z "$RUN_ID" ]]; then
   exit 1
 fi
 
-METRICS_DIR=".agentic/bus/metrics/${RUN_ID}"
-ART_DIR=".agentic/bus/artifacts/${RUN_ID}"
+AGENTIC_HOME="${AGENTIC_HOME:-$(python3 - <<'PY'
+import json
+from pathlib import Path
+p = Path(".agentic/settings.json")
+default = ".agentic"
+try:
+    data = json.loads(p.read_text())
+    print(data.get("settings", {}).get("paths", {}).get("agentic_home", default))
+except Exception:
+    print(default)
+PY
+)}"
+METRICS_DIR="${AGENTIC_HOME}/bus/metrics/${RUN_ID}"
+ART_DIR="${AGENTIC_HOME}/bus/artifacts/${RUN_ID}"
 OUT_FILE="${ART_DIR}/token_summary.md"
 
 mkdir -p "$ART_DIR"

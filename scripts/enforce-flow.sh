@@ -21,10 +21,22 @@ if [[ "$MODE" != "pre_release" && "$MODE" != "final" ]]; then
   exit 1
 fi
 
-SETTINGS_FILE=".agentic/settings.json"
-STATE_FILE=".agentic/bus/state/${RUN_ID}.json"
-ART_DIR=".agentic/bus/artifacts/${RUN_ID}"
-METRICS_DIR=".agentic/bus/metrics/${RUN_ID}"
+AGENTIC_HOME="${AGENTIC_HOME:-$(python3 - <<'PY'
+import json
+from pathlib import Path
+p = Path(".agentic/settings.json")
+default = ".agentic"
+try:
+    data = json.loads(p.read_text())
+    print(data.get("settings", {}).get("paths", {}).get("agentic_home", default))
+except Exception:
+    print(default)
+PY
+)}"
+SETTINGS_FILE="$AGENTIC_HOME/settings.json"
+STATE_FILE="$AGENTIC_HOME/bus/state/${RUN_ID}.json"
+ART_DIR="$AGENTIC_HOME/bus/artifacts/${RUN_ID}"
+METRICS_DIR="$AGENTIC_HOME/bus/metrics/${RUN_ID}"
 
 if [[ ! -f "$SETTINGS_FILE" ]]; then
   echo "[FAIL] Missing settings file: $SETTINGS_FILE"
@@ -69,11 +81,16 @@ flow = cfg.get("flow_control", {})
 dispatch = cfg.get("agent_dispatch", {})
 rollout = cfg.get("rollout", {})
 docs_cfg = cfg.get("docs", {})
+runtime_cfg = cfg.get("runtime", {})
 required_by_tier = flow.get("required_agents", {})
 default_tier = flow.get("default_tier", "standard")
 catalog = dispatch.get("catalog", [])
 always_required_agents = dispatch.get("always_required_agents", [])
 enforcement_mode = rollout.get("enforcement_mode", "blocking")
+repo_mode = str(runtime_cfg.get("mode", "framework"))
+scope_mode = str(docs_cfg.get("scope_mode", "framework_only"))
+framework_docs_paths = docs_cfg.get("framework_docs_paths", [])
+project_docs_paths_raw = docs_cfg.get("project_docs_paths", [])
 
 tier = requested_tier or default_tier
 if tier not in {"lean", "standard", "strict"}:
@@ -120,6 +137,8 @@ required_artifacts = [
     "planned_agents.md",
     "token_summary.md",
 ]
+if scope_mode in {"framework_only", "project_only"}:
+    required_artifacts.append("diff_summary.md")
 missing_required_artifacts = [name for name in required_artifacts if not (art_dir / name).exists()]
 
 planned_agents = []
@@ -163,6 +182,8 @@ missing_metrics = []
 agents_not_executed = []
 missing_evidence = []
 missing_planned = []
+missing_scope_docs = []
+cross_scope_docs = []
 timestamp_issues = []
 runbook_issue = None
 readme_issue = None
@@ -373,11 +394,52 @@ if mode == "final" and tier == "strict":
             reasons.append("tech_verify_failed")
             tech_verify_issue = "Strict-tier tech verify report contains failing checks."
 
+def normalize_project_doc(path: str) -> str:
+    value = str(path).strip()
+    if value == "<project_root>/README.md":
+        return "README.md"
+    return value
+
+if scope_mode not in {"framework_only", "project_only"}:
+    status = "FAIL"
+    reasons.append("invalid_docs_scope_mode")
+else:
+    diff_summary = art_dir / "diff_summary.md"
+    if diff_summary.exists():
+        diff_text = diff_summary.read_text()
+        if scope_mode == "framework_only":
+            required_scope_docs = [str(path).strip() for path in framework_docs_paths if str(path).strip()]
+            forbidden_scope_docs = ["docs/PRD.md", "docs/RUNBOOK.md"]
+        else:
+            required_scope_docs = [
+                normalize_project_doc(path)
+                for path in project_docs_paths_raw
+                if str(path).strip()
+            ]
+            framework_set = {str(path).strip() for path in framework_docs_paths if str(path).strip()}
+            forbidden_scope_docs = sorted(framework_set.difference(set(required_scope_docs)))
+
+        for path in required_scope_docs:
+            if path and path not in diff_text:
+                missing_scope_docs.append(path)
+        for path in forbidden_scope_docs:
+            if path and path in diff_text:
+                cross_scope_docs.append(path)
+
+        if missing_scope_docs:
+            status = "FAIL"
+            reasons.append("missing_scope_docs")
+        if cross_scope_docs:
+            status = "FAIL"
+            reasons.append("cross_scope_docs")
+
 report = []
 report.append("# Flow Evidence")
 report.append("")
 report.append(f"- Run ID: {run_id}")
 report.append(f"- Mode: {mode}")
+report.append(f"- Repo Mode: {repo_mode}")
+report.append(f"- Docs Scope Mode: {scope_mode}")
 report.append(f"- Tier: {tier}")
 report.append(f"- Gate Status: {gate_status}")
 report.append(f"- Required Agents: {', '.join(required_agents)}")
@@ -401,6 +463,10 @@ if missing_planned:
     report.append(f"- Missing Planned Dispatch: {', '.join(missing_planned)}")
 if missing_catalog_rows:
     report.append(f"- Missing Catalog Rows: {', '.join(missing_catalog_rows)}")
+if missing_scope_docs:
+    report.append(f"- Missing Scope Docs: {', '.join(sorted(set(missing_scope_docs)))}")
+if cross_scope_docs:
+    report.append(f"- Cross Scope Docs: {', '.join(sorted(set(cross_scope_docs)))}")
 if timestamp_issues:
     report.append(f"- Timestamp Issues: {', '.join(sorted(set(timestamp_issues)))}")
 if runbook_issue:
@@ -414,7 +480,7 @@ if tech_verify_issue:
 
 flow_status = "flow_ok"
 if status != "PASS":
-    if any(r in reasons for r in ("missing_required_artifacts", "missing_catalog_rows", "missing_planned_dispatch")):
+    if any(r in reasons for r in ("missing_required_artifacts", "missing_catalog_rows", "missing_planned_dispatch", "invalid_docs_scope_mode")):
         flow_status = "invalid_path"
     else:
         flow_status = "blocked_flow"

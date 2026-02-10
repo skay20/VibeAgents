@@ -15,10 +15,22 @@ if [[ -z "$RUN_ID" ]]; then
   exit 1
 fi
 
-SETTINGS_FILE=".agentic/settings.json"
-STATE_FILE=".agentic/bus/state/${RUN_ID}.json"
-ART_DIR=".agentic/bus/artifacts/${RUN_ID}"
-METRICS_DIR=".agentic/bus/metrics/${RUN_ID}"
+AGENTIC_HOME="${AGENTIC_HOME:-$(python3 - <<'PY'
+import json
+from pathlib import Path
+p = Path(".agentic/settings.json")
+default = ".agentic"
+try:
+    data = json.loads(p.read_text())
+    print(data.get("settings", {}).get("paths", {}).get("agentic_home", default))
+except Exception:
+    print(default)
+PY
+)}"
+SETTINGS_FILE="$AGENTIC_HOME/settings.json"
+STATE_FILE="$AGENTIC_HOME/bus/state/${RUN_ID}.json"
+ART_DIR="$AGENTIC_HOME/bus/artifacts/${RUN_ID}"
+METRICS_DIR="$AGENTIC_HOME/bus/metrics/${RUN_ID}"
 PRD_FILE="docs/PRD.md"
 
 if [[ ! -f "$SETTINGS_FILE" ]]; then

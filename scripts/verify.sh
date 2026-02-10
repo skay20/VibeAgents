@@ -2,7 +2,7 @@
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/verify.sh
 # Template-Version: 1.22.0
-# Last-Generated: 2026-02-06T16:43:23Z
+# Last-Generated: 2026-02-10T20:25:14Z
 # Ownership: Managed
 
 set -euo pipefail
@@ -161,11 +161,20 @@ project_meta = settings.get("project_meta", {})
 validation = settings.get("validation", {})
 prompt_resolution = settings.get("prompt_resolution", {})
 flow_control = settings.get("flow_control", {})
+runtime_cfg = settings.get("runtime", {})
+paths_cfg = settings.get("paths", {})
+framework_hygiene = settings.get("framework_hygiene", {})
 required_agents = flow_control.get("required_agents", {})
 agent_dispatch = settings.get("agent_dispatch", {})
 dispatch_catalog = agent_dispatch.get("catalog", [])
 dispatch_always_required = agent_dispatch.get("always_required_agents", [])
 required = [
+    ("runtime.mode", runtime_cfg.get("mode", None)),
+    ("paths.agentic_home", paths_cfg.get("agentic_home", None)),
+    ("framework_hygiene.enforce_last_generated", framework_hygiene.get("enforce_last_generated", None)),
+    ("framework_hygiene.mode_scope", framework_hygiene.get("mode_scope", None)),
+    ("framework_hygiene.allow_auto_last_generated", framework_hygiene.get("allow_auto_last_generated", None)),
+    ("framework_hygiene.stale_grace_seconds", framework_hygiene.get("stale_grace_seconds", None)),
     ("prd_intake.detect_without_keyword", prd_intake.get("detect_without_keyword", None)),
     ("prd_intake.min_structural_signals", prd_intake.get("min_structural_signals", None)),
     ("prd_intake.structural_signals", prd_intake.get("structural_signals", None)),
@@ -229,6 +238,9 @@ required = [
     ("docs.auto_generate_project_readme", docs_cfg.get("auto_generate_project_readme", None)),
     ("docs.require_project_runbook_when_project_detected", docs_cfg.get("require_project_runbook_when_project_detected", None)),
     ("docs.require_project_readme_when_project_detected", docs_cfg.get("require_project_readme_when_project_detected", None)),
+    ("docs.scope_mode", docs_cfg.get("scope_mode", None)),
+    ("docs.framework_docs_paths", docs_cfg.get("framework_docs_paths", None)),
+    ("docs.project_docs_paths", docs_cfg.get("project_docs_paths", None)),
     ("docs.update_readme_each_iteration", docs_cfg.get("update_readme_each_iteration", None)),
     ("docs.enforce_parent_docs_each_iteration", docs_cfg.get("enforce_parent_docs_each_iteration", None)),
     ("docs.parent_docs_required_paths", docs_cfg.get("parent_docs_required_paths", None)),
@@ -294,13 +306,46 @@ rollout = settings.get("rollout", {})
 if rollout.get("enforcement_mode") not in {"blocking", "report_only"}:
     print("[FAIL] rollout.enforcement_mode must be blocking|report_only")
     sys.exit(1)
-if not isinstance(docs_cfg.get("parent_docs_required_paths", []), list) or len(docs_cfg.get("parent_docs_required_paths", [])) < 2:
-    print("[FAIL] docs.parent_docs_required_paths must be a list with README.md and docs/QUICKSTART.md")
+if runtime_cfg.get("mode") not in {"framework", "project"}:
+    print("[FAIL] runtime.mode must be framework|project")
     sys.exit(1)
-required_parent_docs = {"README.md", "docs/QUICKSTART.md"}
-if not required_parent_docs.issubset(set(docs_cfg.get("parent_docs_required_paths", []))):
-    print("[FAIL] docs.parent_docs_required_paths must include README.md and docs/QUICKSTART.md")
+if framework_hygiene.get("mode_scope") not in {"framework_only", "all"}:
+    print("[FAIL] framework_hygiene.mode_scope must be framework_only|all")
     sys.exit(1)
+if not isinstance(framework_hygiene.get("allow_auto_last_generated", []), list):
+    print("[FAIL] framework_hygiene.allow_auto_last_generated must be a list")
+    sys.exit(1)
+try:
+    grace = int(framework_hygiene.get("stale_grace_seconds", 120))
+except Exception:
+    print("[FAIL] framework_hygiene.stale_grace_seconds must be an integer")
+    sys.exit(1)
+if grace < 0:
+    print("[FAIL] framework_hygiene.stale_grace_seconds must be >= 0")
+    sys.exit(1)
+if docs_cfg.get("scope_mode") not in {"framework_only", "project_only"}:
+    print("[FAIL] docs.scope_mode must be framework_only|project_only")
+    sys.exit(1)
+if runtime_cfg.get("mode") == "framework" and docs_cfg.get("scope_mode") != "framework_only":
+    print("[FAIL] runtime.mode=framework requires docs.scope_mode=framework_only")
+    sys.exit(1)
+if runtime_cfg.get("mode") == "project" and docs_cfg.get("scope_mode") != "project_only":
+    print("[FAIL] runtime.mode=project requires docs.scope_mode=project_only")
+    sys.exit(1)
+if not isinstance(docs_cfg.get("framework_docs_paths", []), list) or len(docs_cfg.get("framework_docs_paths", [])) < 2:
+    print("[FAIL] docs.framework_docs_paths must include README.md and docs/QUICKSTART.md")
+    sys.exit(1)
+if not isinstance(docs_cfg.get("project_docs_paths", []), list) or len(docs_cfg.get("project_docs_paths", [])) < 2:
+    print("[FAIL] docs.project_docs_paths must include docs/PRD.md and docs/RUNBOOK.md")
+    sys.exit(1)
+if runtime_cfg.get("mode") == "framework":
+    required_parent_docs = {"README.md", "docs/QUICKSTART.md"}
+    if not isinstance(docs_cfg.get("parent_docs_required_paths", []), list) or len(docs_cfg.get("parent_docs_required_paths", [])) < 2:
+        print("[FAIL] docs.parent_docs_required_paths must be configured for framework mode")
+        sys.exit(1)
+    if not required_parent_docs.issubset(set(docs_cfg.get("parent_docs_required_paths", []))):
+        print("[FAIL] docs.parent_docs_required_paths must include README.md and docs/QUICKSTART.md")
+        sys.exit(1)
 
 # Ensure every catalog agent is reachable via tier requirement, always_required,
 # or conditional trigger configuration.
@@ -331,7 +376,7 @@ PYCODE
 fi
 
 # 2f) Scripts check
-for s in scripts/start-run.sh scripts/orchestrator-first.sh scripts/resolve-dispatch.sh scripts/log-event.sh scripts/log-question.sh scripts/preflight.sh scripts/preflight.py scripts/render-agent-prompt.sh scripts/enforce-flow.sh scripts/check-project-meta.sh scripts/resolve-project-root.sh scripts/resolve-project-root.py scripts/ensure-project-runbook.sh scripts/ensure-project-runbook.py scripts/ensure-project-readme.sh scripts/ensure-project-readme.py scripts/sync-agents.sh scripts/switch-context.sh scripts/gates/verify-tech.sh scripts/metrics-token-summary.sh; do
+for s in scripts/start-run.sh scripts/orchestrator-first.sh scripts/resolve-dispatch.sh scripts/log-event.sh scripts/log-question.sh scripts/preflight.sh scripts/preflight.py scripts/render-agent-prompt.sh scripts/enforce-flow.sh scripts/check-project-meta.sh scripts/resolve-project-root.sh scripts/resolve-project-root.py scripts/ensure-project-runbook.sh scripts/ensure-project-runbook.py scripts/ensure-project-readme.sh scripts/ensure-project-readme.py scripts/sync-agents.sh scripts/switch-context.sh scripts/gates/verify-tech.sh scripts/metrics-token-summary.sh scripts/init-project.sh scripts/pack-framework.sh scripts/refresh-managed-metadata.sh; do
   if [[ ! -f "$s" ]]; then
     fail "Missing script: $s"
   fi
@@ -341,6 +386,30 @@ done
 SYNC_PROFILE="${AGENTIC_CONTEXT_PROFILE:-default}"
 if ! scripts/sync-agents.sh --check --profile "$SYNC_PROFILE"; then
   fail "sync-agents check failed for profile=$SYNC_PROFILE"
+fi
+
+# 2j.1) Framework-only Last-Generated freshness check
+SHOULD_CHECK_FRESHNESS="$(python3 - <<'PYCODE'
+import json
+from pathlib import Path
+p = Path(".agentic/settings.json")
+try:
+    settings = json.loads(p.read_text()).get("settings", {})
+except Exception:
+    print("false")
+    raise SystemExit
+runtime_mode = str(settings.get("runtime", {}).get("mode", "framework"))
+hygiene = settings.get("framework_hygiene", {})
+enforce = bool(hygiene.get("enforce_last_generated", True))
+scope = str(hygiene.get("mode_scope", "framework_only"))
+should = enforce and (scope == "all" or runtime_mode == "framework")
+print("true" if should else "false")
+PYCODE
+)"
+if [[ "$SHOULD_CHECK_FRESHNESS" == "true" ]]; then
+  if ! scripts/refresh-managed-metadata.sh --check; then
+    fail "framework Last-Generated freshness check failed (run scripts/refresh-managed-metadata.sh)"
+  fi
 fi
 
 # 2k) Token semantics and per-run token summary checks
@@ -422,7 +491,7 @@ if [[ $? -ne 0 ]]; then
   FAIL=1
 fi
 
-# 2l) Parent repo docs must be updated each approved iteration when enabled
+# 2l) Documentation scope must be respected per repo mode
 python3 - <<'PYCODE'
 import json
 import sys
@@ -439,13 +508,44 @@ except Exception:
     sys.exit(1)
 
 docs_cfg = settings.get("docs", {})
-if not bool(docs_cfg.get("enforce_parent_docs_each_iteration", False)):
-    sys.exit(0)
+runtime_mode = str(settings.get("runtime", {}).get("mode", "framework"))
+scope_mode = str(docs_cfg.get("scope_mode", "framework_only"))
+framework_paths = docs_cfg.get("framework_docs_paths", [])
+project_paths_raw = docs_cfg.get("project_docs_paths", [])
 
-required_paths = docs_cfg.get("parent_docs_required_paths", [])
-if not isinstance(required_paths, list) or not required_paths:
-    print("[FAIL] docs.parent_docs_required_paths must be configured when docs enforcement is enabled")
+if runtime_mode == "framework" and scope_mode != "framework_only":
+    print("[FAIL] runtime.mode=framework requires docs.scope_mode=framework_only")
     sys.exit(1)
+if runtime_mode == "project" and scope_mode != "project_only":
+    print("[FAIL] runtime.mode=project requires docs.scope_mode=project_only")
+    sys.exit(1)
+
+if not isinstance(framework_paths, list) or not framework_paths:
+    print("[FAIL] docs.framework_docs_paths must be configured")
+    sys.exit(1)
+if not isinstance(project_paths_raw, list) or not project_paths_raw:
+    print("[FAIL] docs.project_docs_paths must be configured")
+    sys.exit(1)
+
+def normalize_project_path(path: str) -> str:
+    value = str(path).strip()
+    if value == "<project_root>/README.md":
+        return "README.md"
+    return value
+
+project_paths = [normalize_project_path(path) for path in project_paths_raw if str(path).strip()]
+if runtime_mode == "framework":
+    required_paths = [str(path).strip() for path in framework_paths if str(path).strip()]
+    forbidden_paths = ["docs/PRD.md", "docs/RUNBOOK.md"]
+else:
+    required_paths = project_paths
+    forbidden_paths = [
+        str(path).strip()
+        for path in framework_paths
+        if str(path).strip() and str(path).strip() not in required_paths
+    ]
+
+enforce_docs_required = bool(docs_cfg.get("update_readme_each_iteration", True))
 
 state_dir = Path(".agentic/bus/state")
 if not state_dir.exists():
@@ -471,14 +571,55 @@ for state_file in sorted(state_dir.glob("*.json")):
         continue
 
     text = diff_summary.read_text(encoding="utf-8", errors="ignore")
-    for path in required_paths:
-        if path not in text:
+    if enforce_docs_required:
+        for path in required_paths:
+            if path not in text:
+                failures.append(
+                    f"Approved run {run_id} missing required docs update in diff_summary.md: {path}"
+                )
+    for path in forbidden_paths:
+        if path and path in text:
             failures.append(
-                f"Approved run {run_id} missing required docs update in diff_summary.md: {path}"
+                f"Approved run {run_id} crossed docs scope ({runtime_mode}) by updating: {path}"
             )
 
 if failures:
     for item in failures:
+        print("[FAIL] " + item)
+    sys.exit(1)
+PYCODE
+if [[ $? -ne 0 ]]; then
+  FAIL=1
+fi
+
+# 2m) Block local absolute paths in settings/scripts
+python3 - <<'PYCODE'
+from pathlib import Path
+import re
+import sys
+
+targets = [Path(".agentic/settings.json")] + [
+    path for path in sorted(Path("scripts").glob("*.sh"))
+    if path.name != "verify.sh"
+]
+patterns = [
+    re.compile(r"/Users/[^/\s]+/"),
+    re.compile(r"[A-Za-z]:\\\\Users\\\\[^\\\\\s]+\\\\"),
+]
+violations = []
+
+for target in targets:
+    try:
+        text = target.read_text(encoding="utf-8", errors="ignore")
+    except Exception:
+        continue
+    for pattern in patterns:
+        if pattern.search(text):
+            violations.append(f"{target}: contains local absolute path matching '{pattern.pattern}'")
+            break
+
+if violations:
+    for item in violations:
         print("[FAIL] " + item)
     sys.exit(1)
 PYCODE

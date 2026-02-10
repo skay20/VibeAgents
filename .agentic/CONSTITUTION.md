@@ -2,7 +2,7 @@
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/.agentic/CONSTITUTION.md
 Template-Version: 2.12.0
-Last-Generated: 2026-02-06T16:43:23Z
+Last-Generated: 2026-02-10T20:25:14Z
 Ownership: Managed
 ---
 
@@ -120,6 +120,13 @@ Documentation guardrail:
 - Global `docs/RUNBOOK.md` remains framework-level unless explicitly requested otherwise.
 - Project-specific generated documentation must be written by docs flow to `settings.docs.project_runbook_path` (default `<project_root>/RUNBOOK.md`).
 - Documentation stage is incomplete if project runbook target is missing for generated projects.
+
+## Framework Freshness Contract
+- This contract is controlled by `settings.framework_hygiene`.
+- If `runtime.mode=framework` and `framework_hygiene.enforce_last_generated=true`, every modified managed file must have fresh `Last-Generated` metadata before verify can pass.
+- If `runtime.mode=project`, this check is disabled by policy.
+- `Last-Generated: AUTO` is invalid in framework mode unless the file is explicitly listed in `framework_hygiene.allow_auto_last_generated`.
+- Freshness comparison uses file mtime against `Last-Generated` with `framework_hygiene.stale_grace_seconds`.
 
 ## Project Template Compatibility (Cross-Project)
 When running this system against a generated side project (`project_meta`):

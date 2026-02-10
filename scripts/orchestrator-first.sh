@@ -12,6 +12,19 @@ TOOLCHAIN="${2:-${AGENTIC_TOOLCHAIN:-unknown}}"
 RUN_MODE="${3:-${AGENTIC_RUN_MODE:-}}"
 APPROVAL_MODE="${4:-}"
 
+AGENTIC_HOME="${AGENTIC_HOME:-$(python3 - <<'PY'
+import json
+from pathlib import Path
+p = Path(".agentic/settings.json")
+default = ".agentic"
+try:
+    data = json.loads(p.read_text())
+    print(data.get("settings", {}).get("paths", {}).get("agentic_home", default))
+except Exception:
+    print(default)
+PY
+)}"
+
 OUTPUT="$(scripts/start-run.sh "$RUN_ID" "$TOOLCHAIN" "$RUN_MODE" "$APPROVAL_MODE")"
 echo "$OUTPUT"
 
@@ -25,8 +38,8 @@ if [[ -z "$RESOLVED_RUN_ID" ]]; then
   RESOLVED_RUN_ID="$RUN_ID"
 fi
 
-ART_DIR=".agentic/bus/artifacts/$RESOLVED_RUN_ID"
-STATE_FILE=".agentic/bus/state/$RESOLVED_RUN_ID.json"
+ART_DIR="$AGENTIC_HOME/bus/artifacts/$RESOLVED_RUN_ID"
+STATE_FILE="$AGENTIC_HOME/bus/state/$RESOLVED_RUN_ID.json"
 mkdir -p "$ART_DIR"
 
 cat > "$ART_DIR/orchestrator_entrypoint.md" <<EOF

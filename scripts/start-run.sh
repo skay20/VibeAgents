@@ -2,7 +2,7 @@
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/start-run.sh
 # Template-Version: 1.5.0
-# Last-Generated: 2026-02-04T16:33:06Z
+# Last-Generated: 2026-02-10T20:25:14Z
 # Ownership: Managed
 
 set -euo pipefail
@@ -12,7 +12,19 @@ TOOLCHAIN="${2:-${AGENTIC_TOOLCHAIN:-unknown}}"
 RUN_MODE="${3:-${AGENTIC_RUN_MODE:-}}"
 APPROVAL_MODE="${4:-}"
 
-SETTINGS_FILE=".agentic/settings.json"
+AGENTIC_HOME="${AGENTIC_HOME:-$(python3 - <<'PY'
+import json
+from pathlib import Path
+p = Path(".agentic/settings.json")
+default = ".agentic"
+try:
+    data = json.loads(p.read_text())
+    print(data.get("settings", {}).get("paths", {}).get("agentic_home", default))
+except Exception:
+    print(default)
+PY
+)}"
+SETTINGS_FILE="$AGENTIC_HOME/settings.json"
 
 telemetry_enabled="true"
 telemetry_events="true"
@@ -23,10 +35,11 @@ preferred_run_mode="autonomous"
 default_run_mode="guided"
 
 if [[ -f "$SETTINGS_FILE" ]]; then
-  read -r telemetry_enabled telemetry_events telemetry_questions_log run_start_enabled write_run_meta preferred_run_mode default_run_mode < <(python3 - <<'PY'
+  read -r telemetry_enabled telemetry_events telemetry_questions_log run_start_enabled write_run_meta preferred_run_mode default_run_mode < <(SETTINGS_FILE="$SETTINGS_FILE" python3 - <<'PY'
 import json
+import os
 from pathlib import Path
-p = Path(".agentic/settings.json")
+p = Path(os.environ["SETTINGS_FILE"])
 try:
     data = json.loads(p.read_text())
 except Exception:
@@ -46,7 +59,7 @@ rs_enabled = run_start.get("enabled", True)
 rs_meta = run_start.get("write_run_meta", True)
 pref = run_mode.get("preferred", "autonomous")
 default = run_mode.get("default_if_unanswered", "guided")
-print("true" if enabled else "false",
+    print("true" if enabled else "false",
       "true" if events else "false",
       "true" if qlog else "false",
       "true" if rs_enabled else "false",
@@ -97,9 +110,9 @@ fi
 
 STARTED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
-STATE_DIR=".agentic/bus/state"
-METRICS_DIR=".agentic/bus/metrics/$RUN_ID"
-ART_DIR=".agentic/bus/artifacts/$RUN_ID"
+STATE_DIR="$AGENTIC_HOME/bus/state"
+METRICS_DIR="$AGENTIC_HOME/bus/metrics/$RUN_ID"
+ART_DIR="$AGENTIC_HOME/bus/artifacts/$RUN_ID"
 mkdir -p "$STATE_DIR" "$METRICS_DIR" "$ART_DIR"
 
 if [[ "$telemetry_questions_log" == "true" ]]; then

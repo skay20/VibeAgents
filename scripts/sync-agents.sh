@@ -104,6 +104,7 @@ write_universal_inline() {
 - In implementation runs, do not omit `architect`, `qa_reviewer`, or `docs_writer`.
 - Planned agents are not execution evidence; executed agents must emit metrics with `ok|blocked|failed`.
 - Enforce flow gates with `scripts/enforce-flow.sh <run_id> <tier> pre_release|final`.
+- In framework mode, refresh `Last-Generated` metadata for modified managed files before verify passes.
 EOF
 }
 

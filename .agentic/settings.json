@@ -2,9 +2,29 @@
   "Managed-By": "AgenticRepoBuilder",
   "Template-Source": "templates/.agentic/settings.json",
   "Template-Version": "2.3.0",
-  "Last-Generated": "2026-02-06T16:43:23Z",
+  "Last-Generated": "2026-02-10T20:25:14Z",
   "Ownership": "Managed",
   "settings": {
+    "runtime": {
+      "mode": "framework"
+    },
+    "paths": {
+      "agentic_home": ".agentic"
+    },
+    "framework_hygiene": {
+      "enforce_last_generated": true,
+      "mode_scope": "framework_only",
+      "allow_auto_last_generated": [
+        "AGENTS.md",
+        "GEMINI.md",
+        ".claude/CLAUDE.md",
+        ".cursor/rules/00-global.mdc",
+        ".windsurf/rules/00-global.md",
+        ".github/copilot-instructions.md",
+        ".gemini/styleguide.md"
+      ],
+      "stale_grace_seconds": 120
+    },
     "prd_intake": {
       "detect_without_keyword": true,
       "min_structural_signals": 3,
@@ -53,6 +73,16 @@
       "auto_log_agents": true
     },
     "docs": {
+      "scope_mode": "framework_only",
+      "framework_docs_paths": [
+        "README.md",
+        "docs/QUICKSTART.md"
+      ],
+      "project_docs_paths": [
+        "docs/PRD.md",
+        "docs/RUNBOOK.md",
+        "<project_root>/README.md"
+      ],
       "project_runbook_path": "<project_root>/RUNBOOK.md",
       "project_readme_path": "<project_root>/README.md",
       "auto_generate_project_runbook": true,

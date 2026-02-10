@@ -2,7 +2,7 @@
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/README.md
 Template-Version: 1.1.0
-Last-Generated: 2026-02-04T00:36:08Z
+Last-Generated: 2026-02-10T20:25:14Z
 Ownership: Managed
 ---
 
@@ -19,6 +19,18 @@ Guia completa: `docs/QUICKSTART.md`
 3. Use workflows in `.agentic/WORKFLOWS_GUIDE.md`.
 4. Run `scripts/verify.sh` for quality gates.
 5. Set toggles in `.agentic/settings.json` (run mode, telemetry).
+
+## Framework vs Project
+- Framework source mode is declared in `.agentic/mode.json` and `settings.runtime.mode`.
+- Create a new project repo with embedded runtime:
+  - `scripts/init-project.sh <target_dir> --mode project`
+- Create a reusable framework bundle:
+  - `scripts/pack-framework.sh`
+- Docs governance:
+  - `mode=framework` updates framework docs (`README.md`, `docs/QUICKSTART.md`).
+  - `mode=project` updates project docs (`docs/PRD.md`, `docs/RUNBOOK.md`, project `README.md`).
+- Framework freshness:
+  - run `scripts/refresh-managed-metadata.sh` before `scripts/verify.sh` to refresh `Last-Generated` on modified managed files.
 
 ## Modes
 - Scaffold: create a new repo from zero.

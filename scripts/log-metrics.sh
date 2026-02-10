@@ -2,7 +2,7 @@
 # Managed-By: AgenticRepoBuilder
 # Template-Source: templates/scripts/log-metrics.sh
 # Template-Version: 1.14.0
-# Last-Generated: 2026-02-04T14:22:29Z
+# Last-Generated: 2026-02-10T20:25:14Z
 # Ownership: Managed
 
 set -euo pipefail
@@ -21,7 +21,19 @@ TOKENS_IN="${11:-auto}"
 TOKENS_OUT="${12:-auto}"
 NOTES="${13:-}"
 TOOL="${14:-${AGENTIC_TOOL:-}}"
-SETTINGS_FILE=".agentic/settings.json"
+AGENTIC_HOME="${AGENTIC_HOME:-$(python3 - <<'PY'
+import json
+from pathlib import Path
+p = Path(".agentic/settings.json")
+default = ".agentic"
+try:
+    data = json.loads(p.read_text())
+    print(data.get("settings", {}).get("paths", {}).get("agentic_home", default))
+except Exception:
+    print(default)
+PY
+)}"
+SETTINGS_FILE="$AGENTIC_HOME/settings.json"
 
 is_false() {
   local v
@@ -46,10 +58,11 @@ capture_tokens="true"
 enforce_agent_id="true"
 
 if [[ -f "$SETTINGS_FILE" ]]; then
-  read -r telemetry_enabled capture_tokens enforce_agent_id < <(python3 - <<'PY'
+  read -r telemetry_enabled capture_tokens enforce_agent_id < <(SETTINGS_FILE="$SETTINGS_FILE" python3 - <<'PY'
 import json
+import os
 from pathlib import Path
-p = Path(".agentic/settings.json")
+p = Path(os.environ["SETTINGS_FILE"])
 try:
     data = json.loads(p.read_text())
 except Exception:
@@ -79,16 +92,34 @@ if is_false "$telemetry_enabled"; then
 fi
 
 if [[ "$enforce_agent_id" == "true" ]]; then
-  if [[ -d ".agentic/agents" ]]; then
-    allowed=$(ls .agentic/agents/*.md 2>/dev/null | xargs -n1 basename | sed 's/\.md$//')
+  if [[ -d "$AGENTIC_HOME/agents" ]]; then
+    allowed=$(ls "$AGENTIC_HOME"/agents/*.md 2>/dev/null | xargs -n1 basename | sed 's/\.md$//')
     if ! echo "$allowed" | grep -qx "$AGENT_ID"; then
-      echo "[FAIL] Invalid agent_id '$AGENT_ID' (not in .agentic/agents)"
+      echo "[FAIL] Invalid agent_id '$AGENT_ID' (not in $AGENTIC_HOME/agents)"
       exit 1
     fi
   fi
 fi
 
-METRICS_DIR=".agentic/bus/metrics/$RUN_ID"
+if [[ -z "${TOOL:-}" ]]; then
+  STATE_FILE="$AGENTIC_HOME/bus/state/$RUN_ID.json"
+  if [[ -f "$STATE_FILE" ]]; then
+    TOOL="$(STATE_FILE="$STATE_FILE" python3 - <<'PY'
+import json
+import os
+from pathlib import Path
+p = Path(os.environ["STATE_FILE"])
+try:
+    data = json.loads(p.read_text())
+except Exception:
+    data = {}
+print(data.get("toolchain", ""))
+PY
+)"
+  fi
+fi
+
+METRICS_DIR="$AGENTIC_HOME/bus/metrics/$RUN_ID"
 mkdir -p "$METRICS_DIR"
 
 # Convert outputs to JSON array safely
@@ -259,8 +290,8 @@ cat > "$METRICS_DIR/$AGENT_ID.json" <<EOF
 }
 EOF
 
-STATE_FILE=".agentic/bus/state/$RUN_ID.json"
-ART_DIR=".agentic/bus/artifacts/$RUN_ID"
+STATE_FILE="$AGENTIC_HOME/bus/state/$RUN_ID.json"
+ART_DIR="$AGENTIC_HOME/bus/artifacts/$RUN_ID"
 if [[ -f "$STATE_FILE" ]]; then
   STATE_FILE="$STATE_FILE" ART_DIR="$ART_DIR" AGENT_ID="$AGENT_ID" STATUS="$STATUS" python3 - <<'PY'
 import json

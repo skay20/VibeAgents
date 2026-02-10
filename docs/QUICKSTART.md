@@ -2,7 +2,7 @@
 Managed-By: AgenticRepoBuilder
 Template-Source: templates/docs/QUICKSTART.md
 Template-Version: 1.5.0
-Last-Generated: 2026-02-06T16:43:23Z
+Last-Generated: 2026-02-10T20:25:14Z
 Ownership: Managed
 ---
 
@@ -22,28 +22,36 @@ Authoritative operational files:
 ```bash
 pwd
 ```
-2. Check settings:
+2. Confirm repo mode:
+```bash
+cat .agentic/mode.json
+```
+3. Check settings:
 ```bash
 cat .agentic/settings.json
 ```
-3. Optional run mode:
+4. Optional run mode:
 ```bash
 export AGENTIC_RUN_MODE=AgentX
 ```
-4. Start run:
+5. Start run:
 ```bash
 AGENTIC_TOOL=codex scripts/orchestrator-first.sh
 ```
-5. Provide PRD to the assistant and answer startup calibration.
-6. Resolve tier + dispatch before implementation:
+6. Provide PRD to the assistant and answer startup calibration.
+7. Resolve tier + dispatch before implementation:
 ```bash
 scripts/resolve-dispatch.sh <run_id>
 ```
-7. Verify repository contracts:
+8. Refresh managed metadata (framework mode):
+```bash
+scripts/refresh-managed-metadata.sh
+```
+9. Verify repository contracts:
 ```bash
 scripts/verify.sh
 ```
-8. Optional: refresh compiled adapters/context from source rules:
+10. Optional: refresh compiled adapters/context from source rules:
 ```bash
 scripts/sync-agents.sh --profile default
 ```
@@ -51,6 +59,16 @@ scripts/sync-agents.sh --profile default
 If running this framework inside a generated side project with `project_meta`, run:
 ```bash
 scripts/check-project-meta.sh <project_meta_dir>
+```
+
+Bootstrap project repo from this framework:
+```bash
+scripts/init-project.sh <target_dir> --mode project
+```
+
+Create a portable framework bundle:
+```bash
+scripts/pack-framework.sh
 ```
 
 ## Startup Handshake (If You See “No Questions” or “PRD Not Ingested”)
@@ -248,6 +266,9 @@ scripts/ensure-project-readme.sh <run_id>
 - Global `docs/RUNBOOK.md` is framework-level.
 - Generated project runbook target is controlled by:
   - `settings.docs.project_runbook_path` (default `<project_root>/RUNBOOK.md`)
+- Docs scope is controlled by:
+  - `settings.runtime.mode` (`framework|project`)
+  - `settings.docs.scope_mode` (`framework_only|project_only`)
 
 ## Maintenance Policy
 `docs/QUICKSTART.md` is managed and must be updated on iterations that change:
